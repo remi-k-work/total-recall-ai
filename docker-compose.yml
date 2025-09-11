@@ -1,6 +1,6 @@
 services:
   db:
-    image: ankane/pgvector:pg17
+    image: pgvector/pgvector:pg17
     hostname: localhost
     ports:
       - "5432:5432"
