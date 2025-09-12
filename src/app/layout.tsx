@@ -1,5 +1,8 @@
 import "./globals.css";
 
+// components
+import { Toaster } from "@/components/ui/sonner";
+
 // assets
 import { geistSans, geistMono } from "@/assets/fonts";
 
@@ -20,7 +23,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" translate="no">
-      <body className={`${geistSans.variable} ${geistMono.variable} font-geist-mono antialiased`}>{children}</body>
+      <body className={`${geistSans.variable} ${geistMono.variable} font-geist-mono antialiased`}>
+        <main>{children}</main>
+        <Toaster richColors />
+      </body>
     </html>
   );
 }
