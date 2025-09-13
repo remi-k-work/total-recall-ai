@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" translate="no">
-      <body className={`${geistSans.variable} ${geistMono.variable} font-geist-mono antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} font-geist-mono dark antialiased`}>
         <main>{children}</main>
         <Toaster richColors />
       </body>

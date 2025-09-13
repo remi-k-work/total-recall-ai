@@ -1,3 +1,6 @@
+// components
+import SignUpForm from "@/features/auth/components/SignUpForm";
+
 export default function Home() {
-  return <p>Hello World!</p>;
+  return <SignUpForm />;
 }

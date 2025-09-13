@@ -8,18 +8,19 @@ import { useFormContext } from ".";
 import { Button } from "@/components/ui/custom/button";
 
 // assets
-import { HandThumbDownIcon, HandThumbUpIcon, XCircleIcon } from "@heroicons/react/24/solid";
+import { ArrowLeftCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import { Loader2 } from "lucide-react";
 
 // types
-import type { LocalizedContent } from "@/types/shared";
+import type { ReactNode } from "react";
 
 interface FormSubmitProps {
-  localizedContent: LocalizedContent;
+  submitIcon: ReactNode;
+  submitText: string;
   isPending: boolean;
 }
 
-export default function FormSubmit({ localizedContent, isPending }: FormSubmitProps) {
+export default function FormSubmit({ submitIcon, submitText, isPending }: FormSubmitProps) {
   // Get the form context
   const { Subscribe, reset } = useFormContext();
 
@@ -30,16 +31,17 @@ export default function FormSubmit({ localizedContent, isPending }: FormSubmitPr
     <section className="flex w-full flex-wrap items-center justify-around gap-6">
       <Subscribe selector={(formState) => [formState.canSubmit, formState.isSubmitting, formState.isPristine]}>
         {([canSubmit, isSubmitting, isPristine]) => (
-          <Button type="submit" disabled={isPending || !canSubmit || isPristine}>
+          // <Button type="submit" disabled={isPending || !canSubmit || isPristine}>
+          <Button type="submit">
             {isPending || isSubmitting ? (
               <>
                 <Loader2 className="size-9 animate-spin" />
-                {localizedContent["formSubmit"]["sending"]}
+                {submitText}
               </>
             ) : (
               <>
-                <HandThumbUpIcon className="size-9" />
-                {localizedContent["formSubmit"]["send"]}
+                {submitIcon}
+                {submitText}
               </>
             )}
           </Button>
@@ -47,11 +49,11 @@ export default function FormSubmit({ localizedContent, isPending }: FormSubmitPr
       </Subscribe>
       <Button type="button" variant="destructive" onClick={() => reset()}>
         <XCircleIcon className="size-9" />
-        {localizedContent["formSubmit"]["reset"]}
+        Reset
       </Button>
       <Button type="button" variant="secondary" onClick={() => back()}>
-        <HandThumbDownIcon className="size-9" />
-        {localizedContent["formSubmit"]["cancel"]}
+        <ArrowLeftCircleIcon className="size-9" />
+        Cancel
       </Button>
     </section>
   );
