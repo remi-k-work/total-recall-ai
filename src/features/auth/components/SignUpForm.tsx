@@ -14,6 +14,9 @@ import { useAppForm } from "@/components/form";
 import { SignUpFormSchema } from "@/features/auth/schemas/signUpForm";
 import useSignUpFormFeedback from "@/features/auth/hooks/useSignUpFormFeedback";
 
+// components
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
+
 // assets
 import { UserIcon } from "@heroicons/react/24/solid";
 
@@ -32,33 +35,42 @@ export default function SignUpForm() {
 
   return (
     <AppForm>
-      <form action={formAction} className="bg-background mx-auto w-full max-w-4xl rounded-xl p-3" onSubmit={() => handleSubmit()}>
-        <AppField
-          name="name"
-          validators={{ onChange: SignUpFormSchema.shape.name }}
-          children={(field) => <field.TextField label="Name" size={40} maxLength={26} spellCheck={false} autoComplete="name" placeholder="e.g. John Doe" />}
-        />
-        <AppField
-          name="email"
-          validators={{ onChange: SignUpFormSchema.shape.email }}
-          children={(field) => (
-            <field.TextField label="Email" size={40} maxLength={50} spellCheck={false} autoComplete="email" placeholder="e.g. john.doe@gmail.com" />
-          )}
-        />
-        <AppField
-          name="password"
-          validators={{ onChange: SignUpFormSchema.shape.password }}
-          children={(field) => <field.PasswordField label="Password" size={40} maxLength={129} autoComplete="new-password" placeholder="e.g. P@ssw0rd!" />}
-        />
-        <AppField
-          name="confirmPassword"
-          validators={{ onChange: SignUpFormSchema.shape.confirmPassword }}
-          children={(field) => (
-            <field.PasswordField label="Confirm Password" size={40} maxLength={129} autoComplete="new-password" placeholder="e.g. P@ssw0rd!" />
-          )}
-        />
-        <br />
-        <FormSubmit submitIcon={<UserIcon className="size-9" />} submitText="Create New Account" isPending={isPending} />
+      <form action={formAction} onSubmit={() => handleSubmit()}>
+        <Card>
+          <CardHeader>
+            <CardTitle>Sign Up</CardTitle>
+            <CardDescription>Fill out the form below to create a new account</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <AppField
+              name="name"
+              validators={{ onChange: SignUpFormSchema.shape.name }}
+              children={(field) => <field.TextField label="Name" size={40} maxLength={26} spellCheck={false} autoComplete="name" placeholder="e.g. John Doe" />}
+            />
+            <AppField
+              name="email"
+              validators={{ onChange: SignUpFormSchema.shape.email }}
+              children={(field) => (
+                <field.TextField label="Email" size={40} maxLength={50} spellCheck={false} autoComplete="email" placeholder="e.g. john.doe@gmail.com" />
+              )}
+            />
+            <AppField
+              name="password"
+              validators={{ onChange: SignUpFormSchema.shape.password }}
+              children={(field) => <field.PasswordField label="Password" size={40} maxLength={129} autoComplete="new-password" placeholder="e.g. P@ssw0rd!" />}
+            />
+            <AppField
+              name="confirmPassword"
+              validators={{ onChange: SignUpFormSchema.shape.confirmPassword }}
+              children={(field) => (
+                <field.PasswordField label="Confirm Password" size={40} maxLength={129} autoComplete="new-password" placeholder="e.g. P@ssw0rd!" />
+              )}
+            />
+          </CardContent>
+          <CardFooter>
+            <FormSubmit submitIcon={<UserIcon className="size-9" />} submitText="Create New Account" isPending={isPending} />
+          </CardFooter>
+        </Card>
       </form>
     </AppForm>
   );

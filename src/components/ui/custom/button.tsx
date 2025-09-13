@@ -19,7 +19,7 @@ const buttonVariants = cva(
         default: "text-primary-foreground border-primary-foreground hover:shadow-primary-foreground",
         destructive: "text-destructive-foreground border-destructive-foreground hover:shadow-destructive-foreground",
         secondary: "text-secondary-foreground border-secondary-foreground hover:shadow-secondary-foreground",
-        ghost: "text-primary-foreground border-primary-foreground/15 hover:shadow-primary-foreground",
+        ghost: "text-foreground border-foreground/15 hover:border-accent-foreground",
       },
       size: {
         default: "px-4 py-2",

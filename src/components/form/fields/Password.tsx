@@ -47,10 +47,17 @@ export default function PasswordField({ label, className, ...props }: PasswordFi
           value={value}
           onChange={(ev) => handleChange(ev.target.value)}
           onBlur={handleBlur}
-          className={cn("pr-10 [&::-ms-reveal]:hidden", className)}
+          className={cn("pr-13 [&::-ms-reveal]:hidden", className)}
           {...props}
         />
-        <Button type="button" variant="ghost" size="icon" onClick={() => setShowPassword(!showPassword)} className="absolute top-1/2 right-3 -translate-y-1/2">
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          title={showPassword ? "Hide Password" : "Show Password"}
+          onClick={() => setShowPassword(!showPassword)}
+          className="absolute top-1/2 right-2 -translate-y-1/2 p-1"
+        >
           {showPassword ? <EyeIcon className="size-6" /> : <EyeSlashIcon className="size-6" />}
         </Button>
       </div>

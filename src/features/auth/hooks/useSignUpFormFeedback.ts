@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import type { SignUpFormActionResult } from "@/features/auth/actions/signUpForm";
 
 // Provide feedback to the user regarding sign up form actions
-export default function useSignUpFormFeedback({ actionStatus }: SignUpFormActionResult, reset: () => void) {
+export default function useSignUpFormFeedback({ actionStatus, errors }: SignUpFormActionResult, reset: () => void) {
   useEffect(() => {
     if (actionStatus === "succeeded") {
       toast.success("Success!", { description: "You signed up successfully." });
@@ -20,5 +20,5 @@ export default function useSignUpFormFeedback({ actionStatus }: SignUpFormAction
     } else if (actionStatus === "failed") {
       toast.error("Server error!", { description: "The sign up form was not submitted successfully; please try again later." });
     }
-  }, [actionStatus, reset]);
+  }, [actionStatus, errors, reset]);
 }

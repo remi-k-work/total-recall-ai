@@ -5,6 +5,6 @@ import { z } from "zod";
 import { EmailSchema } from "./email";
 import { PasswordSchema } from "./password";
 
-export const SignInFormSchema = z.object({ email: EmailSchema, password: PasswordSchema, rememberMe: z.boolean().optional() });
+export const SignInFormSchema = z.object({ email: EmailSchema, password: PasswordSchema, rememberMe: z.coerce.boolean() });
 
 export type SignInFormSchemaType = z.infer<typeof SignInFormSchema>;
