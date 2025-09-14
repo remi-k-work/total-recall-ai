@@ -13,5 +13,3 @@ export const SignUpFormSchema = z
     confirmPassword: z.string().trim().min(1, "Please confirm your password"),
   })
   .refine((data) => data.password === data.confirmPassword, { message: "Passwords do not match", path: ["confirmPassword"] });
-
-export type SignUpFormSchemaType = z.infer<typeof SignUpFormSchema>;

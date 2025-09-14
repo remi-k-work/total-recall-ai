@@ -6,8 +6,8 @@ import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
   cn(
-    "inline-flex shrink-0 items-center justify-center gap-2 border whitespace-nowrap transition-all duration-300 ease-in-out outline-none",
-    "hover:shadow-md active:scale-95 active:shadow-none",
+    "inline-flex shrink-0 items-center justify-center gap-2 border whitespace-nowrap transition-all duration-300 ease-in-out outline-none uppercase tracking-widest",
+    "hover:shadow-2xl active:scale-95 active:shadow-none",
     "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-1",
     "disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none",
     "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
@@ -16,10 +16,10 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "text-primary-foreground border-primary-foreground hover:shadow-primary-foreground",
-        destructive: "text-destructive-foreground border-destructive-foreground hover:shadow-destructive-foreground",
-        secondary: "text-secondary-foreground border-secondary-foreground hover:shadow-secondary-foreground",
-        ghost: "text-foreground border-foreground/15 hover:border-accent-foreground",
+        default: "bg-primary text-primary-foreground",
+        destructive: "bg-destructive text-destructive-foreground",
+        secondary: "bg-secondary text-secondary-foreground",
+        ghost: "text-foreground border-input",
       },
       size: {
         default: "px-4 py-2",

@@ -8,7 +8,7 @@ import { useFormContext } from ".";
 import { Button } from "@/components/ui/custom/button";
 
 // assets
-import { ArrowLeftCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
+import { ArrowLeftCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { Loader2 } from "lucide-react";
 
 // types

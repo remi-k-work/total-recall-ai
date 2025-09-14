@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/custom/button";
 import FieldErrors from "@/components/form/field-errors";
 
 // assets
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 // types
 import type { ComponentPropsWithoutRef } from "react";
@@ -47,7 +47,7 @@ export default function PasswordField({ label, className, ...props }: PasswordFi
           value={value}
           onChange={(ev) => handleChange(ev.target.value)}
           onBlur={handleBlur}
-          className={cn("pr-13 [&::-ms-reveal]:hidden", className)}
+          className={cn("pr-18 [&::-ms-reveal]:hidden", className)}
           {...props}
         />
         <Button
@@ -56,9 +56,9 @@ export default function PasswordField({ label, className, ...props }: PasswordFi
           size="icon"
           title={showPassword ? "Hide Password" : "Show Password"}
           onClick={() => setShowPassword(!showPassword)}
-          className="absolute top-1/2 right-2 -translate-y-1/2 p-1"
+          className="absolute top-1/2 right-3 -translate-y-1/2"
         >
-          {showPassword ? <EyeIcon className="size-6" /> : <EyeSlashIcon className="size-6" />}
+          {showPassword ? <EyeIcon className="size-7" /> : <EyeSlashIcon className="size-7" />}
         </Button>
       </div>
       <FieldErrors />

@@ -2,7 +2,7 @@
 import { cn } from "@/lib/utils";
 
 // assets
-import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 // types
 interface ErrorLineProps {
@@ -15,7 +15,7 @@ export function ErrorLine({ isShowing, message }: ErrorLineProps) {
     <p
       role="alert"
       className={cn(
-        "text-destructive-foreground border-destructive-foreground flex max-w-none items-center gap-2 rounded-b-xl border px-3 py-2",
+        "text-destructive-foreground bg-destructive border-input flex max-w-none items-center gap-2 border px-3 py-2",
         isShowing ? "animate-valid-error-show" : "animate-valid-error-hide",
       )}
     >

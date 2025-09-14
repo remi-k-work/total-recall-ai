@@ -6,7 +6,7 @@ import { useFieldContext } from "@/components/form";
 
 // components
 import { Label } from "@/components/ui/custom/label";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/components/ui/custom/checkbox";
 import FieldErrors from "@/components/form/field-errors";
 
 // types

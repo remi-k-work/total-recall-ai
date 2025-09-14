@@ -1,5 +1,5 @@
 // next
-import { Geist, Geist_Mono } from "next/font/google";
+import { Outfit, Fira_Code } from "next/font/google";
 
-export const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-export const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+export const fontSans = Outfit({ variable: "--font-sans", subsets: ["latin"] });
+export const fontMono = Fira_Code({ variable: "--font-mono", subsets: ["latin"] });

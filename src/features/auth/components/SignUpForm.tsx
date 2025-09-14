@@ -18,7 +18,7 @@ import useSignUpFormFeedback from "@/features/auth/hooks/useSignUpFormFeedback";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
 
 // assets
-import { UserIcon } from "@heroicons/react/24/solid";
+import { UserIcon } from "@heroicons/react/24/outline";
 
 // constants
 import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/auth/constants/signUpForm";

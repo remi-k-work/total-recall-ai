@@ -18,7 +18,7 @@ import useSignInFormFeedback from "@/features/auth/hooks/useSignInFormFeedback";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
 
 // assets
-import { UserIcon } from "@heroicons/react/24/solid";
+import { UserIcon } from "@heroicons/react/24/outline";
 
 // constants
 import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/auth/constants/signInForm";
@@ -56,7 +56,7 @@ export default function SignInForm() {
                 <field.PasswordField label="Password" size={40} maxLength={129} autoComplete="current-password" placeholder="e.g. P@ssw0rd!" />
               )}
             />
-            <AppField name="rememberMe" children={(field) => <field.CheckBoxField label="Remember Me" />} />
+            <AppField name="rememberMe" children={(field) => <field.CheckBoxField label="Remember Me (recommended on trusted devices)" />} />
           </CardContent>
           <CardFooter>
             <FormSubmit submitIcon={<UserIcon className="size-9" />} submitText="Sign In" isPending={isPending} />
