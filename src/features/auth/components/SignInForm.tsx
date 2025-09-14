@@ -5,6 +5,9 @@
 // react
 import { useActionState } from "react";
 
+// next
+import Link from "next/link";
+
 // server actions and mutations
 import signIn from "@/features/auth/actions/signInForm";
 
@@ -53,13 +56,26 @@ export default function SignInForm() {
               name="password"
               validators={{ onChange: SignInFormSchema.shape.password }}
               children={(field) => (
-                <field.PasswordField label="Password" size={40} maxLength={129} autoComplete="current-password" placeholder="e.g. P@ssw0rd!" />
+                <field.PasswordField
+                  label="Password"
+                  forgotPassHref="/forgot-password"
+                  size={40}
+                  maxLength={129}
+                  autoComplete="current-password"
+                  placeholder="e.g. P@ssw0rd!"
+                />
               )}
             />
             <AppField name="rememberMe" children={(field) => <field.CheckBoxField label="Remember Me (recommended on trusted devices)" />} />
           </CardContent>
           <CardFooter>
             <FormSubmit submitIcon={<UserIcon className="size-9" />} submitText="Sign In" isPending={isPending} />
+            <p className="mt-6 text-center">
+              New to Total Recall AI?&nbsp;
+              <Link href="/sign-up" className="link">
+                Create an Account
+              </Link>
+            </p>
           </CardFooter>
         </Card>
       </form>

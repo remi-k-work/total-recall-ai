@@ -143,6 +143,10 @@
   --shadow-2xl: var(--shadow-2xl);
 }
 
+@utility link {
+  @apply decoration-primary hover:decoration-accent font-sans text-sm font-semibold tracking-widest uppercase underline decoration-2 underline-offset-4;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -158,7 +162,7 @@
 
   a,
   button {
-    @apply focus-visible:outline-accent-foreground transition duration-1000 ease-in-out focus-visible:outline focus-visible:outline-offset-1;
+    @apply focus-visible:outline-primary transition duration-1000 ease-in-out focus-visible:z-1 focus-visible:outline-2 focus-visible:outline-offset-5;
   }
 
   h1,

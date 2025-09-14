@@ -1,6 +1,9 @@
 // react
 import { useId, useState } from "react";
 
+// next
+import Link from "next/link";
+
 // other libraries
 import { cn } from "@/lib/utils";
 import { useFieldContext } from "@/components/form";
@@ -16,12 +19,14 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 // types
 import type { ComponentPropsWithoutRef } from "react";
+import type { UrlObject } from "url";
 
 interface PasswordFieldProps extends ComponentPropsWithoutRef<typeof Input> {
   label: string;
+  forgotPassHref?: UrlObject | __next_route_internal_types__.RouteImpl<string>;
 }
 
-export default function PasswordField({ label, className, ...props }: PasswordFieldProps) {
+export default function PasswordField({ label, forgotPassHref, className, ...props }: PasswordFieldProps) {
   // Get the field context
   const {
     name,
@@ -38,7 +43,16 @@ export default function PasswordField({ label, className, ...props }: PasswordFi
 
   return (
     <>
-      <Label htmlFor={id}>{label}</Label>
+      {forgotPassHref ? (
+        <div className="flex items-center justify-between gap-4">
+          <Label htmlFor={id}>{label}</Label>
+          <Link href={forgotPassHref} className="link">
+            Forgot your password?
+          </Link>
+        </div>
+      ) : (
+        <Label htmlFor={id}>{label}</Label>
+      )}
       <div className="relative">
         <Input
           type={showPassword ? "text" : "password"}

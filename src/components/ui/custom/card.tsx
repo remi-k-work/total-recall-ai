@@ -42,7 +42,7 @@ function CardContent({ className, ...props }: React.ComponentProps<"section">) {
 }
 
 function CardFooter({ className, ...props }: React.ComponentProps<"footer">) {
-  return <footer data-slot="card-footer" className={cn("flex flex-wrap items-center gap-6 px-6 *:flex-1", className)} {...props} />;
+  return <footer data-slot="card-footer" className={className} {...props} />;
 }
 
 export { Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent };

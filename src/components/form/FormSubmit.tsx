@@ -28,7 +28,7 @@ export default function FormSubmit({ submitIcon, submitText, isPending }: FormSu
   const { back } = useRouter();
 
   return (
-    <>
+    <section className="flex flex-wrap items-center gap-6 px-6 *:flex-1">
       <Subscribe selector={(formState) => [formState.canSubmit, formState.isSubmitting, formState.isPristine]}>
         {([canSubmit, isSubmitting, isPristine]) => (
           // <Button type="submit" disabled={isPending || !canSubmit || isPristine}>
@@ -49,12 +49,12 @@ export default function FormSubmit({ submitIcon, submitText, isPending }: FormSu
       </Subscribe>
       <Button type="button" variant="destructive" onClick={() => reset()}>
         <XCircleIcon className="size-9" />
-        Reset
+        Clear Form
       </Button>
       <Button type="button" variant="secondary" onClick={() => back()}>
         <ArrowLeftCircleIcon className="size-9" />
-        Cancel
+        Cancel and Go Back
       </Button>
-    </>
+    </section>
   );
 }
