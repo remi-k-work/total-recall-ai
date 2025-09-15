@@ -12,7 +12,7 @@ import forgotPass from "@/features/auth/actions/forgotPassForm";
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { useAppForm } from "@/components/form";
 import { ForgotPassFormSchema } from "@/features/auth/schemas/forgotPassForm";
-import useForgotPassFormFeedback from "@/features/auth/hooks/useForgotPassFormFeedback";
+import useForgotPassFormFeedback from "@/features/auth/hooks/feedbacks/useForgotPassForm";
 
 // components
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
@@ -30,7 +30,7 @@ export default function ForgotPassForm() {
     transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
   });
 
-  // Provide feedback to the user regarding forgot pass form actions
+  // Provide feedback to the user regarding this form actions
   useForgotPassFormFeedback(formState, reset);
 
   return (

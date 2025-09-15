@@ -15,7 +15,7 @@ import signIn from "@/features/auth/actions/signInForm";
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { useAppForm } from "@/components/form";
 import { SignInFormSchema } from "@/features/auth/schemas/signInForm";
-import useSignInFormFeedback from "@/features/auth/hooks/useSignInFormFeedback";
+import useSignInFormFeedback from "@/features/auth/hooks/feedbacks/useSignInForm";
 
 // components
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
@@ -33,7 +33,7 @@ export default function SignInForm() {
     transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
   });
 
-  // Provide feedback to the user regarding sign in form actions
+  // Provide feedback to the user regarding this form actions
   useSignInFormFeedback(formState, reset);
 
   return (

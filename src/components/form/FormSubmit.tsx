@@ -31,8 +31,7 @@ export default function FormSubmit({ submitIcon, submitText, isPending }: FormSu
     <section className="flex flex-wrap items-center gap-6 px-6 *:flex-1">
       <Subscribe selector={(formState) => [formState.canSubmit, formState.isSubmitting, formState.isPristine]}>
         {([canSubmit, isSubmitting, isPristine]) => (
-          // <Button type="submit" disabled={isPending || !canSubmit || isPristine}>
-          <Button type="submit">
+          <Button type="submit" disabled={isPending || !canSubmit || isPristine}>
             {isPending || isSubmitting ? (
               <>
                 <Loader2 className="size-9 animate-spin" />

@@ -12,7 +12,7 @@ import resetPass from "@/features/auth/actions/resetPassForm";
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { useAppForm } from "@/components/form";
 import { ResetPassFormSchema } from "@/features/auth/schemas/resetPassForm";
-import useResetPassFormFeedback from "@/features/auth/hooks/useResetPassFormFeedback";
+import useResetPassFormFeedback from "@/features/auth/hooks/feedbacks/useResetPassForm";
 
 // components
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
@@ -30,7 +30,7 @@ export default function ResetPassForm() {
     transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
   });
 
-  // Provide feedback to the user regarding reset pass form actions
+  // Provide feedback to the user regarding this form actions
   useResetPassFormFeedback(formState, reset);
 
   return (

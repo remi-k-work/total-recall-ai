@@ -12,7 +12,7 @@ import signUp from "@/features/auth/actions/signUpForm";
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { useAppForm } from "@/components/form";
 import { SignUpFormSchema } from "@/features/auth/schemas/signUpForm";
-import useSignUpFormFeedback from "@/features/auth/hooks/useSignUpFormFeedback";
+import useSignUpFormFeedback from "@/features/auth/hooks/feedbacks/useSignUpForm";
 
 // components
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
@@ -30,7 +30,7 @@ export default function SignUpForm() {
     transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
   });
 
-  // Provide feedback to the user regarding sign up form actions
+  // Provide feedback to the user regarding this form actions
   useSignUpFormFeedback(formState, reset);
 
   return (
@@ -39,7 +39,7 @@ export default function SignUpForm() {
         <Card>
           <CardHeader>
             <CardTitle>Sign Up</CardTitle>
-            <CardDescription>Fill out the form below to create a new account</CardDescription>
+            <CardDescription>To create a new account</CardDescription>
           </CardHeader>
           <CardContent>
             <AppField

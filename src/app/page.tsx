@@ -4,7 +4,7 @@ import ResetPassForm from "@/features/auth/components/ResetPassForm";
 import SignInForm from "@/features/auth/components/SignInForm";
 import SignUpForm from "@/features/auth/components/SignUpForm";
 
-export default function Home() {
+export default function Page() {
   return (
     <>
       <SignUpForm />
