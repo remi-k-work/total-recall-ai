@@ -17,7 +17,8 @@ import { APIError } from "better-auth/api";
 import type { ServerFormState } from "@tanstack/react-form/nextjs";
 
 export interface SignUpFormActionResult extends ServerFormState<any, any> {
-  actionStatus: "idle" | "succeeded" | "failed" | "invalid";
+  actionStatus: "idle" | "succeeded" | "failed" | "invalid" | "authError";
+  actionError?: string;
 }
 
 export default async function signUp(_prevState: unknown, formData: FormData): Promise<SignUpFormActionResult> {
@@ -30,10 +31,7 @@ export default async function signUp(_prevState: unknown, formData: FormData): P
     if (error instanceof ServerValidateError) return { ...error.formState, actionStatus: "invalid" };
 
     // The better-auth api request failed with an error
-    if (error instanceof APIError) {
-      console.error(error.message, error.status);
-      return { ...initialFormState, actionStatus: "failed" };
-    }
+    if (error instanceof APIError) return { ...initialFormState, actionStatus: "authError", actionError: error.message };
 
     // Some other error occurred
     return { ...initialFormState, actionStatus: "failed" };

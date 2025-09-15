@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import type { SignInFormActionResult } from "@/features/auth/actions/signInForm";
 
 // Provide feedback to the user regarding sign in form actions
-export default function useSignInFormFeedback({ actionStatus, errors }: SignInFormActionResult, reset: () => void) {
+export default function useSignInFormFeedback({ actionStatus, actionError, errors }: SignInFormActionResult, reset: () => void) {
   useEffect(() => {
     if (actionStatus === "succeeded") {
       toast.success("Success!", { description: "You signed in successfully." });
@@ -19,6 +19,8 @@ export default function useSignInFormFeedback({ actionStatus, errors }: SignInFo
       toast.warning("Missing fields!", { description: "Please correct the sign in form fields and try again." });
     } else if (actionStatus === "failed") {
       toast.error("Server error!", { description: "The sign in form was not submitted successfully; please try again later." });
+    } else if (actionStatus === "authError") {
+      toast.error("Authorization error!", { description: actionError });
     }
-  }, [actionStatus, errors, reset]);
+  }, [actionStatus, actionError, errors, reset]);
 }
