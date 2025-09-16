@@ -31,7 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" translate="no" suppressHydrationWarning>
       <body
         className={cn(
-          `${fontSans.variable} ${fontMono.variable} font-mono antialiased`,
+          `${fontSans.variable} ${fontMono.variable} grid font-mono antialiased`,
           "grid-cols-[1fr] grid-rows-[auto_1fr_auto] [grid-template-areas:'header''main''footer']",
         )}
       >

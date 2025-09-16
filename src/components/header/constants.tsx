@@ -1,5 +1,5 @@
 // assets
-import { AcademicCapIcon, HomeIcon } from "@heroicons/react/24/solid";
+import { HomeIcon, UserIcon } from "@heroicons/react/24/outline";
 
 // constants
 export const NAV_ITEMS = [
@@ -11,6 +11,6 @@ export const NAV_ITEMS = [
   {
     href: "/dashboard",
     title: "Dashboard",
-    icon: <AcademicCapIcon />,
+    icon: <UserIcon />,
   },
 ] as const;

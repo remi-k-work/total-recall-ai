@@ -1,3 +1,6 @@
+// react
+import { Suspense } from "react";
+
 // components
 import SignInForm from "@/features/auth/components/SignInForm";
 
@@ -11,8 +14,8 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <>
+    <Suspense>
       <SignInForm />
-    </>
+    </Suspense>
   );
 }

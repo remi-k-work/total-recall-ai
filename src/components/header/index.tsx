@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 // components
 import Logo from "./Logo";
 import NavItem from "./NavItem";
-import ThemeChanger from "@/components/ThemeChanger";
+import ThemeChanger from "@/components/theme-changer";
 
 // constants
 import { NAV_ITEMS } from "./constants";
