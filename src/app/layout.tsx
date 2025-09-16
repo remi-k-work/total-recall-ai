@@ -1,6 +1,12 @@
 import "./globals.css";
 
+// other libraries
+import { cn } from "@/lib/utils";
+import { Analytics } from "@vercel/analytics/next";
+
 // components
+import { ThemeProvider } from "next-themes";
+import Header from "@/components/header";
 import { Toaster } from "@/components/ui/sonner";
 
 // assets
@@ -22,10 +28,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" translate="no">
-      <body className={`${fontSans.variable} ${fontMono.variable} dark font-mono antialiased`}>
-        <main>{children}</main>
-        <Toaster richColors />
+    <html lang="en" translate="no" suppressHydrationWarning>
+      <body
+        className={cn(
+          `${fontSans.variable} ${fontMono.variable} font-mono antialiased`,
+          "grid-cols-[1fr] grid-rows-[auto_1fr_auto] [grid-template-areas:'header''main''footer']",
+        )}
+      >
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <Header />
+          <main className="[grid-area:main]">{children}</main>
+          <Toaster richColors />
+          <Analytics debug={false} />
+        </ThemeProvider>
       </body>
     </html>
   );

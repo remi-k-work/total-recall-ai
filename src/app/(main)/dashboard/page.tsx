@@ -1,18 +1,15 @@
-// components
-import ResetPassForm from "@/features/auth/components/ResetPassForm";
-
 // types
 import type { Metadata } from "next";
 
 // constants
 export const metadata: Metadata = {
-  title: "Total Recall AI ► Reset Password",
+  title: "Total Recall AI ► Dashboard",
 };
 
 export default function Page() {
   return (
     <>
-      <ResetPassForm />
+      <p>Welcome to the Dashboard!</p>
     </>
   );
 }
