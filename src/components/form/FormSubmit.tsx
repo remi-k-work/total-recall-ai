@@ -32,17 +32,8 @@ export default function FormSubmit({ submitIcon, submitText, isPending }: FormSu
       <Subscribe selector={(formState) => [formState.canSubmit, formState.isSubmitting, formState.isPristine]}>
         {([canSubmit, isSubmitting, isPristine]) => (
           <Button type="submit" disabled={isPending || !canSubmit || isPristine}>
-            {isPending || isSubmitting ? (
-              <>
-                <Loader2 className="size-9 animate-spin" />
-                {submitText}
-              </>
-            ) : (
-              <>
-                {submitIcon}
-                {submitText}
-              </>
-            )}
+            {isPending || isSubmitting ? <Loader2 className="size-9 animate-spin" /> : <>{submitIcon}</>}
+            {submitText}
           </Button>
         )}
       </Subscribe>

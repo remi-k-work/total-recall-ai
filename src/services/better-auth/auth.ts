@@ -9,6 +9,10 @@ import { db } from "@/drizzle/db";
 // all table definitions (their schemas)
 import { UserTable, SessionTable, AccountTable, VerificationTable } from "@/drizzle/schema";
 
+// types
+export type Session = typeof auth.$Infer.Session;
+export type User = typeof auth.$Infer.Session.user;
+
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg",

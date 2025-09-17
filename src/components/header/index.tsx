@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 // components
 import Logo from "./Logo";
 import NavItem from "./NavItem";
+import UserPopover from "@/components/user-popover";
 import ThemeChanger from "@/components/theme-changer";
 
 // constants
@@ -16,13 +17,14 @@ export default function Header() {
       <nav
         className={cn(
           "grid place-content-end place-items-center gap-4",
-          "grid-flow-row grid-cols-3",
+          "grid-flow-row grid-cols-4",
           "*:bg-background *:text-foreground *:hover:text-accent-foreground *:border *:p-3",
         )}
       >
         {NAV_ITEMS.map((navItem, index) => (
           <NavItem key={index} {...navItem} />
         ))}
+        <UserPopover />
         <ThemeChanger />
       </nav>
     </header>

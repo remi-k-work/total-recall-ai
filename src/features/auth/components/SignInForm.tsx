@@ -21,7 +21,7 @@ import useSignInFormFeedback from "@/features/auth/hooks/feedbacks/useSignInForm
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
 
 // assets
-import { UserIcon } from "@heroicons/react/24/outline";
+import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/outline";
 
 // constants
 import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/auth/constants/signInForm";
@@ -69,7 +69,7 @@ export default function SignInForm() {
             <AppField name="rememberMe" children={(field) => <field.CheckBoxField label="Remember Me (recommended on trusted devices)" />} />
           </CardContent>
           <CardFooter>
-            <FormSubmit submitIcon={<UserIcon className="size-9" />} submitText="Sign In" isPending={isPending} />
+            <FormSubmit submitIcon={<ArrowRightEndOnRectangleIcon className="size-9" />} submitText="Sign In" isPending={isPending} />
             <p className="mt-6 text-center">
               New to Total Recall AI?&nbsp;
               <Link href="/sign-up" className="link">
