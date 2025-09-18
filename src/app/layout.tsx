@@ -1,12 +1,11 @@
 import "./globals.css";
 
-// other libraries
+// services, features, and other libraries
 import { cn } from "@/lib/utils";
 import { Analytics } from "@vercel/analytics/next";
 
 // components
 import { ThemeProvider } from "next-themes";
-import Header from "@/components/header";
 import { Toaster } from "@/components/ui/sonner";
 
 // assets
@@ -26,7 +25,7 @@ export const metadata: Metadata = {
   other: { google: "notranslate" },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function Layout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" translate="no" suppressHydrationWarning>
       <body
@@ -36,8 +35,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <Header />
-          <main className="[grid-area:main]">{children}</main>
+          {children}
           <Toaster richColors />
           <Analytics debug={false} />
         </ThemeProvider>

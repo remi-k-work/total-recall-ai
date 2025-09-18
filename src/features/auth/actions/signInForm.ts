@@ -6,10 +6,8 @@
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 
-// services
+// services, features, and other libraries
 import { auth } from "@/services/better-auth/auth";
-
-// other libraries
 import { initialFormState, ServerValidateError } from "@tanstack/react-form/nextjs";
 import { SERVER_VALIDATE } from "@/features/auth/constants/signInForm";
 import { APIError } from "better-auth/api";
@@ -38,7 +36,7 @@ export default async function signIn(_prevState: unknown, formData: FormData): P
   }
 
   // Revalidate, so the fresh data will be fetched from the server next time this path is visited
-  revalidatePath("/sign-in");
+  revalidatePath("/", "layout");
 
   // The form has successfully validated and submitted!
   return { ...initialFormState, actionStatus: "succeeded" };

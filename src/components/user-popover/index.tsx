@@ -1,9 +1,14 @@
+"use client";
+
+// react
+import { useState } from "react";
+
 // next
 import Link from "next/link";
 import Image from "next/image";
 
-// other libraries
-import { getUserSessionData } from "@/features/auth/lib/helpers";
+// services, features, and other libraries
+import { authClient } from "@/services/better-auth/auth-client";
 
 // components
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -13,9 +18,12 @@ import SignOut from "./SignOut";
 // assets
 import { UserIcon } from "@heroicons/react/24/outline";
 
-export default async function UserPopover() {
-  // Access the user session data from the server side
-  const userSessionData = await getUserSessionData();
+export default function UserPopover() {
+  // Access the user session data from the client side
+  const { data: userSessionData } = authClient.useSession();
+
+  // Whether or not the user popover is open
+  const [isOpen, setIsOpen] = useState(false);
 
   // If there is no user session data, do not render anything
   if (!userSessionData) return null;
@@ -26,7 +34,7 @@ export default async function UserPopover() {
   } = userSessionData;
 
   return (
-    <Popover>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button type="button" variant="ghost" size="icon">
           {image ? <Image src={image} alt={name} width={44} height={44} className="rounded-full object-cover" /> : <UserIcon className="size-11" />}
@@ -36,12 +44,12 @@ export default async function UserPopover() {
         <h3>{name}</h3>
         <p>{email}</p>
         <Button variant="ghost" asChild>
-          <Link href="/profile">
+          <Link href="/profile" onClick={() => setIsOpen(false)}>
             <UserIcon className="size-9" />
             Profile
           </Link>
         </Button>
-        <SignOut />
+        <SignOut onSignedOut={() => setIsOpen(false)} />
       </PopoverContent>
     </Popover>
   );

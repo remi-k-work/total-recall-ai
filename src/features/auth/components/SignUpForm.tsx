@@ -8,7 +8,7 @@ import { useActionState } from "react";
 // server actions and mutations
 import signUp from "@/features/auth/actions/signUpForm";
 
-// other libraries
+// services, features, and other libraries
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { useAppForm } from "@/components/form";
 import { SignUpFormSchema } from "@/features/auth/schemas/signUpForm";

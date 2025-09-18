@@ -8,7 +8,7 @@ import { useActionState } from "react";
 // server actions and mutations
 import resetPass from "@/features/auth/actions/resetPassForm";
 
-// other libraries
+// services, features, and other libraries
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { useAppForm } from "@/components/form";
 import { ResetPassFormSchema } from "@/features/auth/schemas/resetPassForm";

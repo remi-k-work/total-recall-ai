@@ -5,7 +5,7 @@
 // next
 import { revalidatePath } from "next/cache";
 
-// other libraries
+// services, features, and other libraries
 import { initialFormState, ServerValidateError } from "@tanstack/react-form/nextjs";
 import { SERVER_VALIDATE } from "@/features/auth/constants/forgotPassForm";
 

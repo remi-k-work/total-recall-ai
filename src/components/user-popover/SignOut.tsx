@@ -6,7 +6,7 @@ import { useState } from "react";
 // next
 import { useRouter } from "next/navigation";
 
-// services
+// services, features, and other libraries
 import { authClient } from "@/services/better-auth/auth-client";
 
 // components
@@ -17,7 +17,12 @@ import { toast } from "sonner";
 import { ArrowRightStartOnRectangleIcon } from "@heroicons/react/24/outline";
 import { Loader2 } from "lucide-react";
 
-export default function SignOut() {
+// types
+interface SignOutProps {
+  onSignedOut: () => void;
+}
+
+export default function SignOut({ onSignedOut }: SignOutProps) {
   // Whether or not the sign out request is pending
   const [isPending, setIsPending] = useState(false);
 
@@ -39,6 +44,9 @@ export default function SignOut() {
               setIsPending(false);
               toast.success("Success!", { description: "You signed out successfully." });
               router.push("/");
+
+              // Notify the parent component
+              onSignedOut();
             },
             onError: ({ error: { message } }) => {
               setIsPending(false);

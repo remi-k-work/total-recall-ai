@@ -4,7 +4,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-// other libraries
+// services, features, and other libraries
 import { cn } from "@/lib/utils";
 
 // types

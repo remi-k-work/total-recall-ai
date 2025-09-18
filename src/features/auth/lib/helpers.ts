@@ -5,7 +5,7 @@ import { cache } from "react";
 import { headers } from "next/headers";
 import { unauthorized } from "next/navigation";
 
-// services
+// services, features, and other libraries
 import { auth } from "@/services/better-auth/auth";
 
 // Access the user session data from the server side
@@ -15,3 +15,6 @@ export const getUserSessionData = cache(async () => await auth.api.getSession({ 
 export async function makeSureUserIsAuthenticated() {
   if (!(await getUserSessionData())) unauthorized();
 }
+
+// Only check if the current user is authenticated (the check runs on the server side)
+export const isUserAuthenticated = async () => !!(await getUserSessionData());

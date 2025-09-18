@@ -1,4 +1,4 @@
-// other libraries
+// services, features, and other libraries
 import { makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
 // types

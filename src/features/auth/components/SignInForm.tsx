@@ -11,7 +11,7 @@ import Link from "next/link";
 // server actions and mutations
 import signIn from "@/features/auth/actions/signInForm";
 
-// other libraries
+// services, features, and other libraries
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { useAppForm } from "@/components/form";
 import { SignInFormSchema } from "@/features/auth/schemas/signInForm";

@@ -1,4 +1,4 @@
-// other libraries
+// services, features, and other libraries
 import { useTheme } from "next-themes";
 
 // components
