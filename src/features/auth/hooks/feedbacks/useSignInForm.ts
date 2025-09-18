@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 
 // next
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 // components
 import { toast } from "sonner";
@@ -11,13 +11,17 @@ import { toast } from "sonner";
 import type { SignInFormActionResult } from "@/features/auth/actions/signInForm";
 
 // Provide feedback to the user regarding sign in form actions
-export default function useSignInFormFeedback({ actionStatus, actionError, errors }: SignInFormActionResult, reset: () => void) {
+export default function useSignInFormFeedback(
+  { actionStatus, actionError, errors }: SignInFormActionResult,
+  reset: () => void,
+  redirect?: __next_route_internal_types__.RouteImpl<string>,
+) {
   // To be able to redirect the user after a successful sign in
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect") as __next_route_internal_types__.RouteImpl<string>;
 
   useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+
     if (actionStatus === "succeeded") {
       toast.success("Success!", { description: "You signed in successfully." });
 
@@ -25,7 +29,7 @@ export default function useSignInFormFeedback({ actionStatus, actionError, error
       reset();
 
       // Redirect the user after successful sign in
-      router.push(redirect ?? "/dashboard");
+      timeoutId = setTimeout(() => router.push(redirect ?? "/dashboard"), 3000);
     } else if (actionStatus === "invalid") {
       toast.warning("Missing fields!", { description: "Please correct the sign in form fields and try again." });
     } else if (actionStatus === "failed") {
@@ -33,5 +37,9 @@ export default function useSignInFormFeedback({ actionStatus, actionError, error
     } else if (actionStatus === "authError") {
       toast.error("Authorization error!", { description: actionError });
     }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, [actionStatus, actionError, errors, reset, router, redirect]);
 }

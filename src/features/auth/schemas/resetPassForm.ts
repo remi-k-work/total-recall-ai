@@ -4,4 +4,6 @@ import { z } from "zod";
 // schemas
 import { PasswordSchema } from "./password";
 
-export const ResetPassFormSchema = z.object({ newPassword: PasswordSchema });
+export const ResetPassFormSchema = z
+  .object({ newPassword: PasswordSchema, confirmPassword: z.string().trim().min(1, "Please confirm your password") })
+  .refine((data) => data.newPassword === data.confirmPassword, { message: "Passwords do not match", path: ["confirmPassword"] });

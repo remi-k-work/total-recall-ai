@@ -23,10 +23,15 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 // assets
 import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/outline";
 
+// types
+interface SignInFormProps {
+  redirect?: __next_route_internal_types__.RouteImpl<string>;
+}
+
 // constants
 import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/auth/constants/signInForm";
 
-export default function SignInForm() {
+export default function SignInForm({ redirect }: SignInFormProps) {
   const [formState, formAction, isPending] = useActionState(signIn, INITIAL_FORM_STATE);
   const { AppField, AppForm, FormSubmit, handleSubmit, reset } = useAppForm({
     ...FORM_OPTIONS,
@@ -34,7 +39,7 @@ export default function SignInForm() {
   });
 
   // Provide feedback to the user regarding this form actions
-  useSignInFormFeedback(formState, reset);
+  useSignInFormFeedback(formState, reset, redirect);
 
   return (
     <AppForm>

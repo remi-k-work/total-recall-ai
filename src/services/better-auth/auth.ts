@@ -8,6 +8,7 @@ import { db } from "@/drizzle/db";
 
 // all table definitions (their schemas)
 import { UserTable, SessionTable, AccountTable, VerificationTable } from "@/drizzle/schema";
+import { sendResetPassword } from "@/emails/sender";
 
 // types
 export type Session = typeof auth.$Infer.Session;
@@ -23,5 +24,8 @@ export const auth = betterAuth({
 
   emailAndPassword: {
     enabled: true,
+    sendResetPassword: async ({ user: { email }, url }) => {
+      await sendResetPassword(email, url);
+    },
   },
 });

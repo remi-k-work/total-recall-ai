@@ -1,6 +1,9 @@
 // react
 import { useEffect } from "react";
 
+// next
+import { useRouter } from "next/navigation";
+
 // components
 import { toast } from "sonner";
 
@@ -9,12 +12,20 @@ import type { SignUpFormActionResult } from "@/features/auth/actions/signUpForm"
 
 // Provide feedback to the user regarding sign up form actions
 export default function useSignUpFormFeedback({ actionStatus, actionError, errors }: SignUpFormActionResult, reset: () => void) {
+  // To be able to redirect the user after a successful sign up
+  const router = useRouter();
+
   useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+
     if (actionStatus === "succeeded") {
       toast.success("Success!", { description: "You signed up successfully." });
 
       // Reset the entire form after successful submission
       reset();
+
+      // Redirect the user after successful sign up
+      timeoutId = setTimeout(() => router.push("/dashboard"), 3000);
     } else if (actionStatus === "invalid") {
       toast.warning("Missing fields!", { description: "Please correct the sign up form fields and try again." });
     } else if (actionStatus === "failed") {
@@ -22,5 +33,9 @@ export default function useSignUpFormFeedback({ actionStatus, actionError, error
     } else if (actionStatus === "authError") {
       toast.error("Authorization error!", { description: actionError });
     }
-  }, [actionStatus, actionError, errors, reset]);
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [actionStatus, actionError, errors, reset, router]);
 }

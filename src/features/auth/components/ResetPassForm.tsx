@@ -20,11 +20,16 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 // assets
 import { KeyIcon } from "@heroicons/react/24/outline";
 
+// types
+interface ResetPassFormProps {
+  token: string;
+}
+
 // constants
 import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/auth/constants/resetPassForm";
 
-export default function ResetPassForm() {
-  const [formState, formAction, isPending] = useActionState(resetPass, INITIAL_FORM_STATE);
+export default function ResetPassForm({ token }: ResetPassFormProps) {
+  const [formState, formAction, isPending] = useActionState(resetPass.bind(null, token), INITIAL_FORM_STATE);
   const { AppField, AppForm, FormSubmit, handleSubmit, reset } = useAppForm({
     ...FORM_OPTIONS,
     transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
@@ -47,6 +52,13 @@ export default function ResetPassForm() {
               validators={{ onChange: ResetPassFormSchema.shape.newPassword }}
               children={(field) => (
                 <field.PasswordField label="New Password" size={40} maxLength={129} autoComplete="new-password" placeholder="e.g. P@ssw0rd!" />
+              )}
+            />
+            <AppField
+              name="confirmPassword"
+              validators={{ onChange: ResetPassFormSchema.shape.confirmPassword }}
+              children={(field) => (
+                <field.PasswordField label="Confirm Password" size={40} maxLength={129} autoComplete="new-password" placeholder="e.g. P@ssw0rd!" />
               )}
             />
           </CardContent>

@@ -7,7 +7,7 @@ import { ResetPassFormSchema } from "@/features/auth/schemas/resetPassForm";
 import type { ResetPassFormActionResult } from "@/features/auth/actions/resetPassForm";
 
 // constants
-const DEFAULT_VALUES: z.input<typeof ResetPassFormSchema> = { newPassword: "" };
+const DEFAULT_VALUES: z.input<typeof ResetPassFormSchema> = { newPassword: "", confirmPassword: "" };
 
 export const FORM_OPTIONS = formOptions({ defaultValues: DEFAULT_VALUES });
 export const INITIAL_FORM_STATE: ResetPassFormActionResult = { ...initialFormState, actionStatus: "idle" };
