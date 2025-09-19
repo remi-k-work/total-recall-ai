@@ -3,6 +3,7 @@
 "use server";
 
 // next
+import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 
 // services, features, and other libraries
@@ -22,7 +23,7 @@ export interface EmailChangeFormActionResult extends ServerFormState<any, any> {
 export default async function emailChange(_prevState: unknown, formData: FormData): Promise<EmailChangeFormActionResult> {
   try {
     const { newEmail } = await SERVER_VALIDATE(formData);
-    await auth.api.changeEmail({ body: { newEmail, callbackURL: "/dashboard" } });
+    await auth.api.changeEmail({ body: { newEmail, callbackURL: "/dashboard" }, headers: await headers() });
   } catch (error) {
     // Validation has failed
     if (error instanceof ServerValidateError) return { ...error.formState, actionStatus: "invalid" };

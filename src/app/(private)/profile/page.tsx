@@ -1,6 +1,9 @@
 // services, features, and other libraries
 import { makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
+// components
+import EmailChangeForm from "@/features/profile/components/EmailChangeForm";
+
 // types
 import type { Metadata } from "next";
 
@@ -16,7 +19,8 @@ export default async function Page() {
   return (
     <>
       <h1>Profile</h1>
-      <p>Below you can see and manage your profile.</p>
+      <p>Below you can see and manage your profile</p>
+      <EmailChangeForm />
     </>
   );
 }
