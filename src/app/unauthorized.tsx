@@ -8,7 +8,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/custom/button";
 
 // assets
-import { UserIcon } from "@heroicons/react/24/outline";
+import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/outline";
 
 export default function Page() {
   const pathname = usePathname();
@@ -20,7 +20,7 @@ export default function Page() {
       <p>Please sign in to continue.</p>
       <Button variant="ghost" asChild>
         <Link href={`/sign-in?redirect=${pathname}`}>
-          <UserIcon className="size-9" />
+          <ArrowRightEndOnRectangleIcon className="size-9" />
           Sign In
         </Link>
       </Button>

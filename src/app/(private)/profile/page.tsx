@@ -15,7 +15,8 @@ export default async function Page() {
 
   return (
     <>
-      <p>Welcome to the Profile!</p>
+      <h1>Profile</h1>
+      <p>Below you can see and manage your profile.</p>
     </>
   );
 }

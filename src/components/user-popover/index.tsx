@@ -36,7 +36,7 @@ export default function UserPopover() {
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button type="button" variant="ghost" size="icon">
+        <Button type="button" variant="ghost" size="icon" title={name}>
           {image ? <Image src={image} alt={name} width={44} height={44} className="rounded-full object-cover" /> : <UserIcon className="size-11" />}
         </Button>
       </PopoverTrigger>
