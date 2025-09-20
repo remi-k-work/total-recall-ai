@@ -18,9 +18,10 @@ interface FormSubmitProps {
   submitIcon: ReactNode;
   submitText: string;
   isPending: boolean;
+  showCancel?: boolean;
 }
 
-export default function FormSubmit({ submitIcon, submitText, isPending }: FormSubmitProps) {
+export default function FormSubmit({ submitIcon, submitText, isPending, showCancel = true }: FormSubmitProps) {
   // Get the form context
   const { Subscribe, reset } = useFormContext();
 
@@ -41,10 +42,12 @@ export default function FormSubmit({ submitIcon, submitText, isPending }: FormSu
         <XCircleIcon className="size-9" />
         Clear Form
       </Button>
-      <Button type="button" variant="secondary" onClick={() => back()}>
-        <ArrowLeftCircleIcon className="size-9" />
-        Cancel and Go Back
-      </Button>
+      {showCancel && (
+        <Button type="button" variant="secondary" onClick={() => back()}>
+          <ArrowLeftCircleIcon className="size-9" />
+          Cancel and Go Back
+        </Button>
+      )}
     </section>
   );
 }

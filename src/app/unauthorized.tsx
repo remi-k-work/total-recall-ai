@@ -14,7 +14,7 @@ export default function Page() {
   const pathname = usePathname();
 
   return (
-    <article className="grid h-full place-items-center px-4">
+    <article className="grid h-full place-items-center">
       <h1>401 - Unauthorized</h1>
       <p>You are not authorized to view this page.</p>
       <p>Please sign in to continue.</p>

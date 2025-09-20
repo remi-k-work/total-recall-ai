@@ -1,5 +1,5 @@
 // services, features, and other libraries
-import { makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
+import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
 // components
 import EmailChangeForm from "@/features/profile/components/EmailChangeForm";
@@ -16,11 +16,16 @@ export default async function Page() {
   // Make sure the current user is authenticated (the check runs on the server side)
   await makeSureUserIsAuthenticated();
 
+  // Access the user session data from the server side
+  const {
+    user: { email },
+  } = (await getUserSessionData())!;
+
   return (
     <>
       <h1>Profile</h1>
       <p>Below you can see and manage your profile</p>
-      <EmailChangeForm />
+      <EmailChangeForm currentEmail={email} />
     </>
   );
 }

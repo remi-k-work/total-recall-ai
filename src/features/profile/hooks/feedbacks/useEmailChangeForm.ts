@@ -1,9 +1,6 @@
 // react
 import { useEffect } from "react";
 
-// services, features, and other libraries
-import { authClient } from "@/services/better-auth/auth-client";
-
 // components
 import { toast } from "sonner";
 
@@ -11,16 +8,13 @@ import { toast } from "sonner";
 import type { EmailChangeFormActionResult } from "@/features/profile/actions/emailChangeForm";
 
 // Provide feedback to the user regarding email change form actions
-export default function useEmailChangeFormFeedback({ actionStatus, actionError, errors }: EmailChangeFormActionResult, reset: () => void) {
-  // Access the user session data from the client side
-  const { data: userSessionData } = authClient.useSession();
-
+export default function useEmailChangeFormFeedback({ actionStatus, actionError, needsApproval, errors }: EmailChangeFormActionResult, reset: () => void) {
   useEffect(() => {
     if (actionStatus === "succeeded") {
       toast.success("Success!", {
         // There are two successful outcomes here, but only users with verified emails need to additionally approve their email change
-        description: userSessionData?.user.emailVerified
-          ? "The email change has been initiated and needs to be approved. Please check your current email for the approval link."
+        description: needsApproval
+          ? "The email change has been initiated and needs to be approved. Please check your current email address for the approval link."
           : "Your email has been changed successfully. A verification email has been sent to your new email address.",
       });
 
@@ -33,5 +27,5 @@ export default function useEmailChangeFormFeedback({ actionStatus, actionError, 
     } else if (actionStatus === "authError") {
       toast.error("Authorization error!", { description: actionError });
     }
-  }, [actionStatus, actionError, errors, reset, userSessionData]);
+  }, [actionStatus, actionError, needsApproval, errors, reset]);
 }

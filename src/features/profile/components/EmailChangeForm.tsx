@@ -20,13 +20,19 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 // assets
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 
+// types
+interface EmailChangeFormProps {
+  currentEmail: string;
+}
+
 // constants
 import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/profile/constants/emailChangeForm";
 
-export default function EmailChangeForm() {
+export default function EmailChangeForm({ currentEmail }: EmailChangeFormProps) {
   const [formState, formAction, isPending] = useActionState(emailChange, INITIAL_FORM_STATE);
   const { AppField, AppForm, FormSubmit, handleSubmit, reset } = useAppForm({
     ...FORM_OPTIONS,
+    defaultValues: { ...FORM_OPTIONS.defaultValues, newEmail: currentEmail },
     transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
   });
 
@@ -51,7 +57,7 @@ export default function EmailChangeForm() {
             />
           </CardContent>
           <CardFooter>
-            <FormSubmit submitIcon={<PaperAirplaneIcon className="size-9" />} submitText="Request Email Change" isPending={isPending} />
+            <FormSubmit submitIcon={<PaperAirplaneIcon className="size-9" />} submitText="Request Email Change" isPending={isPending} showCancel={false} />
           </CardFooter>
         </Card>
       </form>

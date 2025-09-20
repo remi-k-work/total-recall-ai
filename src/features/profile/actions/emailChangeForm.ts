@@ -7,6 +7,7 @@ import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 
 // services, features, and other libraries
+import { getUserSessionData } from "@/features/auth/lib/helpers";
 import { auth } from "@/services/better-auth/auth";
 import { initialFormState, ServerValidateError } from "@tanstack/react-form/nextjs";
 import { SERVER_VALIDATE } from "@/features/profile/constants/emailChangeForm";
@@ -18,12 +19,23 @@ import type { ServerFormState } from "@tanstack/react-form/nextjs";
 export interface EmailChangeFormActionResult extends ServerFormState<any, any> {
   actionStatus: "idle" | "succeeded" | "failed" | "invalid" | "authError";
   actionError?: string;
+  needsApproval?: boolean;
 }
 
 export default async function emailChange(_prevState: unknown, formData: FormData): Promise<EmailChangeFormActionResult> {
+  // Whether or not the user needs to approve their email change
+  let needsApproval = false;
+
   try {
     const { newEmail } = await SERVER_VALIDATE(formData);
-    await auth.api.changeEmail({ body: { newEmail, callbackURL: "/dashboard" }, headers: await headers() });
+
+    // Access the user session data from the server side
+    const userSessionData = await getUserSessionData();
+
+    // Only users with verified emails need to additionally approve their email change
+    if (userSessionData?.user.emailVerified) needsApproval = true;
+
+    await auth.api.changeEmail({ body: { newEmail, callbackURL: needsApproval ? "/email-approved" : "/email-verified" }, headers: await headers() });
   } catch (error) {
     // Validation has failed
     if (error instanceof ServerValidateError) return { ...error.formState, actionStatus: "invalid" };
@@ -39,5 +51,5 @@ export default async function emailChange(_prevState: unknown, formData: FormDat
   revalidatePath("/", "layout");
 
   // The form has successfully validated and submitted!
-  return { ...initialFormState, actionStatus: "succeeded" };
+  return { ...initialFormState, actionStatus: "succeeded", needsApproval };
 }
