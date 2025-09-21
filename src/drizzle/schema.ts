@@ -1,2 +1,3 @@
 export * from "./schema/auth";
-export * from "./schema/test";
+export * from "./schema/authRelations";
+export * from "./schema/avatar";
