@@ -1,6 +1,9 @@
 // react
 import { useEffect } from "react";
 
+// services, features, and other libraries
+import { authClient } from "@/services/better-auth/auth-client";
+
 // components
 import { toast } from "sonner";
 
@@ -9,12 +12,19 @@ import type { ProfileDetailsFormActionResult } from "@/features/profile/actions/
 
 // Provide feedback to the user regarding this form actions
 export default function useProfileDetailsFormFeedback({ actionStatus, actionError, errors }: ProfileDetailsFormActionResult, reset: () => void) {
+  // Access the user session data from the client side
+  const { refetch } = authClient.useSession();
+
   useEffect(() => {
     if (actionStatus === "succeeded") {
+      // Display a success message
       toast.success("SUCCESS!", { description: "Your profile details have been updated." });
 
       // Reset the entire form after successful submission
       reset();
+
+      // Refetch the user session data with the modified changes
+      refetch();
     } else if (actionStatus === "invalid") {
       toast.warning("MISSING FIELDS!", { description: "Please correct the [PROFILE DETAILS] form fields and try again." });
     } else if (actionStatus === "failed") {
@@ -22,5 +32,5 @@ export default function useProfileDetailsFormFeedback({ actionStatus, actionErro
     } else if (actionStatus === "authError") {
       toast.error("AUTHORIZATION ERROR!", { description: actionError });
     }
-  }, [actionStatus, actionError, errors, reset]);
+  }, [actionStatus, actionError, errors, reset, refetch]);
 }

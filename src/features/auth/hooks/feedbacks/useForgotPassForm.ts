@@ -11,6 +11,7 @@ import type { ForgotPassFormActionResult } from "@/features/auth/actions/forgotP
 export default function useForgotPassFormFeedback({ actionStatus, actionError, errors }: ForgotPassFormActionResult, reset: () => void) {
   useEffect(() => {
     if (actionStatus === "succeeded") {
+      // Display a success message
       toast.success("SUCCESS!", { description: "We have sent the password reset link." });
 
       // Reset the entire form after successful submission

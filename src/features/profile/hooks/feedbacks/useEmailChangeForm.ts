@@ -1,6 +1,9 @@
 // react
 import { useEffect } from "react";
 
+// services, features, and other libraries
+import { authClient } from "@/services/better-auth/auth-client";
+
 // components
 import { toast } from "sonner";
 
@@ -9,8 +12,12 @@ import type { EmailChangeFormActionResult } from "@/features/profile/actions/ema
 
 // Provide feedback to the user regarding this form actions
 export default function useEmailChangeFormFeedback({ actionStatus, actionError, needsApproval, errors }: EmailChangeFormActionResult, reset: () => void) {
+  // Access the user session data from the client side
+  const { refetch } = authClient.useSession();
+
   useEffect(() => {
     if (actionStatus === "succeeded") {
+      // Display a success message
       toast.success("SUCCESS!", {
         // There are two successful outcomes here, but only users with verified emails need to additionally approve their email change
         description: needsApproval
@@ -20,6 +27,9 @@ export default function useEmailChangeFormFeedback({ actionStatus, actionError, 
 
       // Reset the entire form after successful submission
       reset();
+
+      // Refetch the user session data with the modified changes
+      refetch();
     } else if (actionStatus === "invalid") {
       toast.warning("MISSING FIELDS!", { description: "Please correct the [EMAIL CHANGE] form fields and try again." });
     } else if (actionStatus === "failed") {
@@ -27,5 +37,5 @@ export default function useEmailChangeFormFeedback({ actionStatus, actionError, 
     } else if (actionStatus === "authError") {
       toast.error("AUTHORIZATION ERROR!", { description: actionError });
     }
-  }, [actionStatus, actionError, needsApproval, errors, reset]);
+  }, [actionStatus, actionError, needsApproval, errors, reset, refetch]);
 }

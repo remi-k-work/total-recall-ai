@@ -19,6 +19,7 @@ export default function useResetPassFormFeedback({ actionStatus, actionError, er
     let timeoutId: ReturnType<typeof setTimeout>;
 
     if (actionStatus === "succeeded") {
+      // Display a success message
       toast.success("SUCCESS!", { description: "The password has been reset. Please sign in with your new password." });
 
       // Reset the entire form after successful submission

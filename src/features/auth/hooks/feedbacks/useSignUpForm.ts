@@ -19,6 +19,7 @@ export default function useSignUpFormFeedback({ actionStatus, actionError, error
     let timeoutId: ReturnType<typeof setTimeout>;
 
     if (actionStatus === "succeeded") {
+      // Display a success message
       toast.success("SUCCESS!", { description: "You signed up successfully." });
 
       // Reset the entire form after successful submission

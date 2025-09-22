@@ -42,7 +42,7 @@ export default function SignOut({ onSignedOut }: SignOutProps) {
             },
             onSuccess: () => {
               setIsPending(false);
-              toast.success("Success!", { description: "You signed out successfully." });
+              toast.success("SUCCESS!", { description: "You signed out successfully." });
               router.push("/");
 
               // Notify the parent component
@@ -50,7 +50,7 @@ export default function SignOut({ onSignedOut }: SignOutProps) {
             },
             onError: ({ error: { message } }) => {
               setIsPending(false);
-              toast.error("Authorization error!", { description: message });
+              toast.error("AUTHORIZATION ERROR!", { description: message });
             },
           },
         });

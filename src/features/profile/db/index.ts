@@ -22,3 +22,8 @@ export async function upsertAvatar(userId: string, data: Omit<typeof AvatarTable
 export async function updateAvatar(userId: string, data: Partial<Omit<typeof AvatarTable.$inferInsert, "userId">>) {
   await db.update(AvatarTable).set(data).where(eq(AvatarTable.userId, userId));
 }
+
+// Delete an avatar for a user
+export async function deleteAvatar(userId: string) {
+  await db.delete(AvatarTable).where(eq(AvatarTable.userId, userId));
+}

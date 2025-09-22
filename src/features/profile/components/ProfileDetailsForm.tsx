@@ -3,13 +3,14 @@
 "use client";
 
 // react
-import { useActionState } from "react";
+import { startTransition, useActionState } from "react";
 
 // next
 import { useRouter } from "next/navigation";
 
 // server actions and mutations
 import profileDetails from "@/features/profile/actions/profileDetailsForm";
+import deleteAvatar from "@/features/profile/actions/deleteAvatar";
 
 // services, features, and other libraries
 import { mergeForm, useTransform } from "@tanstack/react-form";
@@ -19,13 +20,15 @@ import useProfileDetailsFormFeedback from "@/features/profile/hooks/feedbacks/us
 import { authClient } from "@/services/better-auth/auth-client";
 
 // components
+import { Button } from "@/components/ui/custom/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
 import UserAvatar from "@/components/UserAvatar";
 import { UploadButton } from "@/services/uploadthing/components";
 import { toast } from "sonner";
 
 // assets
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { Loader2 } from "lucide-react";
 
 // types
 interface ProfileDetailsFormProps {
@@ -44,10 +47,12 @@ export default function ProfileDetailsForm({ currentName, currentImage }: Profil
     transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
   });
 
+  const [deleteAvatarState, deleteAvatarAction, deleteAvatarIsPending] = useActionState(deleteAvatar, { actionStatus: "idle" });
+
   // Provide feedback to the user regarding this form actions
   useProfileDetailsFormFeedback(formState, reset);
 
-  // To be able to refresh the user avatar
+  // To be able to refresh the page
   const router = useRouter();
 
   return (
@@ -59,25 +64,35 @@ export default function ProfileDetailsForm({ currentName, currentImage }: Profil
             <CardDescription>Change your avatar and name</CardDescription>
           </CardHeader>
           <CardContent>
-            <UserAvatar name={currentName} avatar={currentImage} />
-            <UploadButton
-              endpoint="avatarUploader"
-              onClientUploadComplete={async (res) => {
-                res.forEach(async ({ ufsUrl, serverData: { message } }) => {
-                  // Update a user's image that should point to their avatar's url
-                  await authClient.updateUser({ image: ufsUrl });
+            <div className="mb-4 flex items-center justify-between gap-4">
+              <UserAvatar name={currentName} avatar={currentImage} />
+              <div className="grid gap-4">
+                <UploadButton
+                  endpoint="avatarUploader"
+                  onClientUploadComplete={async (res) => {
+                    res.forEach(async ({ ufsUrl, serverData: { message } }) => {
+                      // Update a user's image that should point to their avatar's url
+                      await authClient.updateUser({ image: ufsUrl });
 
-                  // Refresh the user avatar and show a success message
-                  router.refresh();
-                  toast.success("SUCCESS!", { description: message });
-                });
-              }}
-              onUploadError={(error: Error) => {
-                // Show the upload error message in case something goes wrong
-                toast.error("UPLOAD ERROR!", { description: error.message });
-              }}
-            />
+                      // Display a success message
+                      toast.success("SUCCESS!", { description: message });
 
+                      // Refresh the page
+                      router.refresh();
+                    });
+                  }}
+                  onUploadError={(error: Error) => {
+                    // Show the upload error message in case something goes wrong
+                    toast.error("UPLOAD ERROR!", { description: error.message });
+                  }}
+                  className="ut-button:w-full ut-button:rounded-none ut-button:uppercase ut-button:font-semibold ut-button:tracking-widest ut-button:bg-primary ut-button:text-primary-foreground"
+                />
+                <Button type="button" variant="destructive" disabled={deleteAvatarIsPending} onClick={() => startTransition(deleteAvatarAction)}>
+                  {deleteAvatarIsPending ? <Loader2 className="size-9 animate-spin" /> : <TrashIcon className="size-9" />}
+                  Delete Avatar
+                </Button>
+              </div>
+            </div>
             <AppField
               name="name"
               validators={{ onChange: ProfileDetailsFormSchema.shape.name }}
@@ -85,7 +100,7 @@ export default function ProfileDetailsForm({ currentName, currentImage }: Profil
             />
           </CardContent>
           <CardFooter>
-            <FormSubmit submitIcon={<PencilSquareIcon className="size-9" />} submitText="Change My Name" isPending={isPending} showCancel={false} />
+            <FormSubmit submitIcon={<PencilSquareIcon className="size-9" />} submitText="Change Name" isPending={isPending} showCancel={false} />
           </CardFooter>
         </Card>
       </form>
