@@ -3,6 +3,7 @@
 "use server";
 
 // next
+import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 
 // services, features, and other libraries
@@ -22,7 +23,7 @@ export interface ProfileDetailsFormActionResult extends ServerFormState<any, any
 export default async function profileDetails(_prevState: unknown, formData: FormData): Promise<ProfileDetailsFormActionResult> {
   try {
     const { name } = await SERVER_VALIDATE(formData);
-    await auth.api.updateUser({ body: { name } });
+    await auth.api.updateUser({ body: { name }, headers: await headers() });
   } catch (error) {
     // Validation has failed
     if (error instanceof ServerValidateError) return { ...error.formState, actionStatus: "invalid" };

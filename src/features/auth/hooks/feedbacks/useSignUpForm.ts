@@ -10,7 +10,7 @@ import { toast } from "sonner";
 // types
 import type { SignUpFormActionResult } from "@/features/auth/actions/signUpForm";
 
-// Provide feedback to the user regarding sign up form actions
+// Provide feedback to the user regarding this form actions
 export default function useSignUpFormFeedback({ actionStatus, actionError, errors }: SignUpFormActionResult, reset: () => void) {
   // To be able to redirect the user after a successful sign up
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function useSignUpFormFeedback({ actionStatus, actionError, error
     let timeoutId: ReturnType<typeof setTimeout>;
 
     if (actionStatus === "succeeded") {
-      toast.success("Success!", { description: "You signed up successfully." });
+      toast.success("SUCCESS!", { description: "You signed up successfully." });
 
       // Reset the entire form after successful submission
       reset();
@@ -27,11 +27,11 @@ export default function useSignUpFormFeedback({ actionStatus, actionError, error
       // Redirect the user after successful sign up
       timeoutId = setTimeout(() => router.push("/dashboard"), 3000);
     } else if (actionStatus === "invalid") {
-      toast.warning("Missing fields!", { description: "Please correct the sign up form fields and try again." });
+      toast.warning("MISSING FIELDS!", { description: "Please correct the [SIGN UP] form fields and try again." });
     } else if (actionStatus === "failed") {
-      toast.error("Server error!", { description: "The sign up form was not submitted successfully; please try again later." });
+      toast.error("SERVER ERROR!", { description: "The [SIGN UP] form was not submitted successfully; please try again later." });
     } else if (actionStatus === "authError") {
-      toast.error("Authorization error!", { description: actionError });
+      toast.error("AUTHORIZATION ERROR!", { description: actionError });
     }
 
     return () => {

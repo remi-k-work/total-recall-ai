@@ -1,0 +1,26 @@
+// react
+import { useEffect } from "react";
+
+// components
+import { toast } from "sonner";
+
+// types
+import type { ProfileDetailsFormActionResult } from "@/features/profile/actions/profileDetailsForm";
+
+// Provide feedback to the user regarding this form actions
+export default function useProfileDetailsFormFeedback({ actionStatus, actionError, errors }: ProfileDetailsFormActionResult, reset: () => void) {
+  useEffect(() => {
+    if (actionStatus === "succeeded") {
+      toast.success("SUCCESS!", { description: "Your profile details have been updated." });
+
+      // Reset the entire form after successful submission
+      reset();
+    } else if (actionStatus === "invalid") {
+      toast.warning("MISSING FIELDS!", { description: "Please correct the [PROFILE DETAILS] form fields and try again." });
+    } else if (actionStatus === "failed") {
+      toast.error("SERVER ERROR!", { description: "The [PROFILE DETAILS] form was not submitted successfully; please try again later." });
+    } else if (actionStatus === "authError") {
+      toast.error("AUTHORIZATION ERROR!", { description: actionError });
+    }
+  }, [actionStatus, actionError, errors, reset]);
+}

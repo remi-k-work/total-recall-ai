@@ -1,15 +1,15 @@
 // components
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/custom/avatar";
 
 // types
 import type { ComponentPropsWithoutRef } from "react";
 
 interface UserAvatarProps extends ComponentPropsWithoutRef<typeof Avatar> {
   name: string;
-  image?: string | Blob;
+  avatar?: string | Blob;
 }
 
-export default function UserAvatar({ name, image, ...props }: UserAvatarProps) {
+export default function UserAvatar({ name, avatar, ...props }: UserAvatarProps) {
   const initials = name
     .split(" ")
     .filter(Boolean)
@@ -18,7 +18,7 @@ export default function UserAvatar({ name, image, ...props }: UserAvatarProps) {
 
   return (
     <Avatar {...props}>
-      <AvatarImage src={image} alt={name} />
+      <AvatarImage src={avatar} alt={name} />
       <AvatarFallback>{initials}</AvatarFallback>
     </Avatar>
   );
