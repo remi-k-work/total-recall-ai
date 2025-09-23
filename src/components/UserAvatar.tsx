@@ -1,3 +1,6 @@
+// services, features, and other libraries
+import { cn } from "@/lib/utils";
+
 // components
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/custom/avatar";
 
@@ -7,9 +10,10 @@ import type { ComponentPropsWithoutRef } from "react";
 interface UserAvatarProps extends ComponentPropsWithoutRef<typeof Avatar> {
   name: string;
   avatar?: string | Blob;
+  isSmall?: boolean;
 }
 
-export default function UserAvatar({ name, avatar, ...props }: UserAvatarProps) {
+export default function UserAvatar({ name, avatar, isSmall = false, className, ...props }: UserAvatarProps) {
   const initials = name
     .split(" ")
     .filter(Boolean)
@@ -17,9 +21,9 @@ export default function UserAvatar({ name, avatar, ...props }: UserAvatarProps) 
     .join("");
 
   return (
-    <Avatar {...props}>
+    <Avatar className={cn(isSmall && "size-11", className)} {...props}>
       <AvatarImage src={avatar} alt={name} />
-      <AvatarFallback>{initials}</AvatarFallback>
+      <AvatarFallback className={cn(isSmall && "border-none text-3xl")}>{initials}</AvatarFallback>
     </Avatar>
   );
 }

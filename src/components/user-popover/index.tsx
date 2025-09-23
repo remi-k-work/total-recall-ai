@@ -5,7 +5,6 @@ import { useState } from "react";
 
 // next
 import Link from "next/link";
-import Image from "next/image";
 
 // services, features, and other libraries
 import { authClient } from "@/services/better-auth/auth-client";
@@ -13,6 +12,7 @@ import { authClient } from "@/services/better-auth/auth-client";
 // components
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/custom/button";
+import UserAvatar from "@/components/UserAvatar";
 import SignOut from "./SignOut";
 
 // assets
@@ -37,19 +37,22 @@ export default function UserPopover() {
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button type="button" variant="ghost" size="icon" title={name}>
-          {image ? <Image src={image} alt={name} width={44} height={44} className="rounded-full object-cover" /> : <UserIcon className="size-11" />}
+          <UserAvatar name={name} avatar={image ?? undefined} isSmall />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="grid gap-4">
-        <h3>{name}</h3>
-        <p>{email}</p>
-        <Button variant="ghost" asChild>
-          <Link href="/profile" onClick={() => setIsOpen(false)}>
-            <UserIcon className="size-9" />
-            Profile
-          </Link>
-        </Button>
-        <SignOut onSignedOut={() => setIsOpen(false)} />
+      <PopoverContent className="grid">
+        <UserAvatar name={name} avatar={image ?? undefined} className="mx-auto" />
+        <h3 className="mt-4 truncate text-center">{name}</h3>
+        <p className="text-muted-foreground truncate text-center">{email}</p>
+        <div className="mt-4 grid gap-4">
+          <Button variant="ghost" asChild>
+            <Link href="/profile" onClick={() => setIsOpen(false)}>
+              <UserIcon className="size-9" />
+              Profile
+            </Link>
+          </Button>
+          <SignOut onSignedOut={() => setIsOpen(false)} />
+        </div>
       </PopoverContent>
     </Popover>
   );

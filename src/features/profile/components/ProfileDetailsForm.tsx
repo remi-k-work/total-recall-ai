@@ -3,32 +3,25 @@
 "use client";
 
 // react
-import { startTransition, useActionState } from "react";
-
-// next
-import { useRouter } from "next/navigation";
+import { useActionState } from "react";
 
 // server actions and mutations
 import profileDetails from "@/features/profile/actions/profileDetailsForm";
-import deleteAvatar from "@/features/profile/actions/deleteAvatar";
 
 // services, features, and other libraries
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { useAppForm } from "@/components/form";
 import { ProfileDetailsFormSchema } from "@/features/profile/schemas/profileDetailsForm";
 import useProfileDetailsFormFeedback from "@/features/profile/hooks/feedbacks/useProfileDetailsForm";
-import { authClient } from "@/services/better-auth/auth-client";
 
 // components
-import { Button } from "@/components/ui/custom/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
 import UserAvatar from "@/components/UserAvatar";
-import { UploadButton } from "@/services/uploadthing/components";
-import { toast } from "sonner";
+import UploadAvatar from "./UploadAvatar";
+import DeleteAvatar from "./DeleteAvatar";
 
 // assets
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { Loader2 } from "lucide-react";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 
 // types
 interface ProfileDetailsFormProps {
@@ -40,20 +33,16 @@ interface ProfileDetailsFormProps {
 import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/profile/constants/profileDetailsForm";
 
 export default function ProfileDetailsForm({ currentName, currentImage }: ProfileDetailsFormProps) {
+  // The main server action that processes the form
   const [formState, formAction, isPending] = useActionState(profileDetails, INITIAL_FORM_STATE);
-  const { AppField, AppForm, FormSubmit, handleSubmit, reset } = useAppForm({
+  const { AppField, AppForm, FormSubmit, handleSubmit, reset, store } = useAppForm({
     ...FORM_OPTIONS,
     defaultValues: { ...FORM_OPTIONS.defaultValues, name: currentName },
     transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
   });
 
-  const [deleteAvatarState, deleteAvatarAction, deleteAvatarIsPending] = useActionState(deleteAvatar, { actionStatus: "idle" });
-
   // Provide feedback to the user regarding this form actions
-  useProfileDetailsFormFeedback(formState, reset);
-
-  // To be able to refresh the page
-  const router = useRouter();
+  const { feedbackMessage, clearFeedbackMessage } = useProfileDetailsFormFeedback(formState, reset, store);
 
   return (
     <AppForm>
@@ -64,33 +53,11 @@ export default function ProfileDetailsForm({ currentName, currentImage }: Profil
             <CardDescription>Change your avatar and name</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="mb-4 flex items-center justify-between gap-4">
+            <div className="mb-4 flex flex-wrap items-center justify-around gap-4 sm:justify-between">
               <UserAvatar name={currentName} avatar={currentImage} />
               <div className="grid gap-4">
-                <UploadButton
-                  endpoint="avatarUploader"
-                  onClientUploadComplete={async (res) => {
-                    res.forEach(async ({ ufsUrl, serverData: { message } }) => {
-                      // Update a user's image that should point to their avatar's url
-                      await authClient.updateUser({ image: ufsUrl });
-
-                      // Display a success message
-                      toast.success("SUCCESS!", { description: message });
-
-                      // Refresh the page
-                      router.refresh();
-                    });
-                  }}
-                  onUploadError={(error: Error) => {
-                    // Show the upload error message in case something goes wrong
-                    toast.error("UPLOAD ERROR!", { description: error.message });
-                  }}
-                  className="ut-button:w-full ut-button:rounded-none ut-button:uppercase ut-button:font-semibold ut-button:tracking-widest ut-button:bg-primary ut-button:text-primary-foreground"
-                />
-                <Button type="button" variant="destructive" disabled={deleteAvatarIsPending} onClick={() => startTransition(deleteAvatarAction)}>
-                  {deleteAvatarIsPending ? <Loader2 className="size-9 animate-spin" /> : <TrashIcon className="size-9" />}
-                  Delete Avatar
-                </Button>
+                <UploadAvatar />
+                <DeleteAvatar currentImage={currentImage} />
               </div>
             </div>
             <AppField
@@ -100,7 +67,18 @@ export default function ProfileDetailsForm({ currentName, currentImage }: Profil
             />
           </CardContent>
           <CardFooter>
-            <FormSubmit submitIcon={<PencilSquareIcon className="size-9" />} submitText="Change Name" isPending={isPending} showCancel={false} />
+            {feedbackMessage && (
+              <p role="status" aria-live="polite" className="text-muted-foreground">
+                {feedbackMessage}
+              </p>
+            )}
+            <FormSubmit
+              submitIcon={<PencilSquareIcon className="size-9" />}
+              submitText="Change Name"
+              isPending={isPending}
+              showCancel={false}
+              onClearedForm={clearFeedbackMessage}
+            />
           </CardFooter>
         </Card>
       </form>

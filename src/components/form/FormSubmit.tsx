@@ -19,9 +19,10 @@ interface FormSubmitProps {
   submitText: string;
   isPending: boolean;
   showCancel?: boolean;
+  onClearedForm?: () => void;
 }
 
-export default function FormSubmit({ submitIcon, submitText, isPending, showCancel = true }: FormSubmitProps) {
+export default function FormSubmit({ submitIcon, submitText, isPending, showCancel = true, onClearedForm }: FormSubmitProps) {
   // Get the form context
   const { Subscribe, reset } = useFormContext();
 
@@ -38,7 +39,14 @@ export default function FormSubmit({ submitIcon, submitText, isPending, showCanc
           </Button>
         )}
       </Subscribe>
-      <Button type="button" variant="destructive" onClick={() => reset()}>
+      <Button
+        type="button"
+        variant="destructive"
+        onClick={() => {
+          reset();
+          onClearedForm?.();
+        }}
+      >
         <XCircleIcon className="size-9" />
         Clear Form
       </Button>

@@ -7,6 +7,7 @@ import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 
 // services, features, and other libraries
+import { makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 import { auth } from "@/services/better-auth/auth";
 import { initialFormState, ServerValidateError } from "@tanstack/react-form/nextjs";
 import { SERVER_VALIDATE } from "@/features/profile/constants/profileDetailsForm";
@@ -20,9 +21,16 @@ export interface ProfileDetailsFormActionResult extends ServerFormState<any, any
   actionError?: string;
 }
 
+// The main server action that processes the form
 export default async function profileDetails(_prevState: unknown, formData: FormData): Promise<ProfileDetailsFormActionResult> {
   try {
+    // Make sure the current user is authenticated (the check runs on the server side)
+    await makeSureUserIsAuthenticated();
+
+    // Validate the form on the server side and extract needed data
     const { name } = await SERVER_VALIDATE(formData);
+
+    // Update the user information through the better-auth api by setting their name
     await auth.api.updateUser({ body: { name }, headers: await headers() });
   } catch (error) {
     // Validation has failed

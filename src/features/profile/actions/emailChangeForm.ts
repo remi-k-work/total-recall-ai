@@ -7,7 +7,7 @@ import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 
 // services, features, and other libraries
-import { getUserSessionData } from "@/features/auth/lib/helpers";
+import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 import { auth } from "@/services/better-auth/auth";
 import { initialFormState, ServerValidateError } from "@tanstack/react-form/nextjs";
 import { SERVER_VALIDATE } from "@/features/profile/constants/emailChangeForm";
@@ -22,19 +22,27 @@ export interface EmailChangeFormActionResult extends ServerFormState<any, any> {
   needsApproval?: boolean;
 }
 
+// The main server action that processes the form
 export default async function emailChange(_prevState: unknown, formData: FormData): Promise<EmailChangeFormActionResult> {
   // Whether or not the user needs to approve their email change
   let needsApproval = false;
 
   try {
-    const { newEmail } = await SERVER_VALIDATE(formData);
+    // Make sure the current user is authenticated (the check runs on the server side)
+    await makeSureUserIsAuthenticated();
 
     // Access the user session data from the server side
-    const userSessionData = await getUserSessionData();
+    const {
+      user: { emailVerified },
+    } = (await getUserSessionData())!;
 
     // Only users with verified emails need to additionally approve their email change
-    if (userSessionData?.user.emailVerified) needsApproval = true;
+    if (emailVerified) needsApproval = true;
 
+    // Validate the form on the server side and extract needed data
+    const { newEmail } = await SERVER_VALIDATE(formData);
+
+    // Request the email change through the better-auth api for the user
     await auth.api.changeEmail({ body: { newEmail, callbackURL: needsApproval ? "/email-approved" : "/email-verified" }, headers: await headers() });
   } catch (error) {
     // Validation has failed

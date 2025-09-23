@@ -29,6 +29,7 @@ interface EmailChangeFormProps {
 import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/profile/constants/emailChangeForm";
 
 export default function EmailChangeForm({ currentEmail }: EmailChangeFormProps) {
+  // The main server action that processes the form
   const [formState, formAction, isPending] = useActionState(emailChange, INITIAL_FORM_STATE);
   const { AppField, AppForm, FormSubmit, handleSubmit, reset } = useAppForm({
     ...FORM_OPTIONS,

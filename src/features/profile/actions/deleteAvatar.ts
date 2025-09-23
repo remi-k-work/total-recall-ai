@@ -19,16 +19,18 @@ export interface DeleteAvatarActionResult {
   actionError?: string;
 }
 
+// Deletes a user avatar, sets the user's image to null, and removes the corresponding avatar file from uploadthing
 export default async function deleteAvatar(): Promise<DeleteAvatarActionResult> {
-  // Make sure the current user is authenticated (the check runs on the server side)
-  await makeSureUserIsAuthenticated();
-
-  // Access the user session data from the server side
-  const {
-    user: { id: userId },
-  } = (await getUserSessionData())!;
-
   try {
+    // Make sure the current user is authenticated (the check runs on the server side)
+    await makeSureUserIsAuthenticated();
+
+    // Access the user session data from the server side
+    const {
+      user: { id: userId },
+    } = (await getUserSessionData())!;
+
+    // Update the user information through the better-auth api by setting their image to null
     await auth.api.updateUser({ body: { image: null as unknown as undefined }, headers: await headers() });
 
     // Obtain the avatar file key for a user, which is unique to their avatar file in uploadthing
