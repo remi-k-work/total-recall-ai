@@ -5,7 +5,7 @@ import { useStore } from "@tanstack/react-form";
 import useAnimatedErrors from "@/hooks/useAnimatedErrors";
 
 // components
-import { ErrorLine } from "./ErrorLine";
+import ErrorLine from "./ErrorLine";
 
 // types
 import type { StandardSchemaV1Issue } from "@tanstack/react-form";

@@ -16,6 +16,7 @@ import useEmailChangeFormFeedback from "@/features/profile/hooks/feedbacks/useEm
 
 // components
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
+import InfoLine from "@/components/form/InfoLine";
 
 // assets
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
@@ -31,14 +32,14 @@ import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/profile/constants/e
 export default function EmailChangeForm({ currentEmail }: EmailChangeFormProps) {
   // The main server action that processes the form
   const [formState, formAction, isPending] = useActionState(emailChange, INITIAL_FORM_STATE);
-  const { AppField, AppForm, FormSubmit, handleSubmit, reset } = useAppForm({
+  const { AppField, AppForm, FormSubmit, handleSubmit, reset, store } = useAppForm({
     ...FORM_OPTIONS,
     defaultValues: { ...FORM_OPTIONS.defaultValues, newEmail: currentEmail },
     transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
   });
 
   // Provide feedback to the user regarding this form actions
-  useEmailChangeFormFeedback(formState, reset);
+  const { feedbackMessage, hideFeedbackMessage } = useEmailChangeFormFeedback(formState, reset, store);
 
   return (
     <AppForm>
@@ -58,7 +59,14 @@ export default function EmailChangeForm({ currentEmail }: EmailChangeFormProps) 
             />
           </CardContent>
           <CardFooter>
-            <FormSubmit submitIcon={<PaperAirplaneIcon className="size-9" />} submitText="Request Email Change" isPending={isPending} showCancel={false} />
+            {feedbackMessage && <InfoLine message={feedbackMessage} />}
+            <FormSubmit
+              submitIcon={<PaperAirplaneIcon className="size-9" />}
+              submitText="Request Email Change"
+              isPending={isPending}
+              showCancel={false}
+              onClearedForm={hideFeedbackMessage}
+            />
           </CardFooter>
         </Card>
       </form>

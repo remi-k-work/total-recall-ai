@@ -10,7 +10,7 @@ interface ErrorLineProps {
   message: string;
 }
 
-export function ErrorLine({ isShowing, message }: ErrorLineProps) {
+export default function ErrorLine({ isShowing, message }: ErrorLineProps) {
   return (
     <p
       role="alert"

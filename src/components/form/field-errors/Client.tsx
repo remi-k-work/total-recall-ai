@@ -3,7 +3,7 @@ import { useFieldContext } from "@/components/form";
 import useAnimatedErrors from "@/hooks/useAnimatedErrors";
 
 // components
-import { ErrorLine } from "./ErrorLine";
+import ErrorLine from "./ErrorLine";
 
 // types
 import type { ZodError } from "zod";

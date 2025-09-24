@@ -3,29 +3,34 @@ import { useEffect } from "react";
 
 // services, features, and other libraries
 import { authClient } from "@/services/better-auth/auth-client";
-
-// components
-import { toast } from "sonner";
+import useFormToastFeedback from "@/hooks/feedbacks/useFormToast";
 
 // types
 import type { DeleteAvatarActionResult } from "@/features/profile/actions/deleteAvatar";
+
+// constants
+const FORM_NAME = "[PROFILE DETAILS]";
+const SUCCEEDED_MESSAGE = "Your avatar has been deleted.";
+const FAILED_MESSAGE = "Your avatar could not be deleted; please try again later.";
 
 // Provide feedback to the user regarding this server action
 export default function useDeleteAvatarFeedback({ actionStatus, actionError }: DeleteAvatarActionResult) {
   // Access the user session data from the client side
   const { refetch } = authClient.useSession();
 
+  // Generic hook for displaying toast notifications for form actions
+  const showToast = useFormToastFeedback(FORM_NAME, { succeeded: SUCCEEDED_MESSAGE, failed: FAILED_MESSAGE, authError: actionError });
+
   useEffect(() => {
     if (actionStatus === "succeeded") {
       // Display a success message
-      toast.success("SUCCESS!", { description: "Your avatar has been deleted." });
+      showToast("succeeded");
 
       // Refetch the user session data with the modified changes
       refetch();
-    } else if (actionStatus === "failed") {
-      toast.error("SERVER ERROR!", { description: "Your avatar could not be deleted; please try again later." });
-    } else if (actionStatus === "authError") {
-      toast.error("AUTHORIZATION ERROR!", { description: actionError });
+    } else {
+      // All other statuses ("invalid", "failed", "authError") handled centrally
+      showToast(actionStatus);
     }
-  }, [actionStatus, actionError, refetch]);
+  }, [actionStatus, showToast, refetch]);
 }

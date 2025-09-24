@@ -19,6 +19,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import UserAvatar from "@/components/UserAvatar";
 import UploadAvatar from "./UploadAvatar";
 import DeleteAvatar from "./DeleteAvatar";
+import InfoLine from "@/components/form/InfoLine";
 
 // assets
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
@@ -42,7 +43,7 @@ export default function ProfileDetailsForm({ currentName, currentImage }: Profil
   });
 
   // Provide feedback to the user regarding this form actions
-  const { feedbackMessage, clearFeedbackMessage } = useProfileDetailsFormFeedback(formState, reset, store);
+  const { feedbackMessage, hideFeedbackMessage } = useProfileDetailsFormFeedback(formState, reset, store);
 
   return (
     <AppForm>
@@ -67,17 +68,13 @@ export default function ProfileDetailsForm({ currentName, currentImage }: Profil
             />
           </CardContent>
           <CardFooter>
-            {feedbackMessage && (
-              <p role="status" aria-live="polite" className="text-muted-foreground">
-                {feedbackMessage}
-              </p>
-            )}
+            {feedbackMessage && <InfoLine message={feedbackMessage} />}
             <FormSubmit
               submitIcon={<PencilSquareIcon className="size-9" />}
               submitText="Change Name"
               isPending={isPending}
               showCancel={false}
-              onClearedForm={clearFeedbackMessage}
+              onClearedForm={hideFeedbackMessage}
             />
           </CardFooter>
         </Card>
