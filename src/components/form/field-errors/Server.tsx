@@ -1,11 +1,9 @@
 // services, features, and other libraries
-import { useFormContext } from "@/components/form";
-import { useFieldContext } from "@/components/form";
+import { useFormContext, useFieldContext } from "@/components/form";
 import { useStore } from "@tanstack/react-form";
-import useAnimatedErrors from "@/hooks/useAnimatedErrors";
 
 // components
-import ErrorLine from "./ErrorLine";
+import ErrorList from "./ErrorList";
 
 // types
 import type { StandardSchemaV1Issue } from "@tanstack/react-form";
@@ -18,10 +16,7 @@ export default function Server() {
   const { name } = useFieldContext();
 
   // Live error messages (unique strings)
-  const liveErrorMessages: string[] =
-    useStore(store, (state) => state.errorMap.onServer?.form?.[name])?.map((issue: StandardSchemaV1Issue) => issue.message) ?? [];
+  const errorMessages: string[] = useStore(store, (state) => state.errorMap.onServer?.form?.[name])?.map((issue: StandardSchemaV1Issue) => issue.message) ?? [];
 
-  const animatedErrors = useAnimatedErrors(liveErrorMessages);
-
-  return animatedErrors.map(({ message, isShowing }) => <ErrorLine key={message} isShowing={isShowing} message={message} />);
+  return <ErrorList messages={errorMessages} />;
 }

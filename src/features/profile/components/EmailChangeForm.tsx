@@ -59,7 +59,7 @@ export default function EmailChangeForm({ currentEmail }: EmailChangeFormProps) 
             />
           </CardContent>
           <CardFooter>
-            {feedbackMessage && <InfoLine message={feedbackMessage} />}
+            <InfoLine message={feedbackMessage} />
             <FormSubmit
               submitIcon={<PaperAirplaneIcon className="size-9" />}
               submitText="Request Email Change"

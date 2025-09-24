@@ -4,9 +4,6 @@
 @import "uploadthing/tw/v4";
 @source "../../node_modules/@uploadthing/react/dist";
 
-/* custom animations */
-@import "../styles/anim/valid-error.css";
-
 @custom-variant dark (&:is(.dark *));
 
 :root {

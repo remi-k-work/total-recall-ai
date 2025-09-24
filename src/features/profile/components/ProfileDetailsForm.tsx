@@ -68,7 +68,7 @@ export default function ProfileDetailsForm({ currentName, currentImage }: Profil
             />
           </CardContent>
           <CardFooter>
-            {feedbackMessage && <InfoLine message={feedbackMessage} />}
+            <InfoLine message={feedbackMessage} />
             <FormSubmit
               submitIcon={<PencilSquareIcon className="size-9" />}
               submitText="Change Name"

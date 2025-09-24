@@ -1,9 +1,8 @@
 // services, features, and other libraries
 import { useFieldContext } from "@/components/form";
-import useAnimatedErrors from "@/hooks/useAnimatedErrors";
 
 // components
-import ErrorLine from "./ErrorLine";
+import ErrorList from "./ErrorList";
 
 // types
 import type { ZodError } from "zod";
@@ -16,11 +15,8 @@ export default function Client() {
     },
   } = useFieldContext();
 
-  // Live error messages (unique strings)
-  const liveErrorMessages = errors.map(({ message }: ZodError) => message);
-
   // Only render errors once the field has been touched and is no longer pristine
-  const animatedErrors = useAnimatedErrors(liveErrorMessages, { gated: true, show: !isPristine && isTouched });
+  const errorMessages = !isPristine && isTouched ? errors.map(({ message }: ZodError) => message) : [];
 
-  return animatedErrors.map(({ message, isShowing }) => <ErrorLine key={message} isShowing={isShowing} message={message} />);
+  return <ErrorList messages={errorMessages} />;
 }
