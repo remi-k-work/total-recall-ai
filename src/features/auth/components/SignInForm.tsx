@@ -19,6 +19,7 @@ import useSignInFormFeedback from "@/features/auth/hooks/feedbacks/useSignInForm
 
 // components
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
+import InfoLine from "@/components/form/InfoLine";
 
 // assets
 import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/outline";
@@ -32,14 +33,15 @@ interface SignInFormProps {
 import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/auth/constants/signInForm";
 
 export default function SignInForm({ redirect }: SignInFormProps) {
+  // The main server action that processes the form
   const [formState, formAction, isPending] = useActionState(signIn, INITIAL_FORM_STATE);
-  const { AppField, AppForm, FormSubmit, handleSubmit, reset } = useAppForm({
+  const { AppField, AppForm, FormSubmit, handleSubmit, reset, store } = useAppForm({
     ...FORM_OPTIONS,
     transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
   });
 
   // Provide feedback to the user regarding this form actions
-  useSignInFormFeedback(formState, reset, redirect);
+  const { feedbackMessage, hideFeedbackMessage } = useSignInFormFeedback(formState, reset, store, redirect);
 
   return (
     <AppForm>
@@ -74,7 +76,13 @@ export default function SignInForm({ redirect }: SignInFormProps) {
             <AppField name="rememberMe" children={(field) => <field.CheckBoxField label="Remember Me (recommended on trusted devices)" />} />
           </CardContent>
           <CardFooter>
-            <FormSubmit submitIcon={<ArrowRightEndOnRectangleIcon className="size-9" />} submitText="Sign In" isPending={isPending} />
+            <InfoLine message={feedbackMessage} />
+            <FormSubmit
+              submitIcon={<ArrowRightEndOnRectangleIcon className="size-9" />}
+              submitText="Sign In"
+              isPending={isPending}
+              onClearedForm={hideFeedbackMessage}
+            />
             <p className="mt-6 text-center">
               New to Total Recall AI?&nbsp;
               <Link href="/sign-up" className="link">

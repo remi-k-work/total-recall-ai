@@ -16,6 +16,7 @@ import useSignUpFormFeedback from "@/features/auth/hooks/feedbacks/useSignUpForm
 
 // components
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
+import InfoLine from "@/components/form/InfoLine";
 
 // assets
 import { UserIcon } from "@heroicons/react/24/outline";
@@ -24,14 +25,15 @@ import { UserIcon } from "@heroicons/react/24/outline";
 import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/auth/constants/signUpForm";
 
 export default function SignUpForm() {
+  // The main server action that processes the form
   const [formState, formAction, isPending] = useActionState(signUp, INITIAL_FORM_STATE);
-  const { AppField, AppForm, FormSubmit, handleSubmit, reset } = useAppForm({
+  const { AppField, AppForm, FormSubmit, handleSubmit, reset, store } = useAppForm({
     ...FORM_OPTIONS,
     transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
   });
 
   // Provide feedback to the user regarding this form actions
-  useSignUpFormFeedback(formState, reset);
+  const { feedbackMessage, hideFeedbackMessage } = useSignUpFormFeedback(formState, reset, store);
 
   return (
     <AppForm>
@@ -68,7 +70,13 @@ export default function SignUpForm() {
             />
           </CardContent>
           <CardFooter>
-            <FormSubmit submitIcon={<UserIcon className="size-9" />} submitText="Create New Account" isPending={isPending} />
+            <InfoLine message={feedbackMessage} />
+            <FormSubmit
+              submitIcon={<UserIcon className="size-9" />}
+              submitText="Create New Account"
+              isPending={isPending}
+              onClearedForm={hideFeedbackMessage}
+            />
           </CardFooter>
         </Card>
       </form>

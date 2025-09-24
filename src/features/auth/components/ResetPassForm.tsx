@@ -16,6 +16,7 @@ import useResetPassFormFeedback from "@/features/auth/hooks/feedbacks/useResetPa
 
 // components
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
+import InfoLine from "@/components/form/InfoLine";
 
 // assets
 import { KeyIcon } from "@heroicons/react/24/outline";
@@ -29,14 +30,15 @@ interface ResetPassFormProps {
 import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/auth/constants/resetPassForm";
 
 export default function ResetPassForm({ token }: ResetPassFormProps) {
+  // The main server action that processes the form
   const [formState, formAction, isPending] = useActionState(resetPass.bind(null, token), INITIAL_FORM_STATE);
-  const { AppField, AppForm, FormSubmit, handleSubmit, reset } = useAppForm({
+  const { AppField, AppForm, FormSubmit, handleSubmit, reset, store } = useAppForm({
     ...FORM_OPTIONS,
     transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
   });
 
   // Provide feedback to the user regarding this form actions
-  useResetPassFormFeedback(formState, reset);
+  const { feedbackMessage, hideFeedbackMessage } = useResetPassFormFeedback(formState, reset, store);
 
   return (
     <AppForm>
@@ -63,7 +65,8 @@ export default function ResetPassForm({ token }: ResetPassFormProps) {
             />
           </CardContent>
           <CardFooter>
-            <FormSubmit submitIcon={<KeyIcon className="size-9" />} submitText="Reset Password" isPending={isPending} />
+            <InfoLine message={feedbackMessage} />
+            <FormSubmit submitIcon={<KeyIcon className="size-9" />} submitText="Reset Password" isPending={isPending} onClearedForm={hideFeedbackMessage} />
           </CardFooter>
         </Card>
       </form>
