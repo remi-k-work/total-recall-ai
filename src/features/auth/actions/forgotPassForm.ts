@@ -19,9 +19,13 @@ export interface ForgotPassFormActionResult extends ServerFormState<any, any> {
   actionError?: string;
 }
 
+// The main server action that processes the form
 export default async function forgotPass(_prevState: unknown, formData: FormData): Promise<ForgotPassFormActionResult> {
   try {
+    // Validate the form on the server side and extract needed data
     const { email } = await SERVER_VALIDATE(formData);
+
+    // Request the password reset through the better-auth api for the user
     await auth.api.requestPasswordReset({ body: { email, redirectTo: "/reset-password" } });
   } catch (error) {
     // Validation has failed

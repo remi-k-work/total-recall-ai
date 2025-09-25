@@ -28,7 +28,7 @@ export const uploadRouter = {
       await upsertAvatar(userId, { fileKey: key, fileUrl: ufsUrl });
 
       // Delete the old avatar file from uploadthing
-      if (avatarFileKey) await utApi.deleteFiles(avatarFileKey);
+      if (avatarFileKey) await utApi.deleteFiles(avatarFileKey.fileKey);
 
       return { message: "Avatar uploaded successfully." };
     }),

@@ -20,9 +20,13 @@ export interface SignInFormActionResult extends ServerFormState<any, any> {
   actionError?: string;
 }
 
+// The main server action that processes the form
 export default async function signIn(_prevState: unknown, formData: FormData): Promise<SignInFormActionResult> {
   try {
+    // Validate the form on the server side and extract needed data
     const { email, password, rememberMe } = await SERVER_VALIDATE(formData);
+
+    // Sign in the user through the better-auth api
     await auth.api.signInEmail({ body: { email, password, rememberMe: !!rememberMe }, headers: await headers() });
   } catch (error) {
     // Validation has failed

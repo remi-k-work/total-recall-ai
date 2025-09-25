@@ -19,10 +19,13 @@ export interface SignUpFormActionResult extends ServerFormState<any, any> {
   actionError?: string;
 }
 
+// The main server action that processes the form
 export default async function signUp(_prevState: unknown, formData: FormData): Promise<SignUpFormActionResult> {
   try {
-    // Validate the form and sign a user up
+    // Validate the form on the server side and extract needed data
     const { name, email, password } = await SERVER_VALIDATE(formData);
+
+    // Sign up the user through the better-auth api
     await auth.api.signUpEmail({ body: { name, email, password } });
   } catch (error) {
     // Validation has failed

@@ -4,6 +4,7 @@ import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth
 // components
 import ProfileDetailsForm from "@/features/profile/components/ProfileDetailsForm";
 import EmailChangeForm from "@/features/profile/components/EmailChangeForm";
+import PassChangeForm from "@/features/profile/components/PassChangeForm";
 
 // types
 import type { Metadata } from "next";
@@ -28,6 +29,7 @@ export default async function Page() {
       <p>Below you can see and manage your profile</p>
       <ProfileDetailsForm currentName={name} currentImage={image ?? undefined} />
       <EmailChangeForm currentEmail={email} />
+      <PassChangeForm />
     </>
   );
 }

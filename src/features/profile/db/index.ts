@@ -6,24 +6,18 @@ import { eq } from "drizzle-orm";
 import { AvatarTable } from "@/drizzle/schema";
 
 // Obtain the avatar file key for a user, which is unique to their avatar file in uploadthing
-export async function getAvatarFileKey(userId: string): Promise<string | undefined> {
-  return (await db.select({ fileKey: AvatarTable.fileKey }).from(AvatarTable).where(eq(AvatarTable.userId, userId)))[0]?.fileKey;
-}
+export const getAvatarFileKey = (userId: string) => db.query.AvatarTable.findFirst({ where: eq(AvatarTable.userId, userId), columns: { fileKey: true } });
 
 // Upsert an avatar for a user
-export async function upsertAvatar(userId: string, data: Omit<typeof AvatarTable.$inferInsert, "userId">) {
-  await db
+export const upsertAvatar = (userId: string, data: Omit<typeof AvatarTable.$inferInsert, "userId">) =>
+  db
     .insert(AvatarTable)
     .values({ userId, ...data })
     .onConflictDoUpdate({ target: AvatarTable.userId, set: data });
-}
 
 // Update an avatar for a user
-export async function updateAvatar(userId: string, data: Partial<Omit<typeof AvatarTable.$inferInsert, "userId">>) {
-  await db.update(AvatarTable).set(data).where(eq(AvatarTable.userId, userId));
-}
+export const updateAvatar = (userId: string, data: Partial<Omit<typeof AvatarTable.$inferInsert, "userId">>) =>
+  db.update(AvatarTable).set(data).where(eq(AvatarTable.userId, userId));
 
 // Delete an avatar for a user
-export async function deleteAvatar(userId: string) {
-  await db.delete(AvatarTable).where(eq(AvatarTable.userId, userId));
-}
+export const deleteAvatar = (userId: string) => db.delete(AvatarTable).where(eq(AvatarTable.userId, userId));

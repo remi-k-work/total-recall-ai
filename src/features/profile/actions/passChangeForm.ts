@@ -3,30 +3,35 @@
 "use server";
 
 // next
+import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 
 // services, features, and other libraries
+import { makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 import { auth } from "@/services/better-auth/auth";
 import { initialFormState, ServerValidateError } from "@tanstack/react-form/nextjs";
-import { SERVER_VALIDATE } from "@/features/auth/constants/resetPassForm";
+import { SERVER_VALIDATE } from "@/features/profile/constants/passChangeForm";
 import { APIError } from "better-auth/api";
 
 // types
 import type { ServerFormState } from "@tanstack/react-form/nextjs";
 
-export interface ResetPassFormActionResult extends ServerFormState<any, any> {
+export interface PassChangeFormActionResult extends ServerFormState<any, any> {
   actionStatus: "idle" | "succeeded" | "failed" | "invalid" | "authError";
   actionError?: string;
 }
 
 // The main server action that processes the form
-export default async function resetPass(token: string, _prevState: unknown, formData: FormData): Promise<ResetPassFormActionResult> {
+export default async function passChange(_prevState: unknown, formData: FormData): Promise<PassChangeFormActionResult> {
   try {
-    // Validate the form on the server side and extract needed data
-    const { newPassword } = await SERVER_VALIDATE(formData);
+    // Make sure the current user is authenticated (the check runs on the server side)
+    await makeSureUserIsAuthenticated();
 
-    // Reset the password through the better-auth api for the user
-    await auth.api.resetPassword({ body: { newPassword, token } });
+    // Validate the form on the server side and extract needed data
+    const { currentPassword, newPassword } = await SERVER_VALIDATE(formData);
+
+    // Change the password through the better-auth api for the user
+    await auth.api.changePassword({ body: { currentPassword, newPassword }, headers: await headers() });
   } catch (error) {
     // Validation has failed
     if (error instanceof ServerValidateError) return { ...error.formState, actionStatus: "invalid" };

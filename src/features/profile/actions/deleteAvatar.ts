@@ -37,7 +37,7 @@ export default async function deleteAvatar(): Promise<DeleteAvatarActionResult> 
     const avatarFileKey = await getAvatarFileKey(userId);
 
     // Delete the old avatar file from uploadthing
-    if (avatarFileKey) await utApi.deleteFiles(avatarFileKey);
+    if (avatarFileKey) await utApi.deleteFiles(avatarFileKey.fileKey);
 
     // Delete an avatar for a user
     await deleteUserAvatar(userId);
