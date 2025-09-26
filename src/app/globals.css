@@ -177,4 +177,8 @@
   p {
     @apply max-w-prose text-pretty;
   }
+
+  form {
+    @apply grid;
+  }
 }

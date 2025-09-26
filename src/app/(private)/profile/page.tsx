@@ -5,6 +5,7 @@ import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth
 import ProfileDetailsForm from "@/features/profile/components/ProfileDetailsForm";
 import EmailChangeForm from "@/features/profile/components/EmailChangeForm";
 import PassChangeForm from "@/features/profile/components/PassChangeForm";
+import SignOutEverywhere from "@/features/profile/components/SignOutEverywhere";
 
 // types
 import type { Metadata } from "next";
@@ -27,9 +28,12 @@ export default async function Page() {
     <>
       <h1>Profile</h1>
       <p>Below you can see and manage your profile</p>
-      <ProfileDetailsForm currentName={name} currentImage={image ?? undefined} />
-      <EmailChangeForm currentEmail={email} />
-      <PassChangeForm />
+      <article className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <ProfileDetailsForm currentName={name} currentImage={image ?? undefined} />
+        <EmailChangeForm currentEmail={email} />
+        <PassChangeForm />
+        <SignOutEverywhere />
+      </article>
     </>
   );
 }
