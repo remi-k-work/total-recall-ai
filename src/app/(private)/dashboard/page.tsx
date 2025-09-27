@@ -3,6 +3,7 @@ import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth
 
 // components
 import ProfileInfo from "@/features/dashboard/components/ProfileInfo";
+import VerifyEmail from "@/features/dashboard/components/VerifyEmail";
 
 // types
 import type { Metadata } from "next";
@@ -23,7 +24,10 @@ export default async function Page() {
     <>
       <h1>Dashboard</h1>
       <p>Welcome back! Below is your account overview</p>
-      <ProfileInfo user={user} />
+      <article className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <ProfileInfo user={user} />
+        <VerifyEmail user={user} />
+      </article>
     </>
   );
 }
