@@ -36,7 +36,7 @@ export default function SignOutEverywhere() {
           variant="destructive"
           disabled={signOutEverywhereIsPending}
           onClick={() => startTransition(signOutEverywhereAction)}
-          className="mx-auto flex"
+          className="mx-auto"
         >
           {signOutEverywhereIsPending ? <Loader2 className="size-9 animate-spin" /> : <ArrowRightStartOnRectangleIcon className="size-9" />}
           Sign Out Everywhere

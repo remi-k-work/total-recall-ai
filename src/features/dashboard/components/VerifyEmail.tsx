@@ -51,7 +51,7 @@ export default function VerifyEmail({ user: { emailVerified } }: VerifyEmailProp
                 hideFeedbackMessage();
                 startTransition(verifyEmailAction);
               }}
-              className="mx-auto flex"
+              className="mx-auto"
             >
               {verifyEmailsPending ? <Loader2 className="size-9 animate-spin" /> : <CheckBadgeIcon className="size-9" />}
               Verify Email
