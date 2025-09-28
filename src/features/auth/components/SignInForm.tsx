@@ -20,6 +20,7 @@ import useSignInFormFeedback from "@/features/auth/hooks/feedbacks/useSignInForm
 // components
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
 import InfoLine from "@/components/form/InfoLine";
+import SignInSocial from "./SignInSocial";
 
 // assets
 import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/outline";
@@ -83,7 +84,11 @@ export default function SignInForm({ redirect }: SignInFormProps) {
               isPending={isPending}
               onClearedForm={hideFeedbackMessage}
             />
-            <p className="mt-6 text-center">
+            <section className="mx-6 mt-9 grid gap-4">
+              <SignInSocial provider="google" redirect={redirect} />
+              <SignInSocial provider="github" redirect={redirect} />
+            </section>
+            <p className="mt-9 text-center">
               New to Total Recall AI?&nbsp;
               <Link href="/sign-up" className="link">
                 Create an Account
