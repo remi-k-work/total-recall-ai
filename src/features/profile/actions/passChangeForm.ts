@@ -47,7 +47,7 @@ export default async function passChange(hasCredential: boolean, _prevState: unk
   }
 
   // Revalidate, so the fresh data will be fetched from the server next time this path is visited
-  revalidatePath("/", "layout");
+  if (hasCredential) revalidatePath("/", "layout");
 
   // The form has successfully validated and submitted!
   return { ...initialFormState, actionStatus: "succeeded" };

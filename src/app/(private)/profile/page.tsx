@@ -32,7 +32,7 @@ export default async function Page() {
       <article className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <ProfileDetailsForm user={user} />
         <EmailChangeForm user={user} />
-        <PassChangeForm hasCredential={hasCredential} />
+        <PassChangeForm key={hasCredential ? "[PASSWORD CHANGE]" : "[PASSWORD SETUP]"} hasCredential={hasCredential} />
         <SignOutEverywhere />
       </article>
     </>
