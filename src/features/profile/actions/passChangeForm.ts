@@ -10,7 +10,7 @@ import { revalidatePath } from "next/cache";
 import { makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 import { auth } from "@/services/better-auth/auth";
 import { initialFormState, ServerValidateError } from "@tanstack/react-form/nextjs";
-import { SERVER_VALIDATE } from "@/features/profile/constants/passChangeForm";
+import { SERVER_VALIDATE_CHANGE, SERVER_VALIDATE_SETUP } from "@/features/profile/constants/passChangeForm";
 import { APIError } from "better-auth/api";
 
 // types
@@ -22,16 +22,19 @@ export interface PassChangeFormActionResult extends ServerFormState<any, any> {
 }
 
 // The main server action that processes the form
-export default async function passChange(_prevState: unknown, formData: FormData): Promise<PassChangeFormActionResult> {
+export default async function passChange(hasCredential: boolean, _prevState: unknown, formData: FormData): Promise<PassChangeFormActionResult> {
   try {
     // Make sure the current user is authenticated (the check runs on the server side)
     await makeSureUserIsAuthenticated();
 
     // Validate the form on the server side and extract needed data
-    const { currentPassword, newPassword } = await SERVER_VALIDATE(formData);
+    let currentPassword: string, newPassword: string;
+    if (hasCredential) ({ currentPassword, newPassword } = await SERVER_VALIDATE_CHANGE(formData));
+    else ({ newPassword } = await SERVER_VALIDATE_SETUP(formData));
 
-    // Change the password through the better-auth api for the user
-    await auth.api.changePassword({ body: { currentPassword, newPassword }, headers: await headers() });
+    // Change or setup the password through the better-auth api for the user
+    if (hasCredential) await auth.api.changePassword({ body: { currentPassword: currentPassword!, newPassword }, headers: await headers() });
+    else await auth.api.setPassword({ body: { newPassword }, headers: await headers() });
   } catch (error) {
     // Validation has failed
     if (error instanceof ServerValidateError) return { ...error.formState, actionStatus: "invalid" };

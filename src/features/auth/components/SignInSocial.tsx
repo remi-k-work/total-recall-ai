@@ -36,10 +36,6 @@ export default function SignInSocial({ provider, redirect }: SignInSocialProps) 
             onRequest: () => {
               setIsPending(true);
             },
-            onSuccess: () => {
-              setIsPending(false);
-              toast.success("SUCCESS!", { description: "You signed in successfully with your social account." });
-            },
             onError: ({ error: { message } }) => {
               setIsPending(false);
               toast.error("AUTHORIZATION ERROR!", { description: message });

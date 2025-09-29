@@ -1,5 +1,5 @@
 // services, features, and other libraries
-import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
+import { getUserSessionData, hasCredentialAccount, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
 // components
 import ProfileDetailsForm from "@/features/profile/components/ProfileDetailsForm";
@@ -20,18 +20,19 @@ export default async function Page() {
   await makeSureUserIsAuthenticated();
 
   // Access the user session data from the server side
-  const {
-    user: { name, email, image },
-  } = (await getUserSessionData())!;
+  const { user } = (await getUserSessionData())!;
+
+  // Determine whether the current user has any "credential" type accounts
+  const hasCredential = await hasCredentialAccount();
 
   return (
     <>
       <h1>Profile</h1>
       <p>Below you can see and manage your profile</p>
       <article className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <ProfileDetailsForm currentName={name} currentImage={image ?? undefined} />
-        <EmailChangeForm currentEmail={email} />
-        <PassChangeForm />
+        <ProfileDetailsForm user={user} />
+        <EmailChangeForm user={user} />
+        <PassChangeForm hasCredential={hasCredential} />
         <SignOutEverywhere />
       </article>
     </>

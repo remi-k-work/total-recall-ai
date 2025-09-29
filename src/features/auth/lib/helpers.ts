@@ -18,3 +18,9 @@ export async function makeSureUserIsAuthenticated() {
 
 // Only check if the current user is authenticated (the check runs on the server side)
 export const isUserAuthenticated = async () => !!(await getUserSessionData());
+
+// List all accounts associated with the current user
+export const listUserAccounts = cache(async () => await auth.api.listUserAccounts({ headers: await headers() }));
+
+// Determine whether the current user has any "credential" type accounts
+export const hasCredentialAccount = async () => (await listUserAccounts()).some((account) => account.providerId === "credential");

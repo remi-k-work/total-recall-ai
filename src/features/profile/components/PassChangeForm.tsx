@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/no-children-prop */
 
 "use client";
@@ -11,7 +12,7 @@ import passChange from "@/features/profile/actions/passChangeForm";
 // services, features, and other libraries
 import { mergeForm, useTransform } from "@tanstack/react-form";
 import { useAppForm } from "@/components/form";
-import { PassChangeFormSchema } from "@/features/profile/schemas/passChangeForm";
+import { PassChangeFormSchema, PassSetupFormSchema } from "@/features/profile/schemas/passChangeForm";
 import usePassChangeFormFeedback from "@/features/profile/hooks/feedbacks/usePassChangeForm";
 
 // components
@@ -21,56 +22,82 @@ import InfoLine from "@/components/form/InfoLine";
 // assets
 import { KeyIcon } from "@heroicons/react/24/outline";
 
-// constants
-import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/profile/constants/passChangeForm";
+// types
+interface PassChangeFormProps {
+  hasCredential: boolean;
+}
 
-export default function PassChangeForm() {
+// constants
+import { FORM_OPTIONS_CHANGE, FORM_OPTIONS_SETUP, INITIAL_FORM_STATE } from "@/features/profile/constants/passChangeForm";
+
+export default function PassChangeForm({ hasCredential }: PassChangeFormProps) {
   // The main server action that processes the form
-  const [formState, formAction, isPending] = useActionState(passChange, INITIAL_FORM_STATE);
+  const [formState, formAction, isPending] = useActionState(passChange.bind(null, hasCredential), INITIAL_FORM_STATE);
   const { AppField, AppForm, FormSubmit, handleSubmit, reset, store } = useAppForm({
-    ...FORM_OPTIONS,
+    ...(hasCredential ? FORM_OPTIONS_CHANGE : FORM_OPTIONS_SETUP),
     transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
   });
 
   // Provide feedback to the user regarding this form actions
-  const { feedbackMessage, hideFeedbackMessage } = usePassChangeFormFeedback(formState, reset, store);
+  const { feedbackMessage, hideFeedbackMessage } = usePassChangeFormFeedback(formState, reset, store, hasCredential);
 
   return (
     <AppForm>
       <form action={formAction} onSubmit={() => handleSubmit()}>
         <Card>
           <CardHeader>
-            <CardTitle>Password Change</CardTitle>
-            <CardDescription>Enter your new password below</CardDescription>
+            <CardTitle>{hasCredential ? "Password Change" : "Password Setup"}</CardTitle>
+            <CardDescription>{hasCredential ? "Enter your new password below" : "Setup your password below"}</CardDescription>
           </CardHeader>
           <CardContent>
-            <AppField
-              name="currentPassword"
-              validators={{ onChange: PassChangeFormSchema.shape.currentPassword }}
-              children={(field) => (
-                <field.PasswordField label="Current Password" size={40} maxLength={129} autoComplete="current-password" placeholder="e.g. P@ssw0rd!" />
-              )}
-            />
-            <AppField
-              name="newPassword"
-              validators={{ onChange: PassChangeFormSchema.shape.newPassword }}
-              children={(field) => (
-                <field.PasswordField label="New Password" size={40} maxLength={129} autoComplete="new-password" placeholder="e.g. P@ssw0rd!" />
-              )}
-            />
-            <AppField
-              name="confirmPassword"
-              validators={{ onChange: PassChangeFormSchema.shape.confirmPassword }}
-              children={(field) => (
-                <field.PasswordField label="Confirm Password" size={40} maxLength={129} autoComplete="new-password" placeholder="e.g. P@ssw0rd!" />
-              )}
-            />
+            {hasCredential ? (
+              <>
+                <AppField
+                  name={"currentPassword" as any}
+                  validators={{ onChange: PassChangeFormSchema.shape.currentPassword }}
+                  children={(field) => (
+                    <field.PasswordField label="Current Password" size={40} maxLength={129} autoComplete="current-password" placeholder="e.g. P@ssw0rd!" />
+                  )}
+                />
+                <AppField
+                  name="newPassword"
+                  validators={{ onChange: PassChangeFormSchema.shape.newPassword }}
+                  children={(field) => (
+                    <field.PasswordField label="New Password" size={40} maxLength={129} autoComplete="new-password" placeholder="e.g. P@ssw0rd!" />
+                  )}
+                />
+                <AppField
+                  name="confirmPassword"
+                  validators={{ onChange: PassChangeFormSchema.shape.confirmPassword }}
+                  children={(field) => (
+                    <field.PasswordField label="Confirm Password" size={40} maxLength={129} autoComplete="new-password" placeholder="e.g. P@ssw0rd!" />
+                  )}
+                />
+              </>
+            ) : (
+              <>
+                <AppField
+                  name="newPassword"
+                  validators={{ onChange: PassSetupFormSchema.shape.newPassword }}
+                  children={(field) => (
+                    <field.PasswordField label="New Password" size={40} maxLength={129} autoComplete="new-password" placeholder="e.g. P@ssw0rd!" />
+                  )}
+                />
+                <AppField
+                  name="confirmPassword"
+                  validators={{ onChange: PassSetupFormSchema.shape.confirmPassword }}
+                  children={(field) => (
+                    <field.PasswordField label="Confirm Password" size={40} maxLength={129} autoComplete="new-password" placeholder="e.g. P@ssw0rd!" />
+                  )}
+                />
+              </>
+            )}
           </CardContent>
           <CardFooter>
             <InfoLine message={feedbackMessage} />
             <FormSubmit
               submitIcon={<KeyIcon className="size-9" />}
-              submitText="Change Password"
+              submitText={hasCredential ? "Change Password" : "Setup Password"}
               isPending={isPending}
               showCancel={false}
               onClearedForm={hideFeedbackMessage}

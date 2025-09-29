@@ -22,14 +22,16 @@ import InfoLine from "@/components/form/InfoLine";
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 
 // types
+import type { User } from "@/services/better-auth/auth";
+
 interface EmailChangeFormProps {
-  currentEmail: string;
+  user: User;
 }
 
 // constants
 import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/profile/constants/emailChangeForm";
 
-export default function EmailChangeForm({ currentEmail }: EmailChangeFormProps) {
+export default function EmailChangeForm({ user: { email: currentEmail } }: EmailChangeFormProps) {
   // The main server action that processes the form
   const [formState, formAction, isPending] = useActionState(emailChange, INITIAL_FORM_STATE);
   const { AppField, AppForm, FormSubmit, handleSubmit, reset, store } = useAppForm({

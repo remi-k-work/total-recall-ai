@@ -25,15 +25,16 @@ import InfoLine from "@/components/form/InfoLine";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 
 // types
+import type { User } from "@/services/better-auth/auth";
+
 interface ProfileDetailsFormProps {
-  currentName: string;
-  currentImage?: string;
+  user: User;
 }
 
 // constants
 import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/profile/constants/profileDetailsForm";
 
-export default function ProfileDetailsForm({ currentName, currentImage }: ProfileDetailsFormProps) {
+export default function ProfileDetailsForm({ user: { name: currentName, image: currentImage } }: ProfileDetailsFormProps) {
   // The main server action that processes the form
   const [formState, formAction, isPending] = useActionState(profileDetails, INITIAL_FORM_STATE);
   const { AppField, AppForm, FormSubmit, handleSubmit, reset, store } = useAppForm({
@@ -55,10 +56,10 @@ export default function ProfileDetailsForm({ currentName, currentImage }: Profil
           </CardHeader>
           <CardContent>
             <div className="mb-4 flex flex-wrap items-center justify-around gap-4 sm:justify-between">
-              <UserAvatar name={currentName} avatar={currentImage} />
+              <UserAvatar name={currentName} avatar={currentImage ?? undefined} />
               <div className="grid gap-4">
                 <UploadAvatar />
-                <DeleteAvatar currentImage={currentImage} />
+                <DeleteAvatar currentImage={currentImage ?? undefined} />
               </div>
             </div>
             <AppField

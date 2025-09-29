@@ -24,6 +24,13 @@ export const auth = betterAuth({
   appName: "total-recall-ai",
   plugins: [nextCookies()],
 
+  account: {
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["google", "github"],
+    },
+  },
+
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID!,
