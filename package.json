@@ -11,9 +11,12 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
+    "db:test": "tsx ./src/drizzle/seed/test.ts",
     "email": "copy .env node_modules\\react-email && email dev --dir src/emails --port 3002"
   },
   "dependencies": {
+    "@ai-sdk/google": "^2.0.17",
+    "@ai-sdk/react": "^2.0.59",
     "@heroicons/react": "^2.2.0",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-checkbox": "^1.3.3",
@@ -25,6 +28,7 @@
     "@tanstack/react-form": "^1.19.5",
     "@uploadthing/react": "^7.3.3",
     "@vercel/analytics": "^1.5.0",
+    "ai": "^5.0.59",
     "better-auth": "^1.3.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -52,7 +56,7 @@
     "@types/pg": "^8.15.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "dotenv": "^17.2.2",
+    "dotenv": "^17.2.3",
     "drizzle-kit": "^0.31.4",
     "eslint": "^9",
     "eslint-config-next": "15.5.3",
@@ -61,6 +65,7 @@
     "prettier-plugin-tailwindcss": "^0.6.14",
     "react-email": "4.2.11",
     "tailwindcss": "^4",
+    "tsx": "^4.20.6",
     "tw-animate-css": "^1.3.8",
     "typescript": "^5"
   }

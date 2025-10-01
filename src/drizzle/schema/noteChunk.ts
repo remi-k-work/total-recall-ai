@@ -1,6 +1,6 @@
 // drizzle and db access
-import { index, integer, pgTable, text, uuid, vector } from "drizzle-orm/pg-core";
-import { createdAt, id, updatedAt } from "@/drizzle/helpers";
+import { index, pgTable, text, uuid, vector } from "drizzle-orm/pg-core";
+import { id } from "@/drizzle/helpers";
 import { relations } from "drizzle-orm";
 
 // all table definitions (their schemas)
@@ -13,11 +13,8 @@ export const NoteChunkTable = pgTable(
     noteId: uuid()
       .notNull()
       .references(() => NoteTable.id, { onDelete: "cascade" }),
-    chunkIndex: integer().notNull(),
-    text: text().notNull(),
+    chunk: text().notNull(),
     embedding: vector({ dimensions: 768 }),
-    createdAt,
-    updatedAt,
   },
   (table) => [index("embedding_index").using("hnsw", table.embedding.op("vector_cosine_ops"))],
 );
