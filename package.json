@@ -34,6 +34,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.44.5",
+    "langchain": "^1.0.0-alpha.7",
     "lucide-react": "^0.544.0",
     "motion": "^12.23.21",
     "next": "15.5.3",
