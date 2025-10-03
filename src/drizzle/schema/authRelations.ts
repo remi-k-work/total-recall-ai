@@ -5,8 +5,10 @@ import { relations } from "drizzle-orm";
 import { UserTable } from "./auth";
 import { AvatarTable } from "./avatar";
 import { NoteTable } from "./note";
+import { NoteChunkTable } from "./noteChunk";
 
 export const userRelations = relations(UserTable, ({ one, many }) => ({
   avatar: one(AvatarTable, { fields: [UserTable.id], references: [AvatarTable.userId] }),
   notes: many(NoteTable),
+  noteChunks: many(NoteChunkTable),
 }));

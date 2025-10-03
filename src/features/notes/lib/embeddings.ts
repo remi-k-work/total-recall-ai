@@ -6,11 +6,22 @@ import { TokenTextSplitter } from "@langchain/textsplitters";
 // Initialize our embedding model
 const model = google.textEmbedding("gemini-embedding-001");
 
-// Split text into chunks of ~50 tokens (~40 words) with 20–25% (~13 tokens) overlap to maintain context
-const tokenTextSplitter = new TokenTextSplitter({ chunkSize: 50, chunkOverlap: 13 });
+// Very short notes (to-dos, quick reminders) (<100 words, ~50–70 tokens, ~20% overlap)
+const noteSplitterS = new TokenTextSplitter({ chunkSize: 100, chunkOverlap: 20 });
+
+// Medium-length notes (paragraphs, daily logs) (~100–400 words, ~150–250 tokens, ~20% overlap)
+const noteSplitterM = new TokenTextSplitter({ chunkSize: 200, chunkOverlap: 40 });
+
+// Long notes, essays, study guides (>400 words, ~350–800 tokens, ~20% overlap)
+const noteSplitterL = new TokenTextSplitter({ chunkSize: 500, chunkOverlap: 100 });
 
 // Parse note's content into smaller chunks for similarity search and retrieval
-const generateNoteChunks = (noteContent: string) => tokenTextSplitter.splitText(noteContent);
+const generateNoteChunks = (noteContent: string) => {
+  // Use different text splitters depending on the length of the note
+  const wordCount = noteContent.trim().split(/\s+/).length;
+
+  return wordCount < 100 ? noteSplitterS.splitText(noteContent) : wordCount < 400 ? noteSplitterM.splitText(noteContent) : noteSplitterL.splitText(noteContent);
+};
 
 // Generate embeddings for a note
 export async function generateNoteEmbeddings(noteContent: string): Promise<Array<{ chunk: string; embedding: number[] }>> {

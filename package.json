@@ -11,6 +11,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
+    "db:seed": "tsx ./src/drizzle/seed/seed.ts",
     "db:test": "tsx ./src/drizzle/seed/test.ts",
     "email": "copy .env node_modules\\react-email && email dev --dir src/emails --port 3002"
   },
