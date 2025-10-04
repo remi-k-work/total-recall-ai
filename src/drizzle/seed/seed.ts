@@ -15,8 +15,8 @@ async function main() {
     // Perform database seeding or other tasks
     console.log("Seeding notes and chunks...");
 
-    // Drop all notes
-    await dropAllNotes();
+    // Drop all notes for a user
+    await dropAllNotes("yLWyVGaBlCa7v27qfYk5DyyYiZqNXxqP");
 
     for (const { title, content } of EXAMPLE_NOTES) {
       // Insert a new note for a user
@@ -25,7 +25,7 @@ async function main() {
       // Generate embeddings for a note
       const noteEmbeddings = await generateNoteEmbeddings(content);
 
-      // Insert multiple new note chunks for a note
+      // Insert multiple new note chunks for a note and the current user
       await insertNoteChunks("yLWyVGaBlCa7v27qfYk5DyyYiZqNXxqP", noteId, noteEmbeddings);
 
       const wordCount = content.split(/\s+/).length;

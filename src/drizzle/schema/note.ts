@@ -12,7 +12,7 @@ export const NoteTable = pgTable("note", {
   userId: text()
     .notNull()
     .references(() => UserTable.id, { onDelete: "cascade" }),
-  title: varchar(),
+  title: varchar().notNull(),
   content: text().notNull(),
   createdAt,
   updatedAt,
