@@ -1,7 +1,12 @@
+// next
+import { notFound } from "next/navigation";
+
 // drizzle and db access
 import { getNote } from "@/features/notes/db";
 
 // services, features, and other libraries
+import { validatePageInputs } from "@/lib/helpers";
+import { NoteDetailsPageSchema } from "@/features/notes/schemas/noteDetailsPage";
 import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
 // components
@@ -15,9 +20,11 @@ export const metadata: Metadata = {
   title: "Total Recall AI ► Note Details",
 };
 
-export default async function Page({ params: paramsPromise }: PageProps<"/notes/[id]">) {
-  // Get the "id" path parameter
-  const { id } = await paramsPromise;
+export default async function Page({ params, searchParams }: PageProps<"/notes/[id]">) {
+  // Safely validate next.js route inputs (`params` and `searchParams`) against a zod schema; return typed data or trigger a 404 on failure
+  const {
+    params: { id },
+  } = await validatePageInputs(NoteDetailsPageSchema, { params, searchParams });
 
   // Make sure the current user is authenticated (the check runs on the server side)
   await makeSureUserIsAuthenticated();
@@ -28,7 +35,10 @@ export default async function Page({ params: paramsPromise }: PageProps<"/notes/
   } = (await getUserSessionData())!;
 
   // Get a single note for a user
-  const [note] = await getNote(id, userId);
+  const note = await getNote(id, userId);
+
+  // If the note is not found, return a 404
+  if (!note) notFound();
 
   return (
     <>

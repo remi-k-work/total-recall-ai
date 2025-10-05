@@ -1,6 +1,6 @@
 // drizzle and db access
 import { db } from "@/drizzle/db";
-import { and, eq, sql } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 
 // all table definitions (their schemas)
 import { NoteTable } from "@/drizzle/schema";
@@ -18,14 +18,11 @@ export const getNotes = (userId: string) =>
       updatedAt: NoteTable.updatedAt,
     })
     .from(NoteTable)
-    .where(eq(NoteTable.userId, userId));
+    .where(eq(NoteTable.userId, userId))
+    .orderBy(desc(NoteTable.updatedAt));
 
 // Get a single note for a user
-export const getNote = (id: string, userId: string) =>
-  db
-    .select()
-    .from(NoteTable)
-    .where(and(eq(NoteTable.id, id), eq(NoteTable.userId, userId)));
+export const getNote = (id: string, userId: string) => db.query.NoteTable.findFirst({ where: and(eq(NoteTable.id, id), eq(NoteTable.userId, userId)) });
 
 // Insert a new note for a user
 export const insertNote = (userId: string, data: Omit<typeof NoteTable.$inferInsert, "userId">) =>

@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm";
 import { AvatarTable } from "@/drizzle/schema";
 
 // Obtain the avatar file key for a user, which is unique to their avatar file in uploadthing
-export const getAvatarFileKey = (userId: string) => db.query.AvatarTable.findFirst({ where: eq(AvatarTable.userId, userId), columns: { fileKey: true } });
+export const getAvatarFileKey = (userId: string) => db.query.AvatarTable.findFirst({ columns: { fileKey: true }, where: eq(AvatarTable.userId, userId) });
 
 // Upsert an avatar for a user
 export const upsertAvatar = (userId: string, data: Omit<typeof AvatarTable.$inferInsert, "userId">) =>

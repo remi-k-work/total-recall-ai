@@ -1,5 +1,6 @@
-// next
-import { notFound } from "next/navigation";
+// services, features, and other libraries
+import { validatePageInputs } from "@/lib/helpers";
+import { ResetPassPageSchema } from "@/features/auth/schemas/resetPassPage";
 
 // components
 import ResetPassForm from "@/features/auth/components/ResetPassForm";
@@ -12,12 +13,11 @@ export const metadata: Metadata = {
   title: "Total Recall AI ► Reset Password",
 };
 
-export default async function Page({ searchParams: searchParamsPromise }: PageProps<"/reset-password">) {
-  // Get the "token" query parameter
-  const { token }: { token?: string } = await searchParamsPromise;
-
-  // If the "token" query parameter is missing, return a 404
-  if (!token) notFound();
+export default async function Page({ params, searchParams }: PageProps<"/reset-password">) {
+  // Safely validate next.js route inputs (`params` and `searchParams`) against a zod schema; return typed data or trigger a 404 on failure
+  const {
+    searchParams: { token },
+  } = await validatePageInputs(ResetPassPageSchema, { params, searchParams });
 
   return (
     <>

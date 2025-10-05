@@ -11,7 +11,7 @@ import { CalendarIcon } from "@heroicons/react/24/outline";
 import type { getNote } from "@/features/notes/db";
 
 interface NoteDetailsProps {
-  note: Awaited<ReturnType<typeof getNote>>[number];
+  note: Exclude<Awaited<ReturnType<typeof getNote>>, undefined>;
 }
 
 export default function NoteDetails({ note: { title, content, updatedAt } }: NoteDetailsProps) {
