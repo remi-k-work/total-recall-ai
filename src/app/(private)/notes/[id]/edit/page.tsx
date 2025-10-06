@@ -6,26 +6,26 @@ import { getNote } from "@/features/notes/db";
 
 // services, features, and other libraries
 import { validatePageInputs } from "@/lib/helpers";
-import { NoteDetailsPageSchema } from "@/features/notes/schemas/noteDetailsPage";
+import { EditNotePageSchema } from "@/features/notes/schemas/editNotePage";
 import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
 // components
 import ToolBar from "@/features/notes/components/ToolBar";
-import NoteDetails from "@/features/notes/components/NoteDetails";
+import EditNoteForm from "@/features/notes/components/EditNoteForm";
 
 // types
 import type { Metadata } from "next";
 
 // constants
 export const metadata: Metadata = {
-  title: "Total Recall AI ► Note Details",
+  title: "Total Recall AI ► Edit Note",
 };
 
-export default async function Page({ params, searchParams }: PageProps<"/notes/[id]">) {
+export default async function Page({ params, searchParams }: PageProps<"/notes/[id]/edit">) {
   // Safely validate next.js route inputs (`params` and `searchParams`) against a zod schema; return typed data or trigger a 404 on failure
   const {
     params: { id },
-  } = await validatePageInputs(NoteDetailsPageSchema, { params, searchParams });
+  } = await validatePageInputs(EditNotePageSchema, { params, searchParams });
 
   // Make sure the current user is authenticated (the check runs on the server side)
   await makeSureUserIsAuthenticated();
@@ -43,10 +43,10 @@ export default async function Page({ params, searchParams }: PageProps<"/notes/[
 
   return (
     <>
-      <h1>Note Details</h1>
-      <p>Below are all your note details</p>
+      <h1>Edit Note</h1>
+      <p>Use the form below to edit an existing note</p>
       <ToolBar />
-      <NoteDetails note={note} />
+      <EditNoteForm note={note} />
     </>
   );
 }

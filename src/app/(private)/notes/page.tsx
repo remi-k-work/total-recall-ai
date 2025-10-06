@@ -8,6 +8,7 @@ import { getNotes } from "@/features/notes/db";
 import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
 // components
+import ToolBar from "@/features/notes/components/ToolBar";
 import NotePreview from "@/features/notes/components/NotePreview";
 
 // types
@@ -34,6 +35,7 @@ export default async function Page() {
     <>
       <h1>Notes</h1>
       <p>Welcome back! Below are all your notes</p>
+      <ToolBar />
       <article className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         {allNotes.map((note) => (
           <Link key={note.id} href={`/notes/${note.id}`}>
