@@ -1,5 +1,6 @@
 // next
 import { notFound } from "next/navigation";
+import Link from "next/link";
 
 // drizzle and db access
 import { getNote } from "@/features/notes/db";
@@ -46,7 +47,9 @@ export default async function Page({ params, searchParams }: PageProps<"/notes/[
       <h1>Note Details</h1>
       <p>Below are all your note details</p>
       <ToolBar />
-      <NoteDetails note={note} />
+      <Link href={`/notes/${note.id}/edit`}>
+        <NoteDetails note={note} />
+      </Link>
     </>
   );
 }

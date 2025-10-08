@@ -6,6 +6,7 @@ import Link from "next/link";
 
 // components
 import { Button } from "@/components/ui/custom/button";
+import NotesAssistant from "./notes-assistant";
 
 // assets
 import { ArrowLeftCircleIcon, PencilSquareIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
@@ -22,14 +23,17 @@ export default function ToolBar() {
   const isNoteDetails = pathname.startsWith("/notes/") && noteId && !pathname.endsWith("/edit");
 
   return (
-    <section className="mb-4 flex items-center justify-end gap-4">
+    <header className="mb-4 flex items-center justify-end gap-4">
       {isNotesRoot && (
-        <Button variant="ghost" asChild>
-          <Link href="/notes/new">
-            <PlusCircleIcon className="size-9" />
-            Create New Note
-          </Link>
-        </Button>
+        <>
+          <Button variant="ghost" asChild>
+            <Link href="/notes/new">
+              <PlusCircleIcon className="size-9" />
+              Create New Note
+            </Link>
+          </Button>
+          <NotesAssistant />
+        </>
       )}
       {isNoteDetails && (
         <Button variant="ghost" asChild>
@@ -47,6 +51,6 @@ export default function ToolBar() {
           </Link>
         </Button>
       )}
-    </section>
+    </header>
   );
 }
