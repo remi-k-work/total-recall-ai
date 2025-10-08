@@ -14,9 +14,25 @@ import Footer from "./Footer";
 import { SparklesIcon, XCircleIcon } from "@heroicons/react/24/outline";
 
 // types
+import type { UIMessage } from "@ai-sdk/react";
+
 interface ModalProps {
   onClosed: () => void;
 }
+
+// constants
+const INITIAL_MESSAGES: UIMessage[] = [
+  {
+    id: "welcome-message",
+    role: "assistant",
+    parts: [
+      {
+        type: "text",
+        text: "I am your notes assistant. I can find and summarize any information that you saved.",
+      },
+    ],
+  },
+] as const;
 
 export default function Modal({ onClosed }: ModalProps) {
   // To be able to call showModal() method on the dialog
@@ -27,7 +43,9 @@ export default function Modal({ onClosed }: ModalProps) {
     dialogRef.current?.showModal();
   }, []);
 
-  const { messages, sendMessage, status } = useChat();
+  const { messages, sendMessage, status } = useChat({
+    messages: INITIAL_MESSAGES,
+  });
 
   return (
     <dialog

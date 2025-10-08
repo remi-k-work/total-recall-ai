@@ -23,7 +23,7 @@ export default function Footer({ sendMessage, status }: FooterProps) {
   const isProcessing = status === "submitted" || status === "streaming";
 
   return (
-    <footer className="flex gap-2 border-t p-3">
+    <footer className="flex gap-3 border-t p-3">
       <Textarea
         value={input}
         onChange={(ev) => setInput(ev.target.value)}
@@ -37,7 +37,6 @@ export default function Footer({ sendMessage, status }: FooterProps) {
       <Button
         type="button"
         size="icon"
-        variant="ghost"
         disabled={!isInputValid || isProcessing}
         title="Send Message"
         onClick={() => {
