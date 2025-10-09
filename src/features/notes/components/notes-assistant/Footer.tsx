@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/custom/button";
 
 // assets
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
+import { Loader2 } from "lucide-react";
 
 // types
 import type { useChat } from "@ai-sdk/react";
@@ -19,14 +20,15 @@ interface FooterProps {
 export default function Footer({ sendMessage, status }: FooterProps) {
   const [input, setInput] = useState("");
 
+  // Is the user's input valid?
   const isInputValid = input.trim().length > 0;
-  const isProcessing = status === "submitted" || status === "streaming";
 
   return (
     <footer className="flex gap-3 border-t p-3">
       <Textarea
         value={input}
         onChange={(ev) => setInput(ev.target.value)}
+        disabled={status !== "ready"}
         cols={50}
         rows={4}
         maxLength={1024}
@@ -37,15 +39,14 @@ export default function Footer({ sendMessage, status }: FooterProps) {
       <Button
         type="button"
         size="icon"
-        disabled={!isInputValid || isProcessing}
+        disabled={!isInputValid || status !== "ready"}
         title="Send Message"
         onClick={() => {
-          if (!isInputValid || isProcessing) return;
-          sendMessage({ text: input });
+          sendMessage({ text: input.trim() });
           setInput("");
         }}
       >
-        <PaperAirplaneIcon className="size-11" />
+        {status === "submitted" || status === "streaming" ? <Loader2 className="size-11 animate-spin" /> : <PaperAirplaneIcon className="size-11" />}
       </Button>
     </footer>
   );

@@ -18,7 +18,7 @@ export const searchNoteChunksForUser = async (userId: string, question: string, 
 
   // Query candidate chunks for this user, ordered by similarity
   const candidateChunks = await db
-    .select({ id: NoteChunkTable.id, noteId: NoteChunkTable.noteId, chunk: NoteChunkTable.chunk, similarity })
+    .select({ noteId: NoteChunkTable.noteId, chunk: NoteChunkTable.chunk, similarity })
     .from(NoteChunkTable)
     .where(
       and(

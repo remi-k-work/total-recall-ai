@@ -28,7 +28,7 @@ const INITIAL_MESSAGES: UIMessage[] = [
     parts: [
       {
         type: "text",
-        text: "I am your notes assistant. I can find and summarize any information that you saved.",
+        text: "Accessing **Total Recall**!\n\nI am your personal cognitive assistant, ready to instantly find and synthesize every brilliant idea you've ever saved. Stop searching and simply **ask me a question** about your notes.",
       },
     ],
   },
@@ -43,9 +43,7 @@ export default function Modal({ onClosed }: ModalProps) {
     dialogRef.current?.showModal();
   }, []);
 
-  const { messages, sendMessage, status } = useChat({
-    messages: INITIAL_MESSAGES,
-  });
+  const { messages, sendMessage, status } = useChat({ messages: INITIAL_MESSAGES });
 
   return (
     <dialog

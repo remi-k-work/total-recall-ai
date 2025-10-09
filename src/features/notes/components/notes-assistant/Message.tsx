@@ -21,8 +21,19 @@ export default function Message({ message: { id, role, parts } }: MessageProps) 
     >
       {parts.map((part, index) => {
         switch (part.type) {
+          // Render text parts as markdown
           case "text":
             return <ReactMarkdown key={`${id}-${index}`}>{part.text}</ReactMarkdown>;
+
+          // For tool parts, use the typed tool part names
+          case "tool-searchNoteChunksForUser":
+            const callId = part.toolCallId;
+
+            return (
+              <p key={callId} className="animate-pulse italic">
+                Searching Notes...
+              </p>
+            );
         }
       })}
     </article>
