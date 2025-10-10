@@ -1,5 +1,5 @@
 // react
-import { startTransition, useActionState } from "react";
+import { startTransition, useActionState, useState } from "react";
 
 // server actions and mutations
 import deleteAvatar from "@/features/profile/actions/deleteAvatar";
@@ -9,6 +9,7 @@ import useDeleteAvatarFeedback from "@/features/profile/hooks/feedbacks/useDelet
 
 // components
 import { Button } from "@/components/ui/custom/button";
+import ConfirmModal from "@/components/ConfirmModal";
 
 // assets
 import { TrashIcon } from "@heroicons/react/24/outline";
@@ -26,10 +27,22 @@ export default function DeleteAvatar({ currentImage }: DeleteAvatarProps) {
   // Provide feedback to the user regarding this server action
   useDeleteAvatarFeedback(deleteAvatarState);
 
+  // Whether or not the confirm modal is open
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <Button type="button" variant="destructive" disabled={!currentImage || deleteAvatarIsPending} onClick={() => startTransition(deleteAvatarAction)}>
-      {deleteAvatarIsPending ? <Loader2 className="size-9 animate-spin" /> : <TrashIcon className="size-9" />}
-      Delete Avatar
-    </Button>
+    <>
+      <Button type="button" variant="destructive" disabled={!currentImage || deleteAvatarIsPending} onClick={() => setIsOpen(true)}>
+        {deleteAvatarIsPending ? <Loader2 className="size-9 animate-spin" /> : <TrashIcon className="size-9" />}
+        Delete Avatar
+      </Button>
+      {isOpen && (
+        <ConfirmModal onConfirmed={() => startTransition(deleteAvatarAction)} onClosed={() => setIsOpen(false)}>
+          <p className="text-center text-xl">
+            Are you sure you want to <b className="text-destructive">delete</b> your avatar?
+          </p>
+        </ConfirmModal>
+      )}
+    </>
   );
 }
