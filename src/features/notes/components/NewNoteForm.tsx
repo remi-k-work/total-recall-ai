@@ -19,7 +19,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import InfoLine from "@/components/form/InfoLine";
 
 // assets
-import { PlusCircleIcon } from "@heroicons/react/24/outline";
+import { DocumentPlusIcon } from "@heroicons/react/24/outline";
 
 // constants
 import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/notes/constants/newNoteForm";
@@ -68,7 +68,7 @@ export default function NewNoteForm() {
           <CardFooter>
             <InfoLine message={feedbackMessage} />
             <FormSubmit
-              submitIcon={<PlusCircleIcon className="size-9" />}
+              submitIcon={<DocumentPlusIcon className="size-9" />}
               submitText="Create New Note"
               isPending={isPending}
               onClearedForm={hideFeedbackMessage}

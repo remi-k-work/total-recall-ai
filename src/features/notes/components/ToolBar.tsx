@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/custom/button";
 import NotesAssistant from "./notes-assistant";
 
 // assets
-import { ArrowLeftCircleIcon, PencilSquareIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
+import { DocumentDuplicateIcon, DocumentPlusIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
 
 export default function ToolBar() {
   // Get current route and note id (if present in url)
@@ -28,7 +28,7 @@ export default function ToolBar() {
         <>
           <Button variant="ghost" asChild>
             <Link href="/notes/new">
-              <PlusCircleIcon className="size-9" />
+              <DocumentPlusIcon className="size-9" />
               Create New Note
             </Link>
           </Button>
@@ -38,7 +38,7 @@ export default function ToolBar() {
       {isNoteDetails && (
         <Button variant="ghost" asChild>
           <Link href={`/notes/${noteId}/edit`}>
-            <PencilSquareIcon className="size-9" />
+            <DocumentTextIcon className="size-9" />
             Edit Note
           </Link>
         </Button>
@@ -46,7 +46,7 @@ export default function ToolBar() {
       {!isNotesRoot && (
         <Button variant="ghost" asChild>
           <Link href="/notes">
-            <ArrowLeftCircleIcon className="size-9" />
+            <DocumentDuplicateIcon className="size-9" />
             Go Back to Notes
           </Link>
         </Button>

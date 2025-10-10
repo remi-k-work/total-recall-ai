@@ -24,7 +24,7 @@ export default function ProfileInfo({ user: { email, name, image, createdAt } }:
       </CardHeader>
       <CardContent>
         <UserAvatar name={name} avatar={image ?? undefined} className="mx-auto" />
-        <h3 className="mx-auto mt-4 truncate text-center">{name}</h3>
+        <h4 className="mx-auto mt-4 truncate text-center">{name}</h4>
         <p className="text-muted-foreground mx-auto truncate text-center">{email}</p>
       </CardContent>
       <CardFooter>

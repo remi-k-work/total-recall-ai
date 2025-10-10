@@ -19,7 +19,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import InfoLine from "@/components/form/InfoLine";
 
 // assets
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import { DocumentTextIcon } from "@heroicons/react/24/outline";
 
 // types
 import type { getNote } from "@/features/notes/db";
@@ -76,7 +76,7 @@ export default function EditNoteForm({ note: { id: noteId, title, content } }: E
           <CardFooter>
             <InfoLine message={feedbackMessage} />
             <FormSubmit
-              submitIcon={<PencilSquareIcon className="size-9" />}
+              submitIcon={<DocumentTextIcon className="size-9" />}
               submitText="Update Note"
               isPending={isPending}
               onClearedForm={hideFeedbackMessage}

@@ -42,7 +42,7 @@ export default function UserPopover() {
       </PopoverTrigger>
       <PopoverContent className="grid">
         <UserAvatar name={name} avatar={image ?? undefined} className="mx-auto" />
-        <h3 className="mt-4 truncate text-center">{name}</h3>
+        <h4 className="mt-4 truncate text-center">{name}</h4>
         <p className="text-muted-foreground truncate text-center">{email}</p>
         <div className="mt-4 grid gap-4">
           <Button variant="ghost" asChild>

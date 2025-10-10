@@ -9,8 +9,8 @@ import { NoteTable } from "@/drizzle/schema";
 import type { DbOrTx } from "@/drizzle/db";
 
 // Retrieve all notes for a user, including only the essential fields, and shorten the content for preview purposes
-export const getNotes = (userId: string) =>
-  db
+export const getNotes = (userId: string, limit?: number) => {
+  const query = db
     .select({
       id: NoteTable.id,
       title: NoteTable.title,
@@ -19,7 +19,11 @@ export const getNotes = (userId: string) =>
     })
     .from(NoteTable)
     .where(eq(NoteTable.userId, userId))
-    .orderBy(desc(NoteTable.updatedAt));
+    .orderBy(desc(NoteTable.updatedAt))
+    .$dynamic();
+
+  return limit ? query.limit(limit) : query;
+};
 
 // Get a single note for a user
 export const getNote = (id: string, userId: string) => db.query.NoteTable.findFirst({ where: and(eq(NoteTable.id, id), eq(NoteTable.userId, userId)) });

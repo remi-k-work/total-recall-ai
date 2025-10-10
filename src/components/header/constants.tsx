@@ -1,20 +1,23 @@
 // assets
-import { HomeIcon, LightBulbIcon, UserIcon } from "@heroicons/react/24/outline";
+import { DocumentDuplicateIcon, LightBulbIcon, UserIcon } from "@heroicons/react/24/outline";
 
 // constants
 export const NAV_ITEMS = [
   {
-    href: "/notes",
-    title: "Notes",
-    icon: <HomeIcon />,
-  },
-  {
     href: "/dashboard",
+    match: "^/dashboard(/.*)?$",
     title: "Dashboard",
     icon: <LightBulbIcon />,
   },
   {
+    href: "/notes",
+    match: "^/notes(/.*)?$",
+    title: "Notes",
+    icon: <DocumentDuplicateIcon />,
+  },
+  {
     href: "/profile",
+    match: "^/profile(/.*)?$",
     title: "Profile",
     icon: <UserIcon />,
   },

@@ -59,7 +59,7 @@ export default function Modal({ onClosed }: ModalProps) {
         <header className="flex items-center justify-between gap-4 p-1">
           <section className="flex items-center gap-2">
             <SparklesIcon className="size-11 flex-none" />
-            <h3 className="flex-1 font-sans text-3xl leading-none uppercase">Notes Assistant</h3>
+            <h4 className="flex-1 font-sans text-3xl leading-none uppercase">Notes Assistant</h4>
           </section>
           <Button type="submit" size="icon" variant="ghost">
             <XCircleIcon className="size-11" />

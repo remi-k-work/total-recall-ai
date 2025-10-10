@@ -12,14 +12,18 @@ import type { ReactNode } from "react";
 
 interface NavItemProps {
   href: __next_route_internal_types__.RouteImpl<string>;
+  match: string;
   title: string;
   icon: ReactNode;
   isExternal?: boolean;
 }
 
-export default function NavItem({ href, title, icon, isExternal = false }: NavItemProps) {
+export default function NavItem({ href, match, title, icon, isExternal = false }: NavItemProps) {
   const pathname = usePathname();
-  const isActive = href === pathname;
+
+  // Compile regex client-side
+  const regex = new RegExp(match);
+  const isActive = regex.test(pathname);
 
   return (
     <Link

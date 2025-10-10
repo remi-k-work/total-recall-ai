@@ -1,6 +1,3 @@
-// next
-import Link from "next/link";
-
 // drizzle and db access
 import { getNotes } from "@/features/notes/db";
 
@@ -9,7 +6,7 @@ import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth
 
 // components
 import ToolBar from "@/features/notes/components/ToolBar";
-import NotePreview from "@/features/notes/components/NotePreview";
+import NotesPreview from "@/features/notes/components/NotesPreview";
 
 // types
 import type { Metadata } from "next";
@@ -29,20 +26,14 @@ export default async function Page() {
   } = (await getUserSessionData())!;
 
   // Retrieve all notes for a user, including only the essential fields, and shorten the content for preview purposes
-  const allNotes = await getNotes(userId);
+  const notes = await getNotes(userId);
 
   return (
     <>
       <h1>Notes</h1>
       <p>Welcome back! Below are all your notes</p>
       <ToolBar />
-      <article className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        {allNotes.map((note) => (
-          <Link key={note.id} href={`/notes/${note.id}`}>
-            <NotePreview note={note} />
-          </Link>
-        ))}
-      </article>
+      <NotesPreview notes={notes} />
     </>
   );
 }
