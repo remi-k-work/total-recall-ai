@@ -6,7 +6,7 @@ import Link from "next/link";
 
 // components
 import { Button } from "@/components/ui/custom/button";
-import NotesAssistant from "./notes-assistant";
+import NotesAssistant from "@/features/notes-assistant/components/notes-assistant";
 
 // assets
 import { DocumentDuplicateIcon, DocumentPlusIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
@@ -23,7 +23,7 @@ export default function ToolBar() {
   const isNoteDetails = pathname.startsWith("/notes/") && noteId && !pathname.endsWith("/edit");
 
   return (
-    <header className="mb-4 flex items-center justify-end gap-4">
+    <header className="mb-4 flex flex-wrap items-center justify-end gap-4">
       {isNotesRoot && (
         <>
           <Button variant="ghost" asChild>
