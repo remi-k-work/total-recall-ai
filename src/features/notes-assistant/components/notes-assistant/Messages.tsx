@@ -2,18 +2,19 @@
 import Message from "./Message";
 
 // types
-import type { UIMessage } from "@ai-sdk/react";
+import type { UIMessage, useChat } from "@ai-sdk/react";
 
 interface MessagesProps {
   messages: UIMessage[];
+  status: ReturnType<typeof useChat>["status"];
 }
 
-export default function Messages({ messages }: MessagesProps) {
+export default function Messages({ messages, status }: MessagesProps) {
   return (
-    <section className="z-1 grid max-h-full gap-3 overflow-y-auto overscroll-y-contain px-3 py-6">
+    <article className="z-1 flex max-h-full flex-col overflow-y-auto overscroll-y-contain px-3 py-6">
       {messages.map((message) => (
-        <Message key={message.id} message={message} />
+        <Message key={message.id} message={message} status={status} />
       ))}
-    </section>
+    </article>
   );
 }

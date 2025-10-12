@@ -1,41 +1,48 @@
-// services, features, and other libraries
-import { cn } from "@/lib/utils";
-
 // components
-import ReactMarkdown from "react-markdown";
+import { Message as AIEMessage, MessageAvatar, MessageContent } from "@/components/ai-elements/custom/message";
+import { Response } from "@/components/ai-elements/response";
 
 // types
-import type { UIMessage } from "@ai-sdk/react";
+import type { UIMessage, useChat } from "@ai-sdk/react";
 
 interface MessageProps {
   message: UIMessage;
+  status: ReturnType<typeof useChat>["status"];
 }
 
-export default function Message({ message: { id, role, parts } }: MessageProps) {
+// constants
+import { REHYPE_PLUGINS } from "@/features/notes-assistant/constants/plugins";
+
+export default function Message({ message: { id, role, parts }, status }: MessageProps) {
   return (
-    <article
-      className={cn(
-        "prose dark:prose-invert rounded-lg px-3 py-2",
-        role === "user" ? "bg-primary text-primary-foreground whitespace-pre-wrap" : "bg-secondary text-secondary-foreground",
-      )}
-    >
-      {parts.map((part, index) => {
-        switch (part.type) {
-          // Render text parts as markdown
-          case "text":
-            return <ReactMarkdown key={`${id}-${index}`}>{part.text}</ReactMarkdown>;
+    <AIEMessage from={role}>
+      <MessageContent>
+        {parts.map((part, index) => {
+          switch (part.type) {
+            // Render text parts as markdown
+            case "text":
+              return (
+                <Response key={`${id}-${index}`} rehypePlugins={REHYPE_PLUGINS} isAnimating={status === "streaming"}>
+                  {part.text}
+                </Response>
+              );
 
-          // For tool parts, use the typed tool part names
-          case "tool-searchNoteChunksForUser":
-            const callId = part.toolCallId;
+            // For tool parts, use the typed tool part names
+            case "tool-searchNoteChunksForUser":
+              const callId = part.toolCallId;
 
-            return (
-              <p key={callId} className="animate-pulse italic">
-                Searching Notes...
-              </p>
-            );
-        }
-      })}
-    </article>
+              return (
+                <p key={callId} className="animate-pulse italic">
+                  Searching Notes...
+                </p>
+              );
+
+            default:
+              return null;
+          }
+        })}
+      </MessageContent>
+      <MessageAvatar name="Total Recall" avatar="/logo-oauth-google.png" />
+    </AIEMessage>
   );
 }

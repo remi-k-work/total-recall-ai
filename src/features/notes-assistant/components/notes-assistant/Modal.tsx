@@ -70,7 +70,7 @@ export default function Modal({ onClosed, className, ...props }: ModalProps) {
                 <XCircleIcon className="size-11" />
               </Button>
             </header>
-            <Messages messages={messages} />
+            <Messages messages={messages} status={status} />
             <Footer sendMessage={sendMessage} status={status} />
           </motion.div>
         )}
