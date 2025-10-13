@@ -20,32 +20,26 @@ type ToolOutputProps = ComponentPropsWithoutRef<"div"> & { output: ToolUIPart["o
 
 // constants
 const ICONS = {
-  "input-streaming": <CircleIcon className="size-4" />,
-  "input-available": <ClockIcon className="size-4 animate-pulse" />,
-  "output-available": <CheckCircleIcon className="size-4 text-green-600" />,
-  "output-error": <XCircleIcon className="size-4 text-red-600" />,
+  "input-streaming": <CircleIcon className="size-7" />,
+  "input-available": <ClockIcon className="size-7 animate-pulse" />,
+  "output-available": <CheckCircleIcon className="size-7 text-green-600" />,
+  "output-error": <XCircleIcon className="size-7 text-red-600" />,
 } as const;
 const LABELS = { "input-streaming": "Pending", "input-available": "Running", "output-available": "Completed", "output-error": "Error" } as const;
 
-export const Tool = ({ className, ...props }: ToolProps) => <Collapsible className={cn("mb-4 w-full rounded-md border", className)} {...props} />;
-
-const getStatusBadge = (status: ToolUIPart["state"]) => {
-  return (
-    <Badge className="gap-1.5 rounded-full text-xs" variant="secondary">
-      {ICONS[status]}
-      {LABELS[status]}
-    </Badge>
-  );
-};
+export const Tool = ({ className, ...props }: ToolProps) => <Collapsible className={cn("group mb-4 w-full rounded-md border", className)} {...props} />;
 
 export const ToolHeader = ({ className, title, type, state, ...props }: ToolHeaderProps) => (
-  <CollapsibleTrigger className={cn("flex w-full items-center justify-between gap-4 p-3", className)} {...props}>
-    <div className="flex items-center gap-2">
-      <WrenchIcon className="text-muted-foreground size-4" />
-      <span className="text-sm font-medium">{title ?? type.split("-").slice(1).join("-")}</span>
-      {getStatusBadge(state)}
+  <CollapsibleTrigger className={cn("flex w-full items-center justify-between gap-4 p-3 text-lg", className)} {...props}>
+    <div className="text-muted-foreground flex flex-wrap items-center gap-2">
+      <WrenchIcon className="size-7" />
+      {title ?? type.split("-").slice(1).join("-")}
+      <Badge className="gap-2 rounded-lg" variant="outline">
+        {ICONS[state]}
+        {LABELS[state]}
+      </Badge>
     </div>
-    <ChevronDownIcon className="text-muted-foreground size-4 transition-transform group-data-[state=open]:rotate-180" />
+    <ChevronDownIcon className="text-muted-foreground size-7 transition-transform group-data-[state=open]:rotate-180" />
   </CollapsibleTrigger>
 );
 
@@ -61,7 +55,7 @@ export const ToolContent = ({ className, ...props }: ToolContentProps) => (
 
 export const ToolInput = ({ className, input, ...props }: ToolInputProps) => (
   <div className={cn("space-y-2 overflow-hidden p-4", className)} {...props}>
-    <h4 className="text-muted-foreground text-xs font-medium tracking-wide uppercase">Parameters</h4>
+    <h4 className="text-muted-foreground tracking-wide uppercase">Parameters</h4>
     <div className="bg-muted/50 rounded-md">
       <CodeBlock code={JSON.stringify(input, null, 2)} language="json" />
     </div>
@@ -69,9 +63,7 @@ export const ToolInput = ({ className, input, ...props }: ToolInputProps) => (
 );
 
 export const ToolOutput = ({ className, output, errorText, ...props }: ToolOutputProps) => {
-  if (!(output || errorText)) {
-    return null;
-  }
+  if (!(output || errorText)) return null;
 
   let Output = <div>{output as ReactNode}</div>;
 
@@ -83,10 +75,8 @@ export const ToolOutput = ({ className, output, errorText, ...props }: ToolOutpu
 
   return (
     <div className={cn("space-y-2 p-4", className)} {...props}>
-      <h4 className="text-muted-foreground text-xs font-medium tracking-wide uppercase">{errorText ? "Error" : "Result"}</h4>
-      <div
-        className={cn("overflow-x-auto rounded-md text-xs [&_table]:w-full", errorText ? "bg-destructive/10 text-destructive" : "bg-muted/50 text-foreground")}
-      >
+      <h4 className="text-muted-foreground tracking-wide uppercase">{errorText ? "Error" : "Result"}</h4>
+      <div className={cn("overflow-x-auto [&_table]:w-full", errorText ? "bg-destructive/10 text-destructive" : "bg-muted/50 text-foreground")}>
         {errorText && <div>{errorText}</div>}
         {Output}
       </div>

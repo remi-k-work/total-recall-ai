@@ -48,7 +48,7 @@ export default function Message({ message: { id, role, parts }, status }: Messag
 
               return (
                 <Tool key={toolCallId}>
-                  <ToolHeader type={part.type} state={state} />
+                  <ToolHeader title="Searching Notes" type={part.type} state={state} />
                   <ToolContent>
                     <ToolInput input={input} />
                     <ToolOutput output={output} errorText={errorText} />

@@ -1,12 +1,41 @@
 // drizzle and db access
 import { db } from "@/drizzle/db";
-import { and, desc, eq, sql } from "drizzle-orm";
+import { and, count, desc, eq, sql } from "drizzle-orm";
 
 // all table definitions (their schemas)
 import { NoteTable } from "@/drizzle/schema";
 
 // types
 import type { DbOrTx } from "@/drizzle/db";
+
+export const getNotesWithPagination = async (userId: string, currentPage: number = 1, itemsPerPage: number = 3) => {
+  const [notes, [{ totalItems }]] = await Promise.all([
+    db
+      .select({
+        id: NoteTable.id,
+        title: NoteTable.title,
+        contentPreview: sql<string>`substring(${NoteTable.content} from 1 for 512)`,
+        updatedAt: NoteTable.updatedAt,
+      })
+      .from(NoteTable)
+      .where(eq(NoteTable.userId, userId))
+      .orderBy(desc(NoteTable.updatedAt))
+      .limit(itemsPerPage)
+      .offset((currentPage - 1) * itemsPerPage),
+
+    db.select({ totalItems: count() }).from(NoteTable).where(eq(NoteTable.userId, userId)),
+  ]);
+
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  return {
+    notes,
+    totalItems,
+    totalPages,
+    prevPageNumber: currentPage > 1 ? currentPage - 1 : 1,
+    nextPageNumber: currentPage < totalPages ? currentPage + 1 : totalPages,
+  };
+};
 
 // Retrieve all notes for a user, including only the essential fields, and shorten the content for preview purposes
 export const getNotes = (userId: string, limit?: number) => {
