@@ -1,8 +1,8 @@
 // services, features, and other libraries
 import { z } from "zod";
 
+// schemas
 export const InputSchema = z.object({ question: z.string().describe("The user's question.") });
-
 export const OutputSchema = z
   .object({
     results: z
@@ -18,3 +18,10 @@ export const OutputSchema = z
       .describe("An array of note chunks retrieved by the search, ordered by relevance (highest similarity score first)."),
   })
   .describe("The comprehensive result set from searching the user's notes.");
+
+// types
+import type { ToolUIPart } from "ai";
+
+export type SearchNoteChunksForUserToolUIPart = ToolUIPart<{
+  searchNoteChunksForUser: { input: z.infer<typeof InputSchema>; output: z.infer<typeof OutputSchema> };
+}>;

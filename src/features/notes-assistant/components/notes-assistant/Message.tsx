@@ -1,6 +1,10 @@
+// services, features, and other libraries
+import { authClient } from "@/services/better-auth/auth-client";
+
 // components
 import { Message as AIEMessage, MessageAvatar, MessageContent } from "@/components/ai-elements/custom/message";
 import { Response } from "@/components/ai-elements/response";
+import { Tool, ToolContent, ToolHeader, ToolInput, ToolOutput } from "@/components/ai-elements/custom/tool";
 
 // types
 import type { UIMessage, useChat } from "@ai-sdk/react";
@@ -14,6 +18,17 @@ interface MessageProps {
 import { REHYPE_PLUGINS } from "@/features/notes-assistant/constants/plugins";
 
 export default function Message({ message: { id, role, parts }, status }: MessageProps) {
+  // Access the user session data from the client side
+  const { data: userSessionData } = authClient.useSession();
+
+  // If there is no user session data, do not render anything
+  if (!userSessionData) return null;
+
+  // Destructure the user session data
+  const {
+    user: { name, image },
+  } = userSessionData;
+
   return (
     <AIEMessage from={role}>
       <MessageContent>
@@ -29,12 +44,19 @@ export default function Message({ message: { id, role, parts }, status }: Messag
 
             // For tool parts, use the typed tool part names
             case "tool-searchNoteChunksForUser":
-              const callId = part.toolCallId;
+              const { toolCallId, state, input, output, errorText } = part;
 
               return (
-                <p key={callId} className="animate-pulse italic">
-                  Searching Notes...
-                </p>
+                <Tool key={toolCallId}>
+                  <ToolHeader type={part.type} state={state} />
+                  <ToolContent>
+                    <ToolInput input={input} />
+                    <ToolOutput output={output} errorText={errorText} />
+                  </ToolContent>
+                </Tool>
+                // <p key={callId} className="animate-pulse italic">
+                //   Searching Notes...
+                // </p>
               );
 
             default:
@@ -42,7 +64,7 @@ export default function Message({ message: { id, role, parts }, status }: Messag
           }
         })}
       </MessageContent>
-      <MessageAvatar name="Total Recall" avatar="/logo-oauth-google.png" />
+      {role === "user" ? <MessageAvatar name={name} avatar={image ?? undefined} /> : <MessageAvatar name="Total Recall" avatar="/logo-oauth-google.png" />}
     </AIEMessage>
   );
 }

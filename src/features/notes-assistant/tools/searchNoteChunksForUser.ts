@@ -11,8 +11,6 @@ export const searchNoteChunksForUserTool = (userId: string) =>
     inputSchema: InputSchema,
     outputSchema: OutputSchema,
     execute: async ({ question }) => {
-      console.log("searchNoteChunksForUser query:", question);
-
       // Search for and retrieve note chunks most relevant to the user's question
       return { results: await searchNoteChunksForUser(userId, question) };
     },
