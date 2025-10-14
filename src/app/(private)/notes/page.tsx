@@ -8,6 +8,8 @@ import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth
 
 // components
 import ToolBar from "@/features/notes/components/ToolBar";
+import Paginate from "@/components/Paginate";
+import SortBy, { SORT_BY_FIELDS } from "@/components/SortBy";
 import NotesPreview from "@/features/notes/components/NotesPreview";
 
 // types
@@ -21,10 +23,8 @@ export const metadata: Metadata = {
 export default async function Page({ params, searchParams }: PageProps<"/notes">) {
   // Safely validate next.js route inputs (`params` and `searchParams`) against a zod schema; return typed data or trigger a 404 on failure
   const {
-    searchParams: { page },
+    searchParams: { p: currentPage },
   } = await validatePageInputs(NotesPageSchema, { params, searchParams });
-
-  console.log(page);
 
   // Make sure the current user is authenticated (the check runs on the server side)
   await makeSureUserIsAuthenticated();
@@ -35,13 +35,15 @@ export default async function Page({ params, searchParams }: PageProps<"/notes">
   } = (await getUserSessionData())!;
 
   // Retrieve all notes for a user, including only the essential fields, and shorten the content for preview purposes
-  const { notes } = await getNotesWithPagination(userId);
+  const { notes, totalPages, prevPageNumber, nextPageNumber } = await getNotesWithPagination(userId, currentPage);
 
   return (
     <>
       <h1>Notes</h1>
       <p>Welcome back! Below are all your notes</p>
       <ToolBar />
+      <Paginate currentPage={currentPage} totalPages={totalPages} prevPageNumber={prevPageNumber} nextPageNumber={nextPageNumber} />
+      <SortBy currentField="created_at" totalPages={totalPages} sortByFields={[SORT_BY_FIELDS[0], SORT_BY_FIELDS[1]]} />
       <NotesPreview notes={notes} />
     </>
   );

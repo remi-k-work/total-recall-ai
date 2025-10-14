@@ -1,19 +1,18 @@
 "use client";
 
 // react
-import { useState } from "react";
+import { useCallback, useMemo } from "react";
 
 // next
+import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-// services, features, and other libraries
-import { cn } from "@/lib/utils";
-
 // components
+import { Button } from "@/components/ui/custom/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 // assets
-import { BackwardIcon, CheckIcon, ForwardIcon } from "@heroicons/react/24/solid";
+import { ArrowLeftCircleIcon, ArrowRightCircleIcon, CheckIcon } from "@heroicons/react/24/outline";
 
 // types
 interface PaginateProps {
@@ -24,45 +23,60 @@ interface PaginateProps {
 }
 
 export default function Paginate({ currentPage, totalPages, prevPageNumber, nextPageNumber }: PaginateProps) {
-  // Whether or not the dropdown menu is open
-  //   const [open, setOpen] = useState(false);
+  // Access the current route's pathname and query parameters
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const pageNumbers = [];
-  for (let i = 1; i <= totalPages; i++) pageNumbers.push(i);
+  // Build a new href with the provided search params while preserving existing ones
+  const buildNewHref = useCallback(
+    (currentPage: number) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("p", String(currentPage));
 
-  // Do not render anything if there are no items to display
-  if (totalPages === 0) return null;
+      return `${pathname}?${params.toString()}` as __next_route_internal_types__.RouteImpl<string>;
+    },
+    [searchParams, pathname],
+  );
+
+  // Generate a list of all page numbers [1, 2, ..., totalPages]
+  const pageNumbers = useMemo(() => [...Array(totalPages).keys()].map((i) => i + 1), [totalPages]);
+
+  // Skip rendering if there is only one or zero pages
+  if (totalPages <= 1) return null;
 
   return (
-    <section>
-      <Link href={`/notes?page=${prevPageNumber}`}>
-        <BackwardIcon width={24} height={24} />
-      </Link>
-      {/* <DropdownMenu open={open} onOpenChange={setOpen}> */}
+    <section className="flex items-center gap-2">
+      <Button size="icon" variant="ghost" title="Previous Page" asChild>
+        <Link href={buildNewHref(prevPageNumber)}>
+          <ArrowLeftCircleIcon className="size-9" />
+        </Link>
+      </Button>
       <DropdownMenu>
-        <DropdownMenuTrigger>
-          <header>
+        <DropdownMenuTrigger asChild>
+          <Button type="button" variant="ghost" title="Change Page">
             {currentPage}&nbsp;/&nbsp;{totalPages}
-          </header>
+          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           {pageNumbers.map((pageNumber) =>
             pageNumber === currentPage ? (
-              <DropdownMenuItem key={pageNumber}>
+              <DropdownMenuItem key={pageNumber} className="justify-between text-xl">
                 {pageNumber}
-                <CheckIcon width={24} height={24} />
+                <CheckIcon className="size-6" />
               </DropdownMenuItem>
             ) : (
-              <DropdownMenuItem key={pageNumber}>
-                <Link href={`/notes?page=${pageNumber}`}>{pageNumber}</Link>
+              <DropdownMenuItem key={pageNumber} className="text-xl" asChild>
+                <Link href={buildNewHref(pageNumber)}>{pageNumber}</Link>
               </DropdownMenuItem>
             ),
           )}
         </DropdownMenuContent>
       </DropdownMenu>
-      <Link href={`/notes?page=${nextPageNumber}`}>
-        <ForwardIcon width={24} height={24} />
-      </Link>
+      <Button size="icon" variant="ghost" title="Next Page" asChild>
+        <Link href={buildNewHref(nextPageNumber)}>
+          <ArrowRightCircleIcon className="size-9" />
+        </Link>
+      </Button>
     </section>
   );
 }
