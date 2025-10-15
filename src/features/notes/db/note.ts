@@ -28,13 +28,7 @@ export const getNotesWithPagination = async (userId: string, currentPage: number
 
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  return {
-    notes,
-    totalItems,
-    totalPages,
-    prevPageNumber: currentPage > 1 ? currentPage - 1 : 1,
-    nextPageNumber: currentPage < totalPages ? currentPage + 1 : totalPages,
-  };
+  return { notes, totalPages, prevPage: Math.max(1, currentPage - 1), nextPage: Math.min(totalPages, currentPage + 1) };
 };
 
 // Retrieve all notes for a user, including only the essential fields, and shorten the content for preview purposes

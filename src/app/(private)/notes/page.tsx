@@ -9,7 +9,7 @@ import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth
 // components
 import ToolBar from "@/features/notes/components/ToolBar";
 import Paginate from "@/components/Paginate";
-import SortBy, { SORT_BY_FIELDS } from "@/components/SortBy";
+import SortBy from "@/components/SortBy";
 import NotesPreview from "@/features/notes/components/NotesPreview";
 
 // types
@@ -35,15 +35,15 @@ export default async function Page({ params, searchParams }: PageProps<"/notes">
   } = (await getUserSessionData())!;
 
   // Retrieve all notes for a user, including only the essential fields, and shorten the content for preview purposes
-  const { notes, totalPages, prevPageNumber, nextPageNumber } = await getNotesWithPagination(userId, currentPage);
+  const { notes, totalPages, prevPage, nextPage } = await getNotesWithPagination(userId, currentPage);
 
   return (
     <>
       <h1>Notes</h1>
       <p>Welcome back! Below are all your notes</p>
       <ToolBar />
-      <Paginate currentPage={currentPage} totalPages={totalPages} prevPageNumber={prevPageNumber} nextPageNumber={nextPageNumber} />
-      <SortBy currentField="created_at" totalPages={totalPages} sortByFields={[SORT_BY_FIELDS[0], SORT_BY_FIELDS[1]]} />
+      <Paginate totalPages={totalPages} currentPage={currentPage} prevPage={prevPage} nextPage={nextPage} />
+      <SortBy totalPages={totalPages} sortByFields={["created_at", "updated_at"]} currentField="created_at" currentDirection="desc" />
       <NotesPreview notes={notes} />
     </>
   );

@@ -4,41 +4,47 @@
 import { useCallback } from "react";
 
 // next
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 // components
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/custom/toggle-group";
+import { Label } from "@/components/ui/custom/label";
+import { Switch } from "@/components/ui/custom/switch";
 
 // assets
 import { ArrowLeftCircleIcon, ArrowRightCircleIcon } from "@heroicons/react/24/outline";
 
 // types
-type SortByField = (typeof SORT_BY_FIELDS)[number];
-
 interface SortByProps {
-  currentField: SortByField[0];
   totalPages: number;
-  sortByFields: readonly SortByField[];
+  sortByFields: (keyof typeof FIELD_ICONS)[];
+  currentField: keyof typeof FIELD_ICONS;
+  currentDirection: "asc" | "desc";
 }
 
 // constants
-export const SORT_BY_FIELDS = [
-  ["created_at", <ArrowLeftCircleIcon key="created_at" className="h-4 w-4" />],
-  ["updated_at", <ArrowRightCircleIcon key="updated_at" className="h-4 w-4" />],
-] as const;
+const FIELD_ICONS = {
+  created_at: <ArrowLeftCircleIcon className="size-9" />,
+  updated_at: <ArrowRightCircleIcon className="size-9" />,
+} as const;
 
-export default function SortBy({ currentField, totalPages, sortByFields }: SortByProps) {
+const FIELD_LABELS = {
+  created_at: "Created",
+  updated_at: "Updated",
+} as const;
+
+export default function SortBy({ totalPages, sortByFields, currentField, currentDirection }: SortByProps) {
   // Access the current route's pathname and query parameters
+  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   // Build a new href with the provided search params while preserving existing ones
   const buildNewHref = useCallback(
-    (currentField: string) => {
+    (paramsToSet: [string, string][]) => {
       const params = new URLSearchParams(searchParams.toString());
-      params.set("s", currentField);
-
+      for (const [key, value] of paramsToSet) params.set(key, value);
       return `${pathname}?${params.toString()}` as __next_route_internal_types__.RouteImpl<string>;
     },
     [searchParams, pathname],
@@ -48,15 +54,28 @@ export default function SortBy({ currentField, totalPages, sortByFields }: SortB
   if (totalPages <= 1) return null;
 
   return (
-    <ToggleGroup type="single" defaultValue={currentField}>
-      {sortByFields.map(([field, icon]) => (
-        <ToggleGroupItem key={field} value={field} aria-label={`Sort by ${field}`} title={`Sort by ${field}`}>
-          <Link href={buildNewHref(field)} className="flex items-center gap-2">
-            {icon}
-            {field}
-          </Link>
-        </ToggleGroupItem>
-      ))}
-    </ToggleGroup>
+    <>
+      <ToggleGroup type="single" defaultValue={currentField}>
+        {sortByFields.map((field) => (
+          <ToggleGroupItem key={field} value={field} aria-label={`Sort By ${FIELD_LABELS[field]}`} title={`Sort By ${FIELD_LABELS[field]}`}>
+            <Link href={buildNewHref([["sf", field]])} className="flex flex-col items-center">
+              {FIELD_ICONS[field]}
+              {FIELD_LABELS[field]}
+            </Link>
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
+      <Label className="flex items-center gap-2">
+        DESC
+        <Switch
+          name="sortDirection"
+          defaultChecked={currentDirection === "asc"}
+          onCheckedChange={(isAscending) => {
+            router.push(buildNewHref([["sd", isAscending ? "asc" : "desc"]]));
+          }}
+        />
+        ASC
+      </Label>
+    </>
   );
 }

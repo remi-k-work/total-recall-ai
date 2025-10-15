@@ -16,23 +16,22 @@ import { ArrowLeftCircleIcon, ArrowRightCircleIcon, CheckIcon } from "@heroicons
 
 // types
 interface PaginateProps {
-  currentPage: number;
   totalPages: number;
-  prevPageNumber: number;
-  nextPageNumber: number;
+  currentPage: number;
+  prevPage: number;
+  nextPage: number;
 }
 
-export default function Paginate({ currentPage, totalPages, prevPageNumber, nextPageNumber }: PaginateProps) {
+export default function Paginate({ totalPages, currentPage, prevPage, nextPage }: PaginateProps) {
   // Access the current route's pathname and query parameters
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   // Build a new href with the provided search params while preserving existing ones
   const buildNewHref = useCallback(
-    (currentPage: number) => {
+    (paramsToSet: [string, string][]) => {
       const params = new URLSearchParams(searchParams.toString());
-      params.set("p", String(currentPage));
-
+      for (const [key, value] of paramsToSet) params.set(key, value);
       return `${pathname}?${params.toString()}` as __next_route_internal_types__.RouteImpl<string>;
     },
     [searchParams, pathname],
@@ -47,7 +46,7 @@ export default function Paginate({ currentPage, totalPages, prevPageNumber, next
   return (
     <section className="flex items-center gap-2">
       <Button size="icon" variant="ghost" title="Previous Page" asChild>
-        <Link href={buildNewHref(prevPageNumber)}>
+        <Link href={buildNewHref([["p", String(prevPage)]])}>
           <ArrowLeftCircleIcon className="size-9" />
         </Link>
       </Button>
@@ -66,14 +65,14 @@ export default function Paginate({ currentPage, totalPages, prevPageNumber, next
               </DropdownMenuItem>
             ) : (
               <DropdownMenuItem key={pageNumber} className="text-xl" asChild>
-                <Link href={buildNewHref(pageNumber)}>{pageNumber}</Link>
+                <Link href={buildNewHref([["p", String(pageNumber)]])}>{pageNumber}</Link>
               </DropdownMenuItem>
             ),
           )}
         </DropdownMenuContent>
       </DropdownMenu>
       <Button size="icon" variant="ghost" title="Next Page" asChild>
-        <Link href={buildNewHref(nextPageNumber)}>
+        <Link href={buildNewHref([["p", String(nextPage)]])}>
           <ArrowRightCircleIcon className="size-9" />
         </Link>
       </Button>
