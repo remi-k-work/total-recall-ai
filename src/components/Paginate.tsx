@@ -40,8 +40,8 @@ export default function Paginate({ totalPages, currentPage, prevPage, nextPage }
   // Generate a list of all page numbers [1, 2, ..., totalPages]
   const pageNumbers = useMemo(() => [...Array(totalPages).keys()].map((i) => i + 1), [totalPages]);
 
-  // Skip rendering if there is only one or zero pages
-  if (totalPages <= 1) return null;
+  // Skip rendering if there is no pages
+  if (totalPages === 0) return null;
 
   return (
     <section className="flex items-center gap-2">

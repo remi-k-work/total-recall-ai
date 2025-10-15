@@ -1,6 +1,6 @@
 // drizzle and db access
 import { db } from "@/drizzle/db";
-import { and, count, desc, eq, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, sql } from "drizzle-orm";
 
 // all table definitions (their schemas)
 import { NoteTable } from "@/drizzle/schema";
@@ -8,7 +8,13 @@ import { NoteTable } from "@/drizzle/schema";
 // types
 import type { DbOrTx } from "@/drizzle/db";
 
-export const getNotesWithPagination = async (userId: string, currentPage: number = 1, itemsPerPage: number = 3) => {
+export const getNotesWithPagination = async (
+  userId: string,
+  currentPage: number = 1,
+  itemsPerPage: number = 3,
+  sortByField: "created_at" | "updated_at" | "title" = "updated_at",
+  sortByDirection: "asc" | "desc" = "desc",
+) => {
   const [notes, [{ totalItems }]] = await Promise.all([
     db
       .select({
@@ -19,7 +25,11 @@ export const getNotesWithPagination = async (userId: string, currentPage: number
       })
       .from(NoteTable)
       .where(eq(NoteTable.userId, userId))
-      .orderBy(desc(NoteTable.updatedAt))
+      .orderBy(
+        sortByDirection === "asc"
+          ? asc(sortByField === "created_at" ? NoteTable.createdAt : sortByField === "updated_at" ? NoteTable.updatedAt : NoteTable.title)
+          : desc(sortByField === "created_at" ? NoteTable.createdAt : sortByField === "updated_at" ? NoteTable.updatedAt : NoteTable.title),
+      )
       .limit(itemsPerPage)
       .offset((currentPage - 1) * itemsPerPage),
 

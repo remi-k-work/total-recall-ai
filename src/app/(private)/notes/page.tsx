@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 export default async function Page({ params, searchParams }: PageProps<"/notes">) {
   // Safely validate next.js route inputs (`params` and `searchParams`) against a zod schema; return typed data or trigger a 404 on failure
   const {
-    searchParams: { p: currentPage },
+    searchParams: { p: currentPage, sf: currentField, sd: currentDirection },
   } = await validatePageInputs(NotesPageSchema, { params, searchParams });
 
   // Make sure the current user is authenticated (the check runs on the server side)
@@ -35,7 +35,7 @@ export default async function Page({ params, searchParams }: PageProps<"/notes">
   } = (await getUserSessionData())!;
 
   // Retrieve all notes for a user, including only the essential fields, and shorten the content for preview purposes
-  const { notes, totalPages, prevPage, nextPage } = await getNotesWithPagination(userId, currentPage);
+  const { notes, totalPages, prevPage, nextPage } = await getNotesWithPagination(userId, currentPage, 10, currentField, currentDirection);
 
   return (
     <>
@@ -43,7 +43,7 @@ export default async function Page({ params, searchParams }: PageProps<"/notes">
       <p>Welcome back! Below are all your notes</p>
       <ToolBar />
       <Paginate totalPages={totalPages} currentPage={currentPage} prevPage={prevPage} nextPage={nextPage} />
-      <SortBy totalPages={totalPages} sortByFields={["created_at", "updated_at"]} currentField="created_at" currentDirection="desc" />
+      <SortBy totalPages={totalPages} sortByFields={["created_at", "updated_at", "title"]} currentField={currentField} currentDirection={currentDirection} />
       <NotesPreview notes={notes} />
     </>
   );
