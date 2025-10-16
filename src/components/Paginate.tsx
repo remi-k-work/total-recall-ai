@@ -37,7 +37,7 @@ export default function Paginate({ totalPages, currentPage, prevPage, nextPage }
   return (
     <section className="flex items-center gap-2">
       <Button size="icon" variant="ghost" title="Previous Page" asChild>
-        <Link href={createHref({ p: prevPage })}>
+        <Link href={createHref({ cp: prevPage })}>
           <ArrowLeftCircleIcon className="size-9" />
         </Link>
       </Button>
@@ -56,14 +56,14 @@ export default function Paginate({ totalPages, currentPage, prevPage, nextPage }
               </DropdownMenuItem>
             ) : (
               <DropdownMenuItem key={pageNumber} className="text-xl" asChild>
-                <Link href={createHref({ p: pageNumber })}>{pageNumber}</Link>
+                <Link href={createHref({ cp: pageNumber })}>{pageNumber}</Link>
               </DropdownMenuItem>
             ),
           )}
         </DropdownMenuContent>
       </DropdownMenu>
       <Button size="icon" variant="ghost" title="Next Page" asChild>
-        <Link href={createHref({ p: nextPage })}>
+        <Link href={createHref({ cp: nextPage })}>
           <ArrowRightCircleIcon className="size-9" />
         </Link>
       </Button>

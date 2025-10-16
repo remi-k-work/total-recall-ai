@@ -5,7 +5,7 @@ import { useCallback } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 // types
-import { type Route } from "next";
+import type { Route } from "next";
 
 // Define a more convenient type for the params object
 type QueryParams = Record<string, string | number>;

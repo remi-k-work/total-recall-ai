@@ -46,7 +46,7 @@ export default function SortBy({ totalPages, fields, currentField, currentDirect
       <ToggleGroup type="single" defaultValue={currentField} className="items-start">
         {fields.map(({ key, label, iconKey }) => (
           <ToggleGroupItem key={key} value={key} aria-label={`Sort By: ${label}`} title={`Sort By: ${label}`} className="gap-0" asChild>
-            <Link href={createHref({ sf: key })} className="flex-col">
+            <Link href={createHref({ sbf: key })} className="flex-col">
               {ICON_MAP[iconKey]}
               <p className="text-center font-sans text-sm whitespace-pre-line">{label.replaceAll(" ", "\n")}</p>
             </Link>
@@ -60,7 +60,7 @@ export default function SortBy({ totalPages, fields, currentField, currentDirect
           aria-label="Sort Direction"
           title="Sort Direction"
           defaultChecked={currentDirection === "asc"}
-          onCheckedChange={(isAscending) => navigate({ sd: isAscending ? "asc" : "desc" })}
+          onCheckedChange={(isAscending) => navigate({ sbd: isAscending ? "asc" : "desc" })}
         />
         <span className="text-muted-foreground ml-1 text-3xl">△</span>ASC
       </Label>
