@@ -1,11 +1,10 @@
 "use client";
 
-// react
-import { useCallback } from "react";
-
 // next
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+
+// services, features, and other libraries
+import useUrlScribe from "@/hooks/useUrlScribe";
 
 // components
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/custom/toggle-group";
@@ -16,41 +15,28 @@ import { Switch } from "@/components/ui/custom/switch";
 import { CalendarIcon, LanguageIcon } from "@heroicons/react/24/outline";
 
 // types
+export interface SortField {
+  key: string;
+  label: string;
+  iconKey: keyof typeof ICON_MAP;
+}
+
 interface SortByProps {
   totalPages: number;
-  sortByFields: (keyof typeof FIELD_ICONS)[];
-  currentField: keyof typeof FIELD_ICONS;
+  fields: SortField[];
+  currentField: string;
   currentDirection: "asc" | "desc";
 }
 
 // constants
-const FIELD_ICONS = {
-  created_at: <CalendarIcon className="size-9" />,
-  updated_at: <CalendarIcon className="size-9" />,
-  title: <LanguageIcon className="size-9" />,
+const ICON_MAP = {
+  calendar: <CalendarIcon className="size-9" />,
+  language: <LanguageIcon className="size-9" />,
 } as const;
 
-const FIELD_LABELS = {
-  created_at: "Created At",
-  updated_at: "Updated At",
-  title: "Note Title",
-} as const;
-
-export default function SortBy({ totalPages, sortByFields, currentField, currentDirection }: SortByProps) {
-  // Access the current route's pathname and query parameters
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  // Build a new href with the provided search params while preserving existing ones
-  const buildNewHref = useCallback(
-    (paramsToSet: [string, string][]) => {
-      const params = new URLSearchParams(searchParams.toString());
-      for (const [key, value] of paramsToSet) params.set(key, value);
-      return `${pathname}?${params.toString()}` as __next_route_internal_types__.RouteImpl<string>;
-    },
-    [searchParams, pathname],
-  );
+export default function SortBy({ totalPages, fields, currentField, currentDirection }: SortByProps) {
+  // A hook to easily create new route strings with updated search parameters (it preserves existing search params)
+  const { createHref, navigate } = useUrlScribe();
 
   // Skip rendering if there is no pages
   if (totalPages === 0) return null;
@@ -58,18 +44,11 @@ export default function SortBy({ totalPages, sortByFields, currentField, current
   return (
     <section className="flex items-center gap-2">
       <ToggleGroup type="single" defaultValue={currentField} className="items-start">
-        {sortByFields.map((field) => (
-          <ToggleGroupItem
-            key={field}
-            value={field}
-            aria-label={`Sort By: ${FIELD_LABELS[field]}`}
-            title={`Sort By: ${FIELD_LABELS[field]}`}
-            className="gap-0"
-            asChild
-          >
-            <Link href={buildNewHref([["sf", field]])} className="flex-col">
-              {FIELD_ICONS[field]}
-              <p className="text-center font-sans text-sm whitespace-pre-line">{FIELD_LABELS[field].replaceAll(" ", "\n")}</p>
+        {fields.map(({ key, label, iconKey }) => (
+          <ToggleGroupItem key={key} value={key} aria-label={`Sort By: ${label}`} title={`Sort By: ${label}`} className="gap-0" asChild>
+            <Link href={createHref({ sf: key })} className="flex-col">
+              {ICON_MAP[iconKey]}
+              <p className="text-center font-sans text-sm whitespace-pre-line">{label.replaceAll(" ", "\n")}</p>
             </Link>
           </ToggleGroupItem>
         ))}
@@ -81,9 +60,7 @@ export default function SortBy({ totalPages, sortByFields, currentField, current
           aria-label="Sort Direction"
           title="Sort Direction"
           defaultChecked={currentDirection === "asc"}
-          onCheckedChange={(isAscending) => {
-            router.push(buildNewHref([["sd", isAscending ? "asc" : "desc"]]));
-          }}
+          onCheckedChange={(isAscending) => navigate({ sd: isAscending ? "asc" : "desc" })}
         />
         <span className="text-muted-foreground ml-1 text-3xl">△</span>ASC
       </Label>

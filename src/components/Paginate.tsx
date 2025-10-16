@@ -1,11 +1,13 @@
 "use client";
 
 // react
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 
 // next
-import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
+
+// services, features, and other libraries
+import useUrlScribe from "@/hooks/useUrlScribe";
 
 // components
 import { Button } from "@/components/ui/custom/button";
@@ -23,19 +25,8 @@ interface PaginateProps {
 }
 
 export default function Paginate({ totalPages, currentPage, prevPage, nextPage }: PaginateProps) {
-  // Access the current route's pathname and query parameters
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  // Build a new href with the provided search params while preserving existing ones
-  const buildNewHref = useCallback(
-    (paramsToSet: [string, string][]) => {
-      const params = new URLSearchParams(searchParams.toString());
-      for (const [key, value] of paramsToSet) params.set(key, value);
-      return `${pathname}?${params.toString()}` as __next_route_internal_types__.RouteImpl<string>;
-    },
-    [searchParams, pathname],
-  );
+  // A hook to easily create new route strings with updated search parameters (it preserves existing search params)
+  const { createHref } = useUrlScribe();
 
   // Generate a list of all page numbers [1, 2, ..., totalPages]
   const pageNumbers = useMemo(() => [...Array(totalPages).keys()].map((i) => i + 1), [totalPages]);
@@ -46,7 +37,7 @@ export default function Paginate({ totalPages, currentPage, prevPage, nextPage }
   return (
     <section className="flex items-center gap-2">
       <Button size="icon" variant="ghost" title="Previous Page" asChild>
-        <Link href={buildNewHref([["p", String(prevPage)]])}>
+        <Link href={createHref({ p: prevPage })}>
           <ArrowLeftCircleIcon className="size-9" />
         </Link>
       </Button>
@@ -65,14 +56,14 @@ export default function Paginate({ totalPages, currentPage, prevPage, nextPage }
               </DropdownMenuItem>
             ) : (
               <DropdownMenuItem key={pageNumber} className="text-xl" asChild>
-                <Link href={buildNewHref([["p", String(pageNumber)]])}>{pageNumber}</Link>
+                <Link href={createHref({ p: pageNumber })}>{pageNumber}</Link>
               </DropdownMenuItem>
             ),
           )}
         </DropdownMenuContent>
       </DropdownMenu>
       <Button size="icon" variant="ghost" title="Next Page" asChild>
-        <Link href={buildNewHref([["p", String(nextPage)]])}>
+        <Link href={createHref({ p: nextPage })}>
           <ArrowRightCircleIcon className="size-9" />
         </Link>
       </Button>

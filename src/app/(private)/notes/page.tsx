@@ -14,8 +14,15 @@ import NotesPreview from "@/features/notes/components/NotesPreview";
 
 // types
 import type { Metadata } from "next";
+import type { SortField } from "@/components/SortBy";
 
 // constants
+const NOTES_SORT_FIELDS: SortField[] = [
+  { key: "created_at", label: "Created At", iconKey: "calendar" },
+  { key: "updated_at", label: "Updated At", iconKey: "calendar" },
+  { key: "title", label: "Note Title", iconKey: "language" },
+] as const;
+
 export const metadata: Metadata = {
   title: "Total Recall AI ► Notes",
 };
@@ -35,7 +42,7 @@ export default async function Page({ params, searchParams }: PageProps<"/notes">
   } = (await getUserSessionData())!;
 
   // Retrieve all notes for a user, including only the essential fields, and shorten the content for preview purposes
-  const { notes, totalPages, prevPage, nextPage } = await getNotesWithPagination(userId, currentPage, 10, currentField, currentDirection);
+  const { notes, totalPages, prevPage, nextPage } = await getNotesWithPagination(userId, currentPage, 1, currentField, currentDirection);
 
   return (
     <>
@@ -43,7 +50,7 @@ export default async function Page({ params, searchParams }: PageProps<"/notes">
       <p>Welcome back! Below are all your notes</p>
       <ToolBar />
       <Paginate totalPages={totalPages} currentPage={currentPage} prevPage={prevPage} nextPage={nextPage} />
-      <SortBy totalPages={totalPages} sortByFields={["created_at", "updated_at", "title"]} currentField={currentField} currentDirection={currentDirection} />
+      <SortBy totalPages={totalPages} fields={NOTES_SORT_FIELDS} currentField={currentField} currentDirection={currentDirection} />
       <NotesPreview notes={notes} />
     </>
   );
