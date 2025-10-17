@@ -3,12 +3,13 @@
 // components
 import { BrowseBarContext } from "./Context";
 import Search from "./search";
-import SortBy from "./SortBy";
+import SortByField from "./SortByField";
+import SortByDirection from "./SortByDirection";
 import Paginate from "./Paginate";
 
 // types
+import type { SortField } from "./SortByField";
 import type { BrowseBarContextType } from "./Context";
-import type { SortField } from "./SortBy";
 
 // constants
 const NOTES_SORT_FIELDS: SortField[] = [
@@ -22,8 +23,11 @@ export default function BrowseBar(props: Omit<BrowseBarContextType, "searchRoute
     <BrowseBarContext value={{ ...props, searchRoute: "/notes", sortByFields: NOTES_SORT_FIELDS }}>
       <section className="bg-card flex flex-wrap items-center justify-around gap-4 p-3">
         <Search />
-        <SortBy />
-        <Paginate />
+        <SortByField />
+        <div className="grid gap-2">
+          <SortByDirection />
+          <Paginate />
+        </div>
       </section>
     </BrowseBarContext>
   );

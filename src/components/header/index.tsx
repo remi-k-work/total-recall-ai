@@ -5,6 +5,7 @@ import { isUserAuthenticated } from "@/features/auth/lib/helpers";
 // components
 import Logo from "./Logo";
 import NavItem from "./NavItem";
+import NotesAssistant from "@/features/notes-assistant/components/notes-assistant";
 import UserPopover from "@/components/user-popover";
 import ThemeChanger from "@/components/theme-changer";
 
@@ -27,7 +28,12 @@ export default async function Header() {
         {NAV_ITEMS.map((navItem, index) => (
           <NavItem key={index} {...navItem} />
         ))}
-        {isAuthenticated && <UserPopover />}
+        {isAuthenticated && (
+          <>
+            <NotesAssistant />
+            <UserPopover />
+          </>
+        )}
         <ThemeChanger />
       </nav>
     </header>

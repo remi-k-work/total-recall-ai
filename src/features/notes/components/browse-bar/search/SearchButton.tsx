@@ -9,7 +9,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Loader2 } from "lucide-react";
 
 export default function SearchButton() {
-  // Whether or not the form is pending
+  // Whether or not the search form is pending
   const { pending } = useFormStatus();
 
   return (

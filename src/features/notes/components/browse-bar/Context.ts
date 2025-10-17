@@ -3,7 +3,7 @@ import { createContext, use } from "react";
 
 // types
 import type { Route } from "next";
-import type { SortField } from "@/features/notes/components/browse-bar/SortBy";
+import type { SortField } from "@/features/notes/components/browse-bar/SortByField";
 
 export interface BrowseBarContextType {
   totalItems: number;

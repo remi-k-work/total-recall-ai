@@ -25,21 +25,30 @@ export default function Paginate() {
   // Generate a list of all page numbers [1, 2, ..., totalPages]
   const pageNumbers = useMemo(() => [...Array(totalPages).keys()].map((i) => i + 1), [totalPages]);
 
-  // Skip rendering if there is no pages
-  if (totalPages === 0) return null;
-
   return (
     <section className="flex items-center gap-2">
       <Button size="icon" variant="ghost" title="Previous Page" asChild>
-        <Link href={createHref({ crp: Math.max(1, currentPage - 1) })}>
-          <ArrowLeftCircleIcon className="size-9" />
-        </Link>
+        {currentPage === 1 || totalPages <= 1 ? (
+          <Button type="button" variant="ghost" title="Previous Page" disabled>
+            <ArrowLeftCircleIcon className="size-9" />
+          </Button>
+        ) : (
+          <Link href={createHref({ crp: Math.max(1, currentPage - 1) })}>
+            <ArrowLeftCircleIcon className="size-9" />
+          </Link>
+        )}
       </Button>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button type="button" variant="ghost" title="Change Page">
-            {currentPage}&nbsp;/&nbsp;{totalPages}
-          </Button>
+        <DropdownMenuTrigger className="select-none" asChild>
+          {totalPages <= 1 ? (
+            <Button type="button" variant="ghost" title="Change Page" disabled>
+              {currentPage}&nbsp;/&nbsp;{currentPage}
+            </Button>
+          ) : (
+            <Button type="button" variant="ghost" title="Change Page">
+              {currentPage}&nbsp;/&nbsp;{totalPages}
+            </Button>
+          )}
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           {pageNumbers.map((pageNumber) =>
@@ -57,9 +66,15 @@ export default function Paginate() {
         </DropdownMenuContent>
       </DropdownMenu>
       <Button size="icon" variant="ghost" title="Next Page" asChild>
-        <Link href={createHref({ crp: Math.min(totalPages, currentPage + 1) })}>
-          <ArrowRightCircleIcon className="size-9" />
-        </Link>
+        {currentPage === totalPages || totalPages <= 1 ? (
+          <Button type="button" variant="ghost" title="Next Page" disabled>
+            <ArrowRightCircleIcon className="size-9" />
+          </Button>
+        ) : (
+          <Link href={createHref({ crp: Math.min(totalPages, currentPage + 1) })}>
+            <ArrowRightCircleIcon className="size-9" />
+          </Link>
+        )}
       </Button>
     </section>
   );

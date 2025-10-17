@@ -1,3 +1,5 @@
+"use client";
+
 // react
 import { useState } from "react";
 
@@ -14,9 +16,8 @@ export default function NotesAssistant() {
 
   return (
     <>
-      <Button type="button" variant="ghost" onClick={() => setIsOpen(true)}>
-        <SparklesIcon className="size-9" />
-        Notes Assistant
+      <Button type="button" size="icon" variant="ghost" title="Notes Assistant" onClick={() => setIsOpen(true)}>
+        <SparklesIcon className="size-11" />
       </Button>
       {isOpen && <Modal onClosed={() => setIsOpen(false)} />}
     </>

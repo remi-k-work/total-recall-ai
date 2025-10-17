@@ -6,7 +6,6 @@ import Link from "next/link";
 
 // components
 import { Button } from "@/components/ui/custom/button";
-import NotesAssistant from "@/features/notes-assistant/components/notes-assistant";
 
 // assets
 import { DocumentDuplicateIcon, DocumentPlusIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
@@ -23,34 +22,46 @@ export default function ToolBar() {
   const isNoteDetails = pathname.startsWith("/notes/") && noteId && !pathname.endsWith("/edit");
 
   return (
-    <header className="mb-4 flex flex-wrap items-center justify-end gap-4">
-      {isNotesRoot && (
-        <>
-          <Button variant="ghost" asChild>
-            <Link href="/notes/new">
-              <DocumentPlusIcon className="size-9" />
-              Create New Note
-            </Link>
+    <section className="flex items-center gap-2">
+      <Button variant="ghost" className="flex-col" asChild>
+        {isNotesRoot ? (
+          <Link href="/notes/new">
+            <DocumentPlusIcon className="size-11" />
+            <p className="text-center whitespace-pre-line">{"New Note".replaceAll(" ", "\n")}</p>
+          </Link>
+        ) : (
+          <Button type="button" variant="ghost" className="flex-col" disabled>
+            <DocumentPlusIcon className="size-11" />
+            <p className="text-center whitespace-pre-line">{"New Note".replaceAll(" ", "\n")}</p>
           </Button>
-          <NotesAssistant />
-        </>
-      )}
-      {isNoteDetails && (
-        <Button variant="ghost" asChild>
+        )}
+      </Button>
+      <Button variant="ghost" className="flex-col" asChild>
+        {isNoteDetails ? (
           <Link href={`/notes/${noteId}/edit`}>
-            <DocumentTextIcon className="size-9" />
-            Edit Note
+            <DocumentTextIcon className="size-11" />
+            <p className="text-center whitespace-pre-line">{"Edit Note".replaceAll(" ", "\n")}</p>
           </Link>
-        </Button>
-      )}
-      {!isNotesRoot && (
-        <Button variant="ghost" asChild>
+        ) : (
+          <Button type="button" variant="ghost" className="flex-col" disabled>
+            <DocumentTextIcon className="size-11" />
+            <p className="text-center whitespace-pre-line">{"Edit Note".replaceAll(" ", "\n")}</p>
+          </Button>
+        )}
+      </Button>
+      <Button variant="ghost" className="flex-col" asChild>
+        {!isNotesRoot ? (
           <Link href="/notes">
-            <DocumentDuplicateIcon className="size-9" />
-            Go Back to Notes
+            <DocumentDuplicateIcon className="size-11" />
+            <p className="text-center whitespace-pre-line">{"Go Back".replaceAll(" ", "\n")}</p>
           </Link>
-        </Button>
-      )}
-    </header>
+        ) : (
+          <Button type="button" variant="ghost" className="flex-col" disabled>
+            <DocumentDuplicateIcon className="size-11" />
+            <p className="text-center whitespace-pre-line">{"Go Back".replaceAll(" ", "\n")}</p>
+          </Button>
+        )}
+      </Button>
+    </section>
   );
 }
