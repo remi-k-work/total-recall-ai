@@ -11,6 +11,7 @@ import useFormToastFeedback from "@/hooks/feedbacks/useFormToast";
 // types
 import type { SignInFormActionResult } from "@/features/auth/actions/signInForm";
 import type { AnyFormApi } from "@tanstack/react-form";
+import type { Route } from "next";
 
 // constants
 const FORM_NAME = "[SIGN IN]";
@@ -21,7 +22,7 @@ export default function useSignInFormFeedback(
   { actionStatus, actionError, errors }: SignInFormActionResult,
   reset: () => void,
   formStore: AnyFormApi["store"],
-  redirect?: __next_route_internal_types__.RouteImpl<string>,
+  redirect?: Route,
 ) {
   // To be able to redirect the user after a successful sign in
   const router = useRouter();

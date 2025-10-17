@@ -1,5 +1,3 @@
-"use client";
-
 // react
 import { useMemo } from "react";
 
@@ -7,6 +5,7 @@ import { useMemo } from "react";
 import Link from "next/link";
 
 // services, features, and other libraries
+import { useBrowseBarContext } from "./Context";
 import useUrlScribe from "@/hooks/useUrlScribe";
 
 // components
@@ -16,15 +15,10 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 // assets
 import { ArrowLeftCircleIcon, ArrowRightCircleIcon, CheckIcon } from "@heroicons/react/24/outline";
 
-// types
-interface PaginateProps {
-  totalPages: number;
-  currentPage: number;
-  prevPage: number;
-  nextPage: number;
-}
+export default function Paginate() {
+  // Access the browse bar context and retrieve all necessary information
+  const { totalPages, currentPage } = useBrowseBarContext();
 
-export default function Paginate({ totalPages, currentPage, prevPage, nextPage }: PaginateProps) {
   // A hook to easily create new route strings with updated search parameters (it preserves existing search params)
   const { createHref } = useUrlScribe();
 
@@ -37,7 +31,7 @@ export default function Paginate({ totalPages, currentPage, prevPage, nextPage }
   return (
     <section className="flex items-center gap-2">
       <Button size="icon" variant="ghost" title="Previous Page" asChild>
-        <Link href={createHref({ cp: prevPage })}>
+        <Link href={createHref({ crp: Math.max(1, currentPage - 1) })}>
           <ArrowLeftCircleIcon className="size-9" />
         </Link>
       </Button>
@@ -56,14 +50,14 @@ export default function Paginate({ totalPages, currentPage, prevPage, nextPage }
               </DropdownMenuItem>
             ) : (
               <DropdownMenuItem key={pageNumber} className="text-xl" asChild>
-                <Link href={createHref({ cp: pageNumber })}>{pageNumber}</Link>
+                <Link href={createHref({ crp: pageNumber })}>{pageNumber}</Link>
               </DropdownMenuItem>
             ),
           )}
         </DropdownMenuContent>
       </DropdownMenu>
       <Button size="icon" variant="ghost" title="Next Page" asChild>
-        <Link href={createHref({ cp: nextPage })}>
+        <Link href={createHref({ crp: Math.min(totalPages, currentPage + 1) })}>
           <ArrowRightCircleIcon className="size-9" />
         </Link>
       </Button>

@@ -19,10 +19,11 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 // types
 import type { ComponentPropsWithoutRef } from "react";
+import type { Route } from "next";
 
 interface PasswordFieldProps extends ComponentPropsWithoutRef<typeof Input> {
   label: string;
-  forgotPassHref?: __next_route_internal_types__.RouteImpl<string>;
+  forgotPassHref?: Route;
 }
 
 export default function PasswordField({ label, forgotPassHref, className, ...props }: PasswordFieldProps) {

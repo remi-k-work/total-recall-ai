@@ -7,23 +7,14 @@ import { NotesPageSchema } from "@/features/notes/schemas/notesPage";
 import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
 // components
+import BrowseBar from "@/features/notes/components/browse-bar";
 import ToolBar from "@/features/notes/components/ToolBar";
-import Paginate from "@/components/Paginate";
-import SortBy from "@/components/SortBy";
-import Search from "@/components/search";
 import NotesPreview from "@/features/notes/components/NotesPreview";
 
 // types
 import type { Metadata } from "next";
-import type { SortField } from "@/components/SortBy";
 
 // constants
-const NOTES_SORT_FIELDS: SortField[] = [
-  { key: "created_at", label: "Created At", iconKey: "calendar" },
-  { key: "updated_at", label: "Updated At", iconKey: "calendar" },
-  { key: "title", label: "Note Title", iconKey: "language" },
-] as const;
-
 export const metadata: Metadata = {
   title: "Total Recall AI ► Notes",
 };
@@ -31,7 +22,7 @@ export const metadata: Metadata = {
 export default async function Page({ params, searchParams }: PageProps<"/notes">) {
   // Safely validate next.js route inputs (`params` and `searchParams`) against a zod schema; return typed data or trigger a 404 on failure
   const {
-    searchParams: { cp: currentPage, sbf: sortByField, sbd: sortByDirection },
+    searchParams: { str: searchTerm, crp: currentPage, sbf: sortByField, sbd: sortByDirection },
   } = await validatePageInputs(NotesPageSchema, { params, searchParams });
 
   // Make sure the current user is authenticated (the check runs on the server side)
@@ -43,16 +34,14 @@ export default async function Page({ params, searchParams }: PageProps<"/notes">
   } = (await getUserSessionData())!;
 
   // Retrieve all notes for a user, including only the essential fields, and shorten the content for preview purposes
-  const { notes, totalPages, prevPage, nextPage } = await getNotesWithPagination(userId, currentPage, 1, sortByField, sortByDirection);
+  const { notes, totalItems, totalPages } = await getNotesWithPagination(userId, searchTerm, currentPage, 3, sortByField, sortByDirection);
 
   return (
     <>
       <h1>Notes</h1>
       <p>Welcome back! Below are all your notes</p>
+      <BrowseBar totalItems={totalItems} totalPages={totalPages} sortByField={sortByField} sortByDirection={sortByDirection} currentPage={currentPage} />
       <ToolBar />
-      <Paginate totalPages={totalPages} currentPage={currentPage} prevPage={prevPage} nextPage={nextPage} />
-      <SortBy totalPages={totalPages} fields={NOTES_SORT_FIELDS} currentField={sortByField} currentDirection={sortByDirection} />
-      <Search action="/notes" />
       <NotesPreview notes={notes} />
     </>
   );

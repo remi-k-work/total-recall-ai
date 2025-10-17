@@ -14,9 +14,11 @@ import GitHubIcon from "@/assets/icons/GitHub";
 import { Loader2 } from "lucide-react";
 
 // types
+import type { Route } from "next";
+
 interface SignInSocialProps {
   provider: "google" | "github";
-  redirect?: __next_route_internal_types__.RouteImpl<string>;
+  redirect?: Route;
 }
 
 export default function SignInSocial({ provider, redirect }: SignInSocialProps) {

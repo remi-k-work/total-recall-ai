@@ -26,8 +26,10 @@ import SignInSocial from "./SignInSocial";
 import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/outline";
 
 // types
+import type { Route } from "next";
+
 interface SignInFormProps {
-  redirect?: __next_route_internal_types__.RouteImpl<string>;
+  redirect?: Route;
 }
 
 // constants

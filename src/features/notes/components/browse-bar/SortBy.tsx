@@ -1,9 +1,8 @@
-"use client";
-
 // next
 import Link from "next/link";
 
 // services, features, and other libraries
+import { useBrowseBarContext } from "./Context";
 import useUrlScribe from "@/hooks/useUrlScribe";
 
 // components
@@ -21,20 +20,16 @@ export interface SortField {
   iconKey: keyof typeof ICON_MAP;
 }
 
-interface SortByProps {
-  totalPages: number;
-  fields: SortField[];
-  currentField: string;
-  currentDirection: "asc" | "desc";
-}
-
 // constants
 const ICON_MAP = {
   calendar: <CalendarIcon className="size-9" />,
   language: <LanguageIcon className="size-9" />,
 } as const;
 
-export default function SortBy({ totalPages, fields, currentField, currentDirection }: SortByProps) {
+export default function SortBy() {
+  // Access the browse bar context and retrieve all necessary information
+  const { totalPages, sortByFields, sortByField, sortByDirection } = useBrowseBarContext();
+
   // A hook to easily create new route strings with updated search parameters (it preserves existing search params)
   const { createHref, navigate } = useUrlScribe();
 
@@ -43,8 +38,8 @@ export default function SortBy({ totalPages, fields, currentField, currentDirect
 
   return (
     <section className="flex items-center gap-2">
-      <ToggleGroup type="single" defaultValue={currentField} className="items-start">
-        {fields.map(({ key, label, iconKey }) => (
+      <ToggleGroup type="single" defaultValue={sortByField} className="items-start">
+        {sortByFields.map(({ key, label, iconKey }) => (
           <ToggleGroupItem key={key} value={key} aria-label={`Sort By: ${label}`} title={`Sort By: ${label}`} className="gap-0" asChild>
             <Link href={createHref({ sbf: key })} className="flex-col">
               {ICON_MAP[iconKey]}
@@ -59,7 +54,7 @@ export default function SortBy({ totalPages, fields, currentField, currentDirect
           name="sortDirection"
           aria-label="Sort Direction"
           title="Sort Direction"
-          defaultChecked={currentDirection === "asc"}
+          defaultChecked={sortByDirection === "asc"}
           onCheckedChange={(isAscending) => navigate({ sbd: isAscending ? "asc" : "desc" })}
         />
         <span className="text-muted-foreground ml-1 text-3xl">△</span>ASC

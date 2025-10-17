@@ -1,5 +1,3 @@
-"use client";
-
 // react
 import { useFormStatus } from "react-dom";
 
@@ -15,9 +13,8 @@ export default function SearchButton() {
   const { pending } = useFormStatus();
 
   return (
-    <Button type="submit" disabled={pending}>
-      {pending ? <Loader2 className="size-9 animate-spin" /> : <MagnifyingGlassIcon className="size-9" />}
-      Search
+    <Button type="submit" size="icon" disabled={pending}>
+      {pending ? <Loader2 className="size-11 animate-spin" /> : <MagnifyingGlassIcon className="size-11" />}
     </Button>
   );
 }

@@ -6,7 +6,7 @@ import { SignInPageSchema } from "@/features/auth/schemas/signInPage";
 import SignInForm from "@/features/auth/components/SignInForm";
 
 // types
-import type { Metadata } from "next";
+import type { Metadata, Route } from "next";
 
 // constants
 export const metadata: Metadata = {
@@ -21,7 +21,7 @@ export default async function Page({ params, searchParams }: PageProps<"/sign-in
 
   return (
     <>
-      <SignInForm redirect={redirect as __next_route_internal_types__.RouteImpl<string>} />
+      <SignInForm redirect={redirect as Route} />
     </>
   );
 }

@@ -8,10 +8,11 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 // types
+import type { Route } from "next";
 import type { ReactNode } from "react";
 
 interface NavItemProps {
-  href: __next_route_internal_types__.RouteImpl<string>;
+  href: Route;
   match: string;
   title: string;
   icon: ReactNode;

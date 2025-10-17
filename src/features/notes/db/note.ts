@@ -1,6 +1,6 @@
 // drizzle and db access
 import { db } from "@/drizzle/db";
-import { and, asc, count, desc, eq, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, ilike, or, sql } from "drizzle-orm";
 
 // all table definitions (their schemas)
 import { NoteTable } from "@/drizzle/schema";
@@ -10,8 +10,9 @@ import type { DbOrTx } from "@/drizzle/db";
 
 export const getNotesWithPagination = async (
   userId: string,
+  searchTerm: string = "",
   currentPage: number = 1,
-  itemsPerPage: number = 3,
+  itemsPerPage: number = 10,
   sortByField: "created_at" | "updated_at" | "title" = "updated_at",
   sortByDirection: "asc" | "desc" = "desc",
 ) => {
@@ -24,7 +25,12 @@ export const getNotesWithPagination = async (
         updatedAt: NoteTable.updatedAt,
       })
       .from(NoteTable)
-      .where(eq(NoteTable.userId, userId))
+      .where(
+        and(
+          eq(NoteTable.userId, userId),
+          or(searchTerm ? ilike(NoteTable.title, `%${searchTerm}%`) : undefined, searchTerm ? ilike(NoteTable.content, `%${searchTerm}%`) : undefined),
+        ),
+      )
       .orderBy(
         sortByDirection === "asc"
           ? asc(sortByField === "created_at" ? NoteTable.createdAt : sortByField === "updated_at" ? NoteTable.updatedAt : NoteTable.title)
@@ -33,12 +39,18 @@ export const getNotesWithPagination = async (
       .limit(itemsPerPage)
       .offset((currentPage - 1) * itemsPerPage),
 
-    db.select({ totalItems: count() }).from(NoteTable).where(eq(NoteTable.userId, userId)),
+    db
+      .select({ totalItems: count() })
+      .from(NoteTable)
+      .where(
+        and(
+          eq(NoteTable.userId, userId),
+          or(searchTerm ? ilike(NoteTable.title, `%${searchTerm}%`) : undefined, searchTerm ? ilike(NoteTable.content, `%${searchTerm}%`) : undefined),
+        ),
+      ),
   ]);
 
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-  return { notes, totalPages, prevPage: Math.max(1, currentPage - 1), nextPage: Math.min(totalPages, currentPage + 1) };
+  return { notes, totalItems, totalPages: Math.ceil(totalItems / itemsPerPage) };
 };
 
 // Retrieve all notes for a user, including only the essential fields, and shorten the content for preview purposes
