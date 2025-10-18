@@ -1,26 +1,19 @@
 "use client";
 
 // components
-import { BrowseBarContext } from "./Context";
+import BrowseBarProvider from "./Context";
 import Search from "./search";
 import SortByField from "./SortByField";
 import SortByDirection from "./SortByDirection";
 import Paginate from "./Paginate";
+import ToolBar from "./ToolBar";
 
 // types
-import type { SortField } from "./SortByField";
-import type { BrowseBarContextType } from "./Context";
+import type { BrowseBarProviderPropsWithoutChildren } from "./Context";
 
-// constants
-const NOTES_SORT_FIELDS: SortField[] = [
-  { key: "created_at", label: "Created At", iconKey: "calendar" },
-  { key: "updated_at", label: "Updated At", iconKey: "calendar" },
-  { key: "title", label: "Note Title", iconKey: "language" },
-] as const;
-
-export default function BrowseBar(props: Omit<BrowseBarContextType, "searchRoute" | "sortByFields">) {
+export default function BrowseBar(props: BrowseBarProviderPropsWithoutChildren) {
   return (
-    <BrowseBarContext value={{ ...props, searchRoute: "/notes", sortByFields: NOTES_SORT_FIELDS }}>
+    <BrowseBarProvider {...props}>
       <section className="bg-card flex flex-wrap items-center justify-around gap-4 p-3">
         <Search />
         <SortByField />
@@ -28,7 +21,8 @@ export default function BrowseBar(props: Omit<BrowseBarContextType, "searchRoute
           <SortByDirection />
           <Paginate />
         </div>
+        <ToolBar />
       </section>
-    </BrowseBarContext>
+    </BrowseBarProvider>
   );
 }

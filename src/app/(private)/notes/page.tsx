@@ -8,7 +8,6 @@ import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth
 
 // components
 import BrowseBar from "@/features/notes/components/browse-bar";
-import ToolBar from "@/features/notes/components/ToolBar";
 import NotesPreview from "@/features/notes/components/NotesPreview";
 
 // types
@@ -40,8 +39,14 @@ export default async function Page({ params, searchParams }: PageProps<"/notes">
     <>
       <h1>Notes</h1>
       <p>Welcome back! Below are all your notes</p>
-      <BrowseBar totalItems={totalItems} totalPages={totalPages} sortByField={sortByField} sortByDirection={sortByDirection} currentPage={currentPage} />
-      <ToolBar />
+      <BrowseBar
+        kind="notes-root"
+        totalItems={totalItems}
+        totalPages={totalPages}
+        sortByField={sortByField}
+        sortByDirection={sortByDirection}
+        currentPage={currentPage}
+      />
       <NotesPreview notes={notes} />
     </>
   );

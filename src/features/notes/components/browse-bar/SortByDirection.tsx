@@ -8,10 +8,14 @@ import { Switch } from "@/components/ui/custom/switch";
 
 export default function SortByDirection() {
   // Access the browse bar context and retrieve all necessary information
-  const { totalPages, sortByDirection } = useBrowseBarContext();
+  const browseBarContext = useBrowseBarContext();
 
   // A hook to easily create new route strings with updated search parameters (it preserves existing search params)
   const { navigate } = useUrlScribe();
+
+  // Render the sort by direction only for the "notes root" kind
+  if (browseBarContext.kind !== "notes-root") return null;
+  const { totalPages, sortByDirection } = browseBarContext;
 
   return (
     <Label className="flex items-center border px-3 font-normal">

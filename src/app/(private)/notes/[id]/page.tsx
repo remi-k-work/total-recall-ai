@@ -11,7 +11,7 @@ import { NoteDetailsPageSchema } from "@/features/notes/schemas/noteDetailsPage"
 import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
 // components
-import ToolBar from "@/features/notes/components/ToolBar";
+import BrowseBar from "@/features/notes/components/browse-bar";
 import NoteDetails from "@/features/notes/components/NoteDetails";
 
 // types
@@ -46,7 +46,7 @@ export default async function Page({ params, searchParams }: PageProps<"/notes/[
     <>
       <h1>Note Details</h1>
       <p>Below are all your note details</p>
-      <ToolBar />
+      <BrowseBar kind="note-details" />
       <Link href={`/notes/${note.id}/edit`}>
         <NoteDetails note={note} />
       </Link>

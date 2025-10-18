@@ -2,7 +2,7 @@
 import { makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
 // components
-import ToolBar from "@/features/notes/components/ToolBar";
+import BrowseBar from "@/features/notes/components/browse-bar";
 import NewNoteForm from "@/features/notes/components/NewNoteForm";
 
 // types
@@ -21,7 +21,7 @@ export default async function Page() {
     <>
       <h1>New Note</h1>
       <p>Use the form below to create a new note</p>
-      <ToolBar />
+      <BrowseBar kind="note-details" />
       <NewNoteForm />
     </>
   );

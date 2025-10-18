@@ -26,10 +26,14 @@ const ICON_MAP = {
 
 export default function SortByField() {
   // Access the browse bar context and retrieve all necessary information
-  const { totalPages, sortByFields, sortByField } = useBrowseBarContext();
+  const browseBarContext = useBrowseBarContext();
 
   // A hook to easily create new route strings with updated search parameters (it preserves existing search params)
   const { createHref } = useUrlScribe();
+
+  // Render the sort by field only for the "notes root" kind
+  if (browseBarContext.kind !== "notes-root") return null;
+  const { totalPages, sortByFields, sortByField } = browseBarContext;
 
   return (
     <ToggleGroup type="single" defaultValue={sortByField} className="items-start">

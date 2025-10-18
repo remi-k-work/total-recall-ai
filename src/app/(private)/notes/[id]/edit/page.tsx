@@ -10,7 +10,7 @@ import { EditNotePageSchema } from "@/features/notes/schemas/editNotePage";
 import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
 // components
-import ToolBar from "@/features/notes/components/ToolBar";
+import BrowseBar from "@/features/notes/components/browse-bar";
 import EditNoteForm from "@/features/notes/components/EditNoteForm";
 
 // types
@@ -45,7 +45,7 @@ export default async function Page({ params, searchParams }: PageProps<"/notes/[
     <>
       <h1>Edit Note</h1>
       <p>Use the form below to edit an existing note</p>
-      <ToolBar />
+      <BrowseBar kind="note-details" />
       <EditNoteForm note={note} />
     </>
   );

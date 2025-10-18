@@ -1,6 +1,3 @@
-// react
-import { useMemo } from "react";
-
 // next
 import Link from "next/link";
 
@@ -17,13 +14,14 @@ import { ArrowLeftCircleIcon, ArrowRightCircleIcon, CheckIcon } from "@heroicons
 
 export default function Paginate() {
   // Access the browse bar context and retrieve all necessary information
-  const { totalPages, currentPage } = useBrowseBarContext();
+  const browseBarContext = useBrowseBarContext();
 
   // A hook to easily create new route strings with updated search parameters (it preserves existing search params)
   const { createHref } = useUrlScribe();
 
-  // Generate a list of all page numbers [1, 2, ..., totalPages]
-  const pageNumbers = useMemo(() => [...Array(totalPages).keys()].map((i) => i + 1), [totalPages]);
+  // Render the pagination only for the "notes root" kind
+  if (browseBarContext.kind !== "notes-root") return null;
+  const { totalPages, currentPage } = browseBarContext;
 
   return (
     <section className="flex items-center gap-2">
@@ -51,18 +49,20 @@ export default function Paginate() {
           )}
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          {pageNumbers.map((pageNumber) =>
-            pageNumber === currentPage ? (
-              <DropdownMenuItem key={pageNumber} className="justify-between text-xl">
-                {pageNumber}
-                <CheckIcon className="size-6" />
-              </DropdownMenuItem>
-            ) : (
-              <DropdownMenuItem key={pageNumber} className="text-xl" asChild>
-                <Link href={createHref({ crp: pageNumber })}>{pageNumber}</Link>
-              </DropdownMenuItem>
-            ),
-          )}
+          {[...Array(totalPages).keys()]
+            .map((i) => i + 1)
+            .map((pageNumber) =>
+              pageNumber === currentPage ? (
+                <DropdownMenuItem key={pageNumber} className="justify-between text-xl">
+                  {pageNumber}
+                  <CheckIcon className="size-6" />
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem key={pageNumber} className="text-xl" asChild>
+                  <Link href={createHref({ crp: pageNumber })}>{pageNumber}</Link>
+                </DropdownMenuItem>
+              ),
+            )}
         </DropdownMenuContent>
       </DropdownMenu>
       <Button size="icon" variant="ghost" title="Next Page" asChild>

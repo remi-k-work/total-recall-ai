@@ -1,5 +1,3 @@
-"use client";
-
 // next
 import { useParams, usePathname } from "next/navigation";
 import Link from "next/link";
@@ -12,7 +10,7 @@ import { DocumentDuplicateIcon, DocumentPlusIcon, DocumentTextIcon } from "@hero
 
 export default function ToolBar() {
   // Get current route and note id (if present in url)
-  const pathname = usePathname() as __next_route_internal_types__.RouteImpl<string>;
+  const pathname = usePathname();
   const { id: noteId } = useParams<{ id?: string }>();
 
   // Check if user is on the main notes page
