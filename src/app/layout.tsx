@@ -31,7 +31,7 @@ export default function Layout({ children }: LayoutProps<"/">) {
       <body
         className={cn(
           `${fontSans.variable} ${fontMono.variable} grid font-mono antialiased`,
-          "grid-cols-[1fr] grid-rows-[auto_1fr_auto] [grid-template-areas:'header''main''footer']",
+          "grid-cols-[1fr] grid-rows-[auto_1fr] [grid-template-areas:'header''main']",
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>

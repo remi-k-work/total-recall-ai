@@ -6,10 +6,10 @@ import InfoLine from "@/components/form/InfoLine";
 import NotePreview from "@/features/notes/components/NotePreview";
 
 // types
-import type { getNotes } from "@/features/notes/db";
+import type { getNotesWithPagination } from "@/features/notes/db";
 
 interface NotesPreviewProps {
-  notes: Awaited<ReturnType<typeof getNotes>>;
+  notes: Awaited<ReturnType<typeof getNotesWithPagination>>["notes"];
 }
 
 export default function NotesPreview({ notes }: NotesPreviewProps) {

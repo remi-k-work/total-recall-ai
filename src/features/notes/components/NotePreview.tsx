@@ -8,10 +8,10 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { CalendarIcon } from "@heroicons/react/24/outline";
 
 // types
-import type { getNotes } from "@/features/notes/db";
+import type { getNotesWithPagination } from "@/features/notes/db";
 
 interface NotePreviewProps {
-  note: Awaited<ReturnType<typeof getNotes>>[number];
+  note: Awaited<ReturnType<typeof getNotesWithPagination>>["notes"][number];
 }
 
 export default function NotePreview({ note: { title, contentPreview, updatedAt } }: NotePreviewProps) {

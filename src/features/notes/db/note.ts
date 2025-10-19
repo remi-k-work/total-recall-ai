@@ -1,6 +1,6 @@
 // drizzle and db access
 import { db } from "@/drizzle/db";
-import { and, asc, count, desc, eq, ilike, or, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, ilike, or, SQL, sql } from "drizzle-orm";
 
 // all table definitions (their schemas)
 import { NoteTable } from "@/drizzle/schema";
@@ -8,14 +8,25 @@ import { NoteTable } from "@/drizzle/schema";
 // types
 import type { DbOrTx } from "@/drizzle/db";
 
+// Retrieve all notes for a user, including only the essential fields, and shorten the content for preview purposes
 export const getNotesWithPagination = async (
   userId: string,
   searchTerm: string = "",
   currentPage: number = 1,
   itemsPerPage: number = 10,
-  sortByField: "created_at" | "updated_at" | "title" = "updated_at",
+  sortByField: "title" | "created_at" | "updated_at" = "updated_at",
   sortByDirection: "asc" | "desc" = "desc",
 ) => {
+  // Build the 'where' clause dynamically for better readability
+  const conditions: (SQL | undefined)[] = [eq(NoteTable.userId, userId)];
+  if (searchTerm) conditions.push(or(ilike(NoteTable.title, `%${searchTerm}%`), ilike(NoteTable.content, `%${searchTerm}%`)));
+  const whereClause = and(...conditions);
+
+  // Define sorting column and direction
+  const sortColumn = sortByField === "title" ? NoteTable.title : sortByField === "created_at" ? NoteTable.createdAt : NoteTable.updatedAt;
+  const sortOrder = sortByDirection === "asc" ? asc : desc;
+
+  // Run queries in parallel for efficiency
   const [notes, [{ totalItems }]] = await Promise.all([
     db
       .select({
@@ -25,36 +36,19 @@ export const getNotesWithPagination = async (
         updatedAt: NoteTable.updatedAt,
       })
       .from(NoteTable)
-      .where(
-        and(
-          eq(NoteTable.userId, userId),
-          or(searchTerm ? ilike(NoteTable.title, `%${searchTerm}%`) : undefined, searchTerm ? ilike(NoteTable.content, `%${searchTerm}%`) : undefined),
-        ),
-      )
-      .orderBy(
-        sortByDirection === "asc"
-          ? asc(sortByField === "created_at" ? NoteTable.createdAt : sortByField === "updated_at" ? NoteTable.updatedAt : NoteTable.title)
-          : desc(sortByField === "created_at" ? NoteTable.createdAt : sortByField === "updated_at" ? NoteTable.updatedAt : NoteTable.title),
-      )
+      .where(whereClause)
+      .orderBy(sortOrder(sortColumn))
       .limit(itemsPerPage)
       .offset((currentPage - 1) * itemsPerPage),
 
-    db
-      .select({ totalItems: count() })
-      .from(NoteTable)
-      .where(
-        and(
-          eq(NoteTable.userId, userId),
-          or(searchTerm ? ilike(NoteTable.title, `%${searchTerm}%`) : undefined, searchTerm ? ilike(NoteTable.content, `%${searchTerm}%`) : undefined),
-        ),
-      ),
+    db.select({ totalItems: count() }).from(NoteTable).where(whereClause),
   ]);
 
   return { notes, totalItems, totalPages: Math.ceil(totalItems / itemsPerPage) };
 };
 
-// Retrieve all notes for a user, including only the essential fields, and shorten the content for preview purposes
-export const getNotes = (userId: string, limit?: number) => {
+// Retrieve the most recently updated notes for a user, with an optional limit
+export const getMostRecentNotes = (userId: string, limit?: number) => {
   const query = db
     .select({
       id: NoteTable.id,

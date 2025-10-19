@@ -1,5 +1,5 @@
 // drizzle and db access
-import { getNotes } from "@/features/notes/db";
+import { getMostRecentNotes } from "@/features/notes/db";
 
 // services, features, and other libraries
 import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
@@ -27,8 +27,8 @@ export default async function Page() {
     user: { id: userId },
   } = (await getUserSessionData())!;
 
-  // Retrieve all notes for a user, including only the essential fields, and shorten the content for preview purposes
-  const notes = await getNotes(userId, 3);
+  // Retrieve the most recently updated notes for a user, with an optional limit
+  const notes = await getMostRecentNotes(userId, 3);
 
   return (
     <>
