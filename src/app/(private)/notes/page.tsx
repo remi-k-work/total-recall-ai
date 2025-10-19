@@ -43,6 +43,7 @@ export default async function Page({ params, searchParams }: PageProps<"/notes">
         kind="notes-root"
         totalItems={totalItems}
         totalPages={totalPages}
+        searchTerm={searchTerm}
         sortByField={sortByField}
         sortByDirection={sortByDirection}
         currentPage={currentPage}

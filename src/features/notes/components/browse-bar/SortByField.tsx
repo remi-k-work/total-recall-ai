@@ -2,8 +2,7 @@
 import Link from "next/link";
 
 // services, features, and other libraries
-import { useBrowseBarContext } from "./Context";
-import useUrlScribe from "@/hooks/useUrlScribe";
+import { useBrowseBarContext } from "./context";
 
 // components
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/custom/toggle-group";
@@ -26,14 +25,7 @@ const ICON_MAP = {
 
 export default function SortByField() {
   // Access the browse bar context and retrieve all necessary information
-  const browseBarContext = useBrowseBarContext();
-
-  // A hook to easily create new route strings with updated search parameters (it preserves existing search params)
-  const { createHref } = useUrlScribe();
-
-  // Render the sort by field only for the "notes root" kind
-  if (browseBarContext.kind !== "notes-root") return null;
-  const { totalPages, sortByFields, sortByField } = browseBarContext;
+  const { totalPages, sortByFields, sortByField, createHref } = useBrowseBarContext("notes-root");
 
   return (
     <ToggleGroup type="single" defaultValue={sortByField} className="items-start">
@@ -48,14 +40,14 @@ export default function SortByField() {
           asChild
         >
           {totalPages <= 1 ? (
-            <div className="flex-col select-none">
+            <div className="flex-col text-center font-sans whitespace-pre-line select-none">
               {ICON_MAP[iconKey]}
-              <p className="text-center font-sans whitespace-pre-line">{label.replaceAll(" ", "\n")}</p>
+              {label.replaceAll(" ", "\n")}
             </div>
           ) : (
-            <Link href={createHref({ sbf: key })} className="flex-col">
+            <Link href={createHref({ sbf: key })} className="flex-col text-center font-sans whitespace-pre-line">
               {ICON_MAP[iconKey]}
-              <p className="text-center font-sans whitespace-pre-line">{label.replaceAll(" ", "\n")}</p>
+              {label.replaceAll(" ", "\n")}
             </Link>
           )}
         </ToggleGroupItem>

@@ -21,7 +21,7 @@ export default async function Page() {
     <>
       <h1>New Note</h1>
       <p>Use the form below to create a new note</p>
-      <BrowseBar kind="note-details" />
+      <BrowseBar kind="note-new" />
       <NewNoteForm />
     </>
   );

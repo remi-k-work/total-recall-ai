@@ -1,6 +1,8 @@
 // next
-import { useParams, usePathname } from "next/navigation";
 import Link from "next/link";
+
+// services, features, and other libraries
+import { useBrowseBarContext } from "./context";
 
 // components
 import { Button } from "@/components/ui/custom/button";
@@ -9,54 +11,47 @@ import { Button } from "@/components/ui/custom/button";
 import { DocumentDuplicateIcon, DocumentPlusIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
 
 export default function ToolBar() {
-  // Get current route and note id (if present in url)
-  const pathname = usePathname();
-  const { id: noteId } = useParams<{ id?: string }>();
-
-  // Check if user is on the main notes page
-  const isNotesRoot = pathname === "/notes";
-
-  // Check if user is viewing a specific note (not editing)
-  const isNoteDetails = pathname.startsWith("/notes/") && noteId && !pathname.endsWith("/edit");
+  // Access the browse bar context and retrieve all necessary information
+  const browseBarContext = useBrowseBarContext();
 
   return (
     <section className="flex items-center gap-2">
       <Button variant="ghost" className="flex-col" asChild>
-        {isNotesRoot ? (
-          <Link href="/notes/new">
+        {browseBarContext.kind === "notes-root" ? (
+          <Link href="/notes/new" className="text-center whitespace-pre-line">
             <DocumentPlusIcon className="size-11" />
-            <p className="text-center whitespace-pre-line">{"New Note".replaceAll(" ", "\n")}</p>
+            {"New Note".replaceAll(" ", "\n")}
           </Link>
         ) : (
-          <Button type="button" variant="ghost" className="flex-col" disabled>
+          <Button type="button" variant="ghost" className="flex-col whitespace-pre-line" disabled>
             <DocumentPlusIcon className="size-11" />
-            <p className="text-center whitespace-pre-line">{"New Note".replaceAll(" ", "\n")}</p>
+            {"New Note".replaceAll(" ", "\n")}
           </Button>
         )}
       </Button>
       <Button variant="ghost" className="flex-col" asChild>
-        {isNoteDetails ? (
-          <Link href={`/notes/${noteId}/edit`}>
+        {browseBarContext.kind === "note-details" ? (
+          <Link href={`/notes/${browseBarContext.noteId}/edit`} className="text-center whitespace-pre-line">
             <DocumentTextIcon className="size-11" />
-            <p className="text-center whitespace-pre-line">{"Edit Note".replaceAll(" ", "\n")}</p>
+            {"Edit Note".replaceAll(" ", "\n")}
           </Link>
         ) : (
-          <Button type="button" variant="ghost" className="flex-col" disabled>
+          <Button type="button" variant="ghost" className="flex-col whitespace-pre-line" disabled>
             <DocumentTextIcon className="size-11" />
-            <p className="text-center whitespace-pre-line">{"Edit Note".replaceAll(" ", "\n")}</p>
+            {"Edit Note".replaceAll(" ", "\n")}
           </Button>
         )}
       </Button>
       <Button variant="ghost" className="flex-col" asChild>
-        {!isNotesRoot ? (
-          <Link href="/notes">
+        {browseBarContext.kind !== "notes-root" ? (
+          <Link href="/notes" className="text-center whitespace-pre-line">
             <DocumentDuplicateIcon className="size-11" />
-            <p className="text-center whitespace-pre-line">{"Go Back".replaceAll(" ", "\n")}</p>
+            {"Go Back".replaceAll(" ", "\n")}
           </Link>
         ) : (
-          <Button type="button" variant="ghost" className="flex-col" disabled>
+          <Button type="button" variant="ghost" className="flex-col whitespace-pre-line" disabled>
             <DocumentDuplicateIcon className="size-11" />
-            <p className="text-center whitespace-pre-line">{"Go Back".replaceAll(" ", "\n")}</p>
+            {"Go Back".replaceAll(" ", "\n")}
           </Button>
         )}
       </Button>

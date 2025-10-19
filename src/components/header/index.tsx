@@ -19,12 +19,7 @@ export default async function Header() {
   return (
     <header className={cn("z-10 mx-4 flex items-center gap-4 [grid-area:header]", "lg:sticky lg:top-0")}>
       <Logo />
-      <nav
-        className={cn(
-          "flex flex-1 flex-wrap items-center justify-end gap-4",
-          "*:bg-background *:text-foreground *:hover:text-accent-foreground *:border *:p-3",
-        )}
-      >
+      <nav className="flex flex-1 flex-wrap items-center justify-end gap-4">
         {NAV_ITEMS.map((navItem, index) => (
           <NavItem key={index} {...navItem} />
         ))}

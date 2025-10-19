@@ -2,8 +2,7 @@
 import Link from "next/link";
 
 // services, features, and other libraries
-import { useBrowseBarContext } from "./Context";
-import useUrlScribe from "@/hooks/useUrlScribe";
+import { useBrowseBarContext } from "./context";
 
 // components
 import { Button } from "@/components/ui/custom/button";
@@ -14,14 +13,7 @@ import { ArrowLeftCircleIcon, ArrowRightCircleIcon, CheckIcon } from "@heroicons
 
 export default function Paginate() {
   // Access the browse bar context and retrieve all necessary information
-  const browseBarContext = useBrowseBarContext();
-
-  // A hook to easily create new route strings with updated search parameters (it preserves existing search params)
-  const { createHref } = useUrlScribe();
-
-  // Render the pagination only for the "notes root" kind
-  if (browseBarContext.kind !== "notes-root") return null;
-  const { totalPages, currentPage } = browseBarContext;
+  const { totalPages, currentPage, createHref } = useBrowseBarContext("notes-root");
 
   return (
     <section className="flex items-center gap-2">
