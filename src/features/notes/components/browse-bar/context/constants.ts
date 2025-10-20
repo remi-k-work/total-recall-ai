@@ -3,7 +3,7 @@ import type { SortField } from "@/features/notes/components/browse-bar/SortByFie
 
 // constants
 export const SORT_BY_FIELDS: SortField[] = [
+  { key: "title", label: "Note Title", iconKey: "language" },
   { key: "created_at", label: "Created At", iconKey: "calendar" },
   { key: "updated_at", label: "Updated At", iconKey: "calendar" },
-  { key: "title", label: "Note Title", iconKey: "language" },
 ] as const;

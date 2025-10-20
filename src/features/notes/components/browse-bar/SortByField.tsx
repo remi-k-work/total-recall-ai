@@ -1,3 +1,6 @@
+// react
+import { useEffect, useState } from "react";
+
 // next
 import Link from "next/link";
 
@@ -19,16 +22,24 @@ export interface SortField {
 
 // constants
 const ICON_MAP = {
-  calendar: <CalendarIcon className="size-11" />,
   language: <LanguageIcon className="size-11" />,
+  calendar: <CalendarIcon className="size-11" />,
 } as const;
 
 export default function SortByField() {
   // Access the browse bar context and retrieve all necessary information
   const { totalPages, sortByFields, sortByField, createHref } = useBrowseBarContext("notes-root");
 
+  // Currently selected sort by field
+  const [currSortByField, setCurrSortByField] = useState(sortByField);
+
+  // Keep the currently selected sort by field in sync with search params
+  useEffect(() => {
+    setCurrSortByField(sortByField);
+  }, [sortByField]);
+
   return (
-    <ToggleGroup type="single" defaultValue={sortByField} className="items-start">
+    <ToggleGroup type="single" className="items-start" value={currSortByField} onValueChange={setCurrSortByField}>
       {sortByFields.map(({ key, label, iconKey }) => (
         <ToggleGroupItem
           key={key}

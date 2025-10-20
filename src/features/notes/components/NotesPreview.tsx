@@ -13,7 +13,7 @@ interface NotesPreviewProps {
 }
 
 export default function NotesPreview({ notes }: NotesPreviewProps) {
-  if (notes.length === 0) return <InfoLine message="No notes found!" className="justify-center" />;
+  if (notes.length === 0) return <InfoLine message="No notes have been found!" className="justify-center px-6 py-9 text-xl" />;
 
   return (
     <article className="grid grid-cols-1 gap-4 xl:grid-cols-2">
