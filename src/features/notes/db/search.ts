@@ -3,7 +3,7 @@ import { db } from "@/drizzle/db";
 import { and, cosineDistance, desc, eq, gt, sql } from "drizzle-orm";
 
 // all table definitions (their schemas)
-import { NoteChunkTable } from "@/drizzle/schema";
+import { NoteChunkTable, NoteTable } from "@/drizzle/schema";
 
 // services, features, and other libraries
 import { generateQuestionEmbedding } from "@/features/notes/lib/embeddings";
@@ -18,8 +18,9 @@ export const searchNoteChunksForUser = async (userId: string, question: string, 
 
   // Query candidate chunks for this user, ordered by similarity
   const candidateChunks = await db
-    .select({ noteId: NoteChunkTable.noteId, chunk: NoteChunkTable.chunk, similarity })
+    .select({ noteId: NoteChunkTable.noteId, noteTitle: NoteTable.title, chunk: NoteChunkTable.chunk, similarity })
     .from(NoteChunkTable)
+    .leftJoin(NoteTable, eq(NoteChunkTable.noteId, NoteTable.id))
     .where(
       and(
         // Only return chunks owned by the current user

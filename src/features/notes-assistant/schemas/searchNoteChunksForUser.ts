@@ -2,22 +2,25 @@
 import { z } from "zod";
 
 // schemas
-export const InputSchema = z.object({ question: z.string().describe("The user's question.") });
+export const InputSchema = z.object({
+  question: z.string().describe("The user's complete, original question. This is used to find the most relevant information within their notes."),
+});
 export const OutputSchema = z
   .object({
     results: z
       .array(
         z
           .object({
-            noteId: z.string().describe("The unique identifier of the note the chunk originated from."),
-            chunk: z.string().describe("The relevant text content (chunk) retrieved from the note."),
-            similarity: z.number().describe("The similarity score (e.g., cosine similarity) of this chunk to the user's question. Higher is more relevant."),
+            noteId: z.string().describe("The unique ID of the source note."),
+            noteTitle: z.string().describe("The title of the source note."),
+            chunk: z.string().describe("The relevant snippet of text from the note."),
+            similarity: z.number().describe("A score from 0.0 to 1.0 indicating how relevant the chunk is to the user's question. Higher is better."),
           })
-          .describe("A single result object containing a relevant note chunk and its metadata."),
+          .describe("A single relevant chunk of text found in a note."),
       )
-      .describe("An array of note chunks retrieved by the search, ordered by relevance (highest similarity score first)."),
+      .describe("An array of relevant note chunks found, ordered from most to least relevant."),
   })
-  .describe("The comprehensive result set from searching the user's notes.");
+  .describe("The search results containing chunks of text from the user's notes.");
 
 // types
 import type { ToolUIPart } from "ai";

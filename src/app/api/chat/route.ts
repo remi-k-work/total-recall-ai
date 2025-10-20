@@ -32,9 +32,6 @@ export async function POST(req: Request) {
 
     activeTools: ["searchNoteChunksForUser"],
 
-    // Recommended for tool calls
-    temperature: 0,
-
     // Define available tools
     tools: { searchNoteChunksForUser: searchNoteChunksForUserTool(userId) },
     onError(error) {
