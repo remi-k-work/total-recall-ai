@@ -1,4 +1,5 @@
 // components
+import PageHeader from "@/components/PageHeader";
 import ForgotPassForm from "@/features/auth/components/ForgotPassForm";
 
 // types
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <>
+      <PageHeader title="Forgot Password" description="Use the form below to reset your password" />
       <ForgotPassForm />
     </>
   );

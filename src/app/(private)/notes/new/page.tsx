@@ -2,6 +2,7 @@
 import { makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
 // components
+import PageHeader from "@/components/PageHeader";
 import BrowseBar from "@/features/notes/components/browse-bar";
 import NewNoteForm from "@/features/notes/components/NewNoteForm";
 
@@ -19,8 +20,7 @@ export default async function Page() {
 
   return (
     <>
-      <h1>New Note</h1>
-      <p>Use the form below to create a new note</p>
+      <PageHeader title="New Note" description="Use the form below to create a new note" />
       <BrowseBar kind="note-new" />
       <NewNoteForm />
     </>

@@ -3,6 +3,7 @@ import { validatePageInputs } from "@/lib/helpers";
 import { SignInPageSchema } from "@/features/auth/schemas/signInPage";
 
 // components
+import PageHeader from "@/components/PageHeader";
 import SignInForm from "@/features/auth/components/SignInForm";
 
 // types
@@ -21,6 +22,7 @@ export default async function Page({ params, searchParams }: PageProps<"/sign-in
 
   return (
     <>
+      <PageHeader title="Sign In" description="Use the form below to sign in" />
       <SignInForm redirect={redirect as Route} />
     </>
   );

@@ -1,7 +1,10 @@
+// components
+import PageHeader from "@/components/PageHeader";
+
 export default function Page() {
   return (
     <>
-      <p>Welcome to Total Recall AI!</p>
+      <PageHeader title="Home" description="Welcome to Total Recall AI!" />
     </>
   );
 }

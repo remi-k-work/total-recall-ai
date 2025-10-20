@@ -5,6 +5,8 @@ import { getMostRecentNotes } from "@/features/notes/db";
 import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
 // components
+import PageHeader from "@/components/PageHeader";
+import SectionHeader from "@/components/SectionHeader";
 import ProfileInfo from "@/features/dashboard/components/ProfileInfo";
 import VerifyEmail from "@/features/dashboard/components/VerifyEmail";
 import NotesPreview from "@/features/notes/components/NotesPreview";
@@ -32,13 +34,12 @@ export default async function Page() {
 
   return (
     <>
-      <h1>Dashboard</h1>
-      <p>Welcome back! Below is your account overview</p>
+      <PageHeader title="Dashboard" description="Welcome back! Below is your account overview" />
       <article className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <ProfileInfo user={user} />
         <VerifyEmail user={user} />
       </article>
-      <h2>Your Most Recent Notes</h2>
+      <SectionHeader title="Your most recent notes" />
       <NotesPreview notes={notes} />
     </>
   );

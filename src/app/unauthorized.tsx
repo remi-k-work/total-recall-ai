@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 // components
+import PageHeader from "@/components/PageHeader";
 import { Button } from "@/components/ui/custom/button";
 
 // assets
@@ -15,9 +16,7 @@ export default function Page() {
 
   return (
     <article className="grid h-full place-items-center">
-      <h1>401 - Unauthorized</h1>
-      <p>You are not authorized to view this page.</p>
-      <p>Please sign in to continue.</p>
+      <PageHeader title="Unauthorized" description="You are not authorized to view this page" />
       <Button variant="ghost" asChild>
         <Link href={`/sign-in?redirect=${pathname}`}>
           <ArrowRightEndOnRectangleIcon className="size-9" />

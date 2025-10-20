@@ -2,6 +2,7 @@
 import { getUserSessionData, hasCredentialAccount, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
 // components
+import PageHeader from "@/components/PageHeader";
 import ProfileDetailsForm from "@/features/profile/components/ProfileDetailsForm";
 import EmailChangeForm from "@/features/profile/components/EmailChangeForm";
 import PassChangeForm from "@/features/profile/components/PassChangeForm";
@@ -27,8 +28,7 @@ export default async function Page() {
 
   return (
     <>
-      <h1>Profile</h1>
-      <p>Below you can see and manage your profile</p>
+      <PageHeader title="Profile" description="Below you can see and manage your profile" />
       <article className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <ProfileDetailsForm user={user} />
         <EmailChangeForm user={user} />

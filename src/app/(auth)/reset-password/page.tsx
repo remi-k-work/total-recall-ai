@@ -3,6 +3,7 @@ import { validatePageInputs } from "@/lib/helpers";
 import { ResetPassPageSchema } from "@/features/auth/schemas/resetPassPage";
 
 // components
+import PageHeader from "@/components/PageHeader";
 import ResetPassForm from "@/features/auth/components/ResetPassForm";
 
 // types
@@ -21,6 +22,7 @@ export default async function Page({ params, searchParams }: PageProps<"/reset-p
 
   return (
     <>
+      <PageHeader title="Reset Password" description="Use the form below to reset your password" />
       <ResetPassForm token={token} />
     </>
   );

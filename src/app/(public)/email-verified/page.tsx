@@ -2,6 +2,7 @@
 import Link from "next/link";
 
 // components
+import PageHeader from "@/components/PageHeader";
 import { Button } from "@/components/ui/custom/button";
 
 // assets
@@ -18,8 +19,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <article className="grid h-full place-items-center">
-      <h1>Email Verified</h1>
-      <p>Your email has been verified successfully.</p>
+      <PageHeader title="Email Verified" description="Your email has been verified successfully" />
       <Button variant="ghost" asChild>
         <Link href={`/dashboard`}>
           <LightBulbIcon className="size-9" />

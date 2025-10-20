@@ -7,6 +7,7 @@ import { NotesPageSchema } from "@/features/notes/schemas/notesPage";
 import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
 // components
+import PageHeader from "@/components/PageHeader";
 import BrowseBar from "@/features/notes/components/browse-bar";
 import NotesPreview from "@/features/notes/components/NotesPreview";
 
@@ -37,8 +38,7 @@ export default async function Page({ params, searchParams }: PageProps<"/notes">
 
   return (
     <>
-      <h1>Notes</h1>
-      <p>Welcome back! Below are all your notes</p>
+      <PageHeader title="Notes" description="Welcome back! Below are all your notes" />
       <BrowseBar
         kind="notes-root"
         totalItems={totalItems}
