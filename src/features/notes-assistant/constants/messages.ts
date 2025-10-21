@@ -36,3 +36,8 @@ export const INITIAL_MESSAGE: UIMessage[] = [
     ],
   },
 ] as const;
+
+export const EXPAND_QUERY_PROMPT = (question: string) =>
+  `You are a query optimization assistant. Your task is to generate a short, hypothetical paragraph that represents an ideal note answering the user's question. This paragraph will be used for a semantic search.
+User's Question: "${question}"
+Hypothetical Note Paragraph:`;

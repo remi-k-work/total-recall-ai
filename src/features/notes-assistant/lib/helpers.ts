@@ -2,18 +2,13 @@
 import { google } from "@ai-sdk/google";
 import { generateText } from "ai";
 
+// constants
+import { EXPAND_QUERY_PROMPT } from "@/features/notes-assistant/constants/messages";
+
 // Expand the user's question into a hypothetical answer
 export async function expandQueryWithHypotheticalAnswer(question: string): Promise<string> {
   try {
-    const { text } = await generateText({
-      model: google("gemini-2.5-flash"),
-      prompt: `You are a query optimization assistant. Your task is to generate a short, hypothetical paragraph that represents an ideal note answering the user's question. This paragraph will be used for a semantic search.
-      
-      User's Question: "${question}"
-      
-      Hypothetical Note Paragraph:`,
-      temperature: 0,
-    });
+    const { text } = await generateText({ model: google("gemini-2.5-flash"), prompt: EXPAND_QUERY_PROMPT(question), temperature: 0 });
     console.log("Expanded query:", text);
     return text;
   } catch (error) {

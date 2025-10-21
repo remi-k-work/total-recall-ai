@@ -20,7 +20,7 @@ export const searchNoteChunksForUser = async (userId: string, question: string, 
   const candidateChunks = await db
     .select({ noteId: NoteChunkTable.noteId, noteTitle: NoteTable.title, chunk: NoteChunkTable.chunk, similarity })
     .from(NoteChunkTable)
-    .leftJoin(NoteTable, eq(NoteChunkTable.noteId, NoteTable.id))
+    .innerJoin(NoteTable, eq(NoteChunkTable.noteId, NoteTable.id))
     .where(
       and(
         // Only return chunks owned by the current user
