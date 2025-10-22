@@ -5,7 +5,7 @@ import "dotenv/config";
 import { dropAllNotes, insertNote, insertNoteChunks } from "@/features/notes/db";
 
 // services, features, and other libraries
-import { generateNoteEmbeddings } from "@/features/notes/lib/embeddings";
+import { generateNoteEmbeddings } from "@/features/notes/lib/embeddings2";
 
 // constants
 import { EXAMPLE_NOTES } from "./constants/notes";

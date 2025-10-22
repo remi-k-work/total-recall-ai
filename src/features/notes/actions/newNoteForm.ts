@@ -13,7 +13,7 @@ import { insertNote, insertNoteChunks } from "@/features/notes/db";
 import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 import { initialFormState, ServerValidateError } from "@tanstack/react-form/nextjs";
 import { SERVER_VALIDATE } from "@/features/notes/constants/newNoteForm";
-import { generateNoteEmbeddings } from "@/features/notes/lib/embeddings";
+import { generateNoteEmbeddings } from "@/features/notes/lib/embeddings2";
 
 // types
 import type { ServerFormState } from "@tanstack/react-form/nextjs";

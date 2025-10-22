@@ -6,7 +6,7 @@ import { and, cosineDistance, desc, eq, gt, sql } from "drizzle-orm";
 import { NoteChunkTable, NoteTable } from "@/drizzle/schema";
 
 // services, features, and other libraries
-import { generateQuestionEmbedding } from "@/features/notes/lib/embeddings";
+import { generateQuestionEmbedding } from "@/features/notes/lib/embeddings2";
 
 // Search for and retrieve note chunks most relevant to the user's question
 export const searchNoteChunksForUser = async (userId: string, question: string, topK: number = 5, baseMinSimilarity: number = 0.5) => {
