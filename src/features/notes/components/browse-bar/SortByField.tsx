@@ -51,12 +51,12 @@ export default function SortByField() {
           asChild
         >
           {totalPages <= 1 ? (
-            <div className="flex-col text-center font-sans whitespace-pre-line select-none">
+            <div className="flex-col text-center whitespace-pre-line select-none">
               {ICON_MAP[iconKey]}
               {label.replaceAll(" ", "\n")}
             </div>
           ) : (
-            <Link href={createHref({ sbf: key })} className="flex-col text-center font-sans whitespace-pre-line">
+            <Link href={createHref({ sbf: key })} className="flex-col text-center whitespace-pre-line">
               {ICON_MAP[iconKey]}
               {label.replaceAll(" ", "\n")}
             </Link>

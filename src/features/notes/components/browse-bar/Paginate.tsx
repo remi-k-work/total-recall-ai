@@ -6,7 +6,7 @@ import { useBrowseBarContext } from "./context";
 
 // components
 import { Button } from "@/components/ui/custom/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/custom/dropdown-menu";
 
 // assets
 import { ArrowLeftCircleIcon, ArrowRightCircleIcon, CheckIcon } from "@heroicons/react/24/outline";
@@ -29,7 +29,7 @@ export default function Paginate() {
         )}
       </Button>
       <DropdownMenu>
-        <DropdownMenuTrigger className="select-none" asChild>
+        <DropdownMenuTrigger asChild>
           {totalPages <= 1 ? (
             <Button type="button" variant="ghost" title="Change Page" disabled>
               {currentPage}&nbsp;/&nbsp;{currentPage}

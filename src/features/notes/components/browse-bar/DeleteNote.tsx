@@ -36,14 +36,14 @@ export default function DeleteNote() {
 
   return (
     <>
-      <Button type="button" variant="destructive" disabled={deleteNoteIsPending} onClick={() => setIsOpen(true)}>
-        {deleteNoteIsPending ? <Loader2 className="size-9 animate-spin" /> : <TrashIcon className="size-9" />}
-        Delete Note
+      <Button type="button" variant="destructive" className="flex-col whitespace-pre-line" disabled={deleteNoteIsPending} onClick={() => setIsOpen(true)}>
+        {deleteNoteIsPending ? <Loader2 className="size-11 animate-spin" /> : <TrashIcon className="size-11" />}
+        {"Delete Note".replaceAll(" ", "\n")}
       </Button>
       {isOpen && (
         <ConfirmModal onConfirmed={() => startTransition(deleteNoteAction)} onClosed={() => setIsOpen(false)}>
           <p className="text-center text-xl">
-            Are you sure you want to <b className="text-destructive">delete</b> your note?
+            Are you sure you want to <b className="text-destructive">delete</b> this note?
           </p>
         </ConfirmModal>
       )}

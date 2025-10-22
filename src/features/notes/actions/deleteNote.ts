@@ -1,8 +1,5 @@
 "use server";
 
-// next
-import { revalidatePath } from "next/cache";
-
 // drizzle and db access
 import { deleteNote as deleteUserNote } from "@/features/notes/db";
 
@@ -31,9 +28,6 @@ export default async function deleteNote(noteId: string): Promise<DeleteNoteActi
     // Some other error occurred
     return { actionStatus: "failed" };
   }
-
-  // Revalidate, so the fresh data will be fetched from the server next time this path is visited
-  revalidatePath("/", "layout");
 
   // The form has successfully validated and submitted!
   return { actionStatus: "succeeded" };

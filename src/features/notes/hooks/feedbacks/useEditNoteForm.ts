@@ -1,6 +1,9 @@
 // react
 import { useEffect } from "react";
 
+// next
+import { useRouter } from "next/navigation";
+
 // services, features, and other libraries
 import usePermanentMessageFeedback from "@/hooks/feedbacks/usePermanentMessage";
 import useFormToastFeedback from "@/hooks/feedbacks/useFormToast";
@@ -15,6 +18,9 @@ const SUCCEEDED_MESSAGE = "The note has been updated.";
 
 // Provide feedback to the user regarding this form actions
 export default function useEditNoteFormFeedback({ actionStatus, errors }: EditNoteFormActionResult, reset: () => void, formStore: AnyFormApi["store"]) {
+  // To be able to redirect the user after a successful note update
+  const router = useRouter();
+
   // Generic hook for managing a permanent feedback message
   const { feedbackMessage, showFeedbackMessage, hideFeedbackMessage } = usePermanentMessageFeedback(formStore);
 
@@ -22,6 +28,8 @@ export default function useEditNoteFormFeedback({ actionStatus, errors }: EditNo
   const showToast = useFormToastFeedback(FORM_NAME, { succeeded: SUCCEEDED_MESSAGE });
 
   useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+
     if (actionStatus === "succeeded") {
       // Display a success message
       showToast("succeeded");
@@ -31,11 +39,18 @@ export default function useEditNoteFormFeedback({ actionStatus, errors }: EditNo
 
       // Show the permanent feedback message as well
       showFeedbackMessage(SUCCEEDED_MESSAGE);
+
+      // Redirect the user after successful note update
+      timeoutId = setTimeout(() => router.push("/notes"), 3000);
     } else {
       // All other statuses ("invalid", "failed", "authError") handled centrally
       showToast(actionStatus);
     }
-  }, [actionStatus, errors, showToast, reset, showFeedbackMessage]);
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [actionStatus, errors, showToast, reset, showFeedbackMessage, router]);
 
   return { feedbackMessage, hideFeedbackMessage };
 }
