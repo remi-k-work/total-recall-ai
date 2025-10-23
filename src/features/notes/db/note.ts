@@ -3,7 +3,7 @@ import { db } from "@/drizzle/db";
 import { and, asc, count, desc, eq, ilike, or, SQL, sql } from "drizzle-orm";
 
 // all table definitions (their schemas)
-import { NoteTable } from "@/drizzle/schema";
+import { NoteTable, UserTable } from "@/drizzle/schema";
 
 // types
 import type { DbOrTx } from "@/drizzle/db";
@@ -68,6 +68,9 @@ export const getMostRecentNotes = (userId: string, limit?: number) => {
 
 // Get a single note for a user
 export const getNote = (id: string, userId: string) => db.query.NoteTable.findFirst({ where: and(eq(NoteTable.id, id), eq(NoteTable.userId, userId)) });
+
+// Drop the demo user and their notes (supports normal db or transaction)
+export const dropDemoUser = (tx: DbOrTx = db) => tx.delete(UserTable).where(eq(UserTable.email, "demo@example.com"));
 
 // Drop all notes for a user (supports normal db or transaction)
 export const dropAllNotes = (userId: string, tx: DbOrTx = db) => tx.delete(NoteTable).where(eq(NoteTable.userId, userId));

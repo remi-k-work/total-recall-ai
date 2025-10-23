@@ -2,7 +2,8 @@
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
-import { admin } from "better-auth/plugins";
+import { admin as adminPlugin } from "better-auth/plugins";
+import { ac, admin, demo, user } from "./permissions";
 
 // drizzle and db access
 import { db } from "@/drizzle/db";
@@ -23,7 +24,7 @@ export const auth = betterAuth({
     schema: { user: UserTable, session: SessionTable, account: AccountTable, verification: VerificationTable },
   }),
   appName: "total-recall-ai",
-  plugins: [admin(), nextCookies()],
+  plugins: [adminPlugin({ ac, roles: { user, admin, demo } }), nextCookies()],
 
   account: {
     accountLinking: {
