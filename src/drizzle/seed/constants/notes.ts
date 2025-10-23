@@ -55,13 +55,13 @@ Here are the core equations we need to memorize for the exam.
 
 ### 1. Constant Velocity
 
-The simplest case: position $x$ as a function of time $t$.
+The simplest case: position $$x$$ as a function of time $$t$$.
 
 $$
 x(t) = x_0 + v_x t
 $$
 
-Where $x_0$ is the initial position and $v_x$ is the constant velocity.
+Where $$x_0$$ is the initial position and $$v_x$$ is the constant velocity.
 
 ### 2. Constant Acceleration
 
@@ -85,9 +85,8 @@ These are the "big five" equations.
    v^2 = v_0^2 + 2a(x - x_0)
    $$
 
-I always forget the quadratic formula, which is often needed to solve for $t$ in the position equation.
-
-For any quadratic equation $ax^2 + bx + c = 0$, the solution is:
+I always forget the quadratic formula, which is often needed to solve for $$t$$ in the position equation.
+For any quadratic equation $$ax^2 + bx + c = 0$$, the solution is:
 
 $$
 x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}
@@ -101,14 +100,14 @@ $$
 **Attendees:** Me, Sarah, David
 
 ### Agenda
-1.  Review last sprint's metrics
-2.  Plan for next sprint
-3.  Blockers and dependencies
+1. Review last sprint's metrics
+2. Plan for next sprint
+3. Blockers and dependencies
 
 ### Discussion
--   **Sarah:** User feedback on the new dashboard is very positive. One bug reported on the date filter (Ticket #452).
--   **David:** The API performance is still a concern. The \`/api/v2/analytics\` endpoint is too slow.
--   **Me:** I suggested we add caching, maybe with Redis.
+- **Sarah:** User feedback on the new dashboard is very positive. One bug reported on the date filter (Ticket #452).
+- **David:** The API performance is still a concern. The \`/api/v2/analytics\` endpoint is too slow.
+- **Me:** I suggested we add caching, maybe with Redis.
 
 ### Action Items
 * **[Me]** Investigate Redis implementation for the analytics endpoint.
@@ -143,22 +142,22 @@ This is way better than the default \`Object.keys(permissions)\` which just retu
 My go-to quick dinner.
 
 ### Sauce Ingredients
--   4 cloves garlic, minced
--   2 tbsp soy sauce
--   1 tbsp oyster sauce
--   1 tsp sesame oil
--   1 tsp sugar
--   (Optional: a pinch of red pepper flakes)
+- 4 cloves garlic, minced
+- 2 tbsp soy sauce
+- 1 tbsp oyster sauce
+- 1 tsp sesame oil
+- 1 tsp sugar
+- (Optional: a pinch of red pepper flakes)
 
 ### Instructions
-1.  Cook your favorite noodles (ramen, spaghetti, etc.).
-2.  While noodles are cooking, mix all sauce ingredients in a small bowl.
-3.  In a pan, heat 1 tbsp of butter or oil.
-4.  Add the minced garlic and cook for 30 seconds until fragrant. **Don't let it burn!**
-5.  Add the sauce mixture to the pan and let it bubble for 1 minute.
-6.  Drain the noodles (reserve a little pasta water).
-7.  Toss the noodles in the pan with the sauce. Add a splash of pasta water to help the sauce cling.
-8.  Serve immediately. Can top with green onions.`,
+1. Cook your favorite noodles (ramen, spaghetti, etc.).
+2. While noodles are cooking, mix all sauce ingredients in a small bowl.
+3. In a pan, heat 1 tbsp of butter or oil.
+4. Add the minced garlic and cook for 30 seconds until fragrant. **Don't let it burn!**
+5. Add the sauce mixture to the pan and let it bubble for 1 minute.
+6. Drain the noodles (reserve a little pasta water).
+7. Toss the noodles in the pan with the sauce. Add a splash of pasta water to help the sauce cling.
+8. Serve immediately. Can top with green onions.`,
   },
   {
     title: "Total Recall AI - Project To-Dos",
