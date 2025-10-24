@@ -1,11 +1,9 @@
-import UserAvatar from "@/components/UserAvatar";
 import { cn } from "@/lib/utils";
 import type { UIMessage } from "ai";
 import type { ComponentPropsWithoutRef } from "react";
 
 type MessageProps = ComponentPropsWithoutRef<"div"> & { from: UIMessage["role"] };
 type MessageContentProps = ComponentPropsWithoutRef<"div">;
-type MessageAvatarProps = ComponentPropsWithoutRef<typeof UserAvatar>;
 
 export const Message = ({ className, from, ...props }: MessageProps) => (
   <div
@@ -25,5 +23,3 @@ export const MessageContent = ({ className, ...props }: MessageContentProps) => 
     {...props}
   />
 );
-
-export const MessageAvatar = ({ ...props }: MessageAvatarProps) => <UserAvatar isSmall {...props} />;

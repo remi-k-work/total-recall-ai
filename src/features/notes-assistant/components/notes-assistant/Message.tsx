@@ -2,9 +2,11 @@
 import { authClient } from "@/services/better-auth/auth-client";
 
 // components
-import { Message as AIEMessage, MessageAvatar, MessageContent } from "@/components/ai-elements/custom/message";
+import { Message as AIEMessage, MessageContent } from "@/components/ai-elements/custom/message";
 import { Response } from "@/components/ai-elements/response";
 import { Tool, ToolContent, ToolHeader, ToolInput, ToolOutput } from "@/components/ai-elements/custom/tool";
+import UserAvatar from "@/components/UserAvatar";
+import AgentAvatar from "@/components/AgentAvatar";
 
 // types
 import type { UIMessage, useChat } from "@ai-sdk/react";
@@ -26,7 +28,7 @@ export default function Message({ message: { id, role, parts }, status }: Messag
 
   // Destructure the user session data
   const {
-    user: { name, image },
+    user: { name, image, role: userRole },
   } = userSessionData;
 
   return (
@@ -64,7 +66,7 @@ export default function Message({ message: { id, role, parts }, status }: Messag
           }
         })}
       </MessageContent>
-      {role === "user" ? <MessageAvatar name={name} avatar={image ?? undefined} /> : <MessageAvatar name="Total Recall" avatar="/logo-oauth-google.png" />}
+      {role === "user" ? <UserAvatar isSmall /> : <AgentAvatar isSmall />}
     </AIEMessage>
   );
 }

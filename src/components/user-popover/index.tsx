@@ -30,18 +30,18 @@ export default function UserPopover() {
 
   // Destructure the user session data
   const {
-    user: { email, name, image },
+    user: { email, name },
   } = userSessionData;
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button type="button" variant="ghost" size="icon" title={name}>
-          <UserAvatar name={name} avatar={image ?? undefined} isSmall />
+          <UserAvatar isSmall />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="grid">
-        <UserAvatar name={name} avatar={image ?? undefined} className="mx-auto" />
+        <UserAvatar className="mx-auto" />
         <h4 className="mt-4 truncate text-center">{name}</h4>
         <p className="text-muted-foreground truncate text-center">{email}</p>
         <div className="mt-4 grid gap-4">

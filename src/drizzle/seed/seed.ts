@@ -2,7 +2,12 @@
 import "dotenv/config";
 
 // drizzle and db access
-import { dropDemoUser, insertNote, insertNoteChunks } from "@/features/notes/db";
+import { db } from "@/drizzle/db";
+import { eq } from "drizzle-orm";
+import { insertNote, insertNoteChunks } from "@/features/notes/db";
+
+// all table definitions (their schemas)
+import { UserTable } from "@/drizzle/schema";
 
 // services, features, and other libraries
 import { auth } from "@/services/better-auth/auth";
@@ -11,19 +16,24 @@ import { generateNoteEmbeddings } from "@/features/notes/lib/embeddings2";
 // constants
 import { EXAMPLE_NOTES } from "./constants/notes";
 
+const DEMO_USER_EMAIL = "quinn.quaid@total-recall.ai";
+const DEMO_USER_NAME = "Quinn Quaid";
+
 async function main() {
   try {
     // Perform database seeding or other tasks
     console.log("Creating demo user...");
-    await dropDemoUser();
+
+    // Drop the demo user and their notes
+    db.delete(UserTable).where(eq(UserTable.email, DEMO_USER_EMAIL));
 
     const {
       user: { id: userId },
     } = await auth.api.createUser({
       body: {
-        email: "demo@example.com",
+        email: DEMO_USER_EMAIL,
         password: "password!",
-        name: "Demo User",
+        name: DEMO_USER_NAME,
         role: "demo",
       },
     });

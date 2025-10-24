@@ -15,7 +15,7 @@ interface ProfileInfoProps {
   user: User;
 }
 
-export default function ProfileInfo({ user: { email, name, image, createdAt } }: ProfileInfoProps) {
+export default function ProfileInfo({ user: { email, name, createdAt } }: ProfileInfoProps) {
   return (
     <Card>
       <CardHeader>
@@ -23,7 +23,7 @@ export default function ProfileInfo({ user: { email, name, image, createdAt } }:
         <CardDescription>Your account details and current status</CardDescription>
       </CardHeader>
       <CardContent>
-        <UserAvatar name={name} avatar={image ?? undefined} className="mx-auto" />
+        <UserAvatar className="mx-auto" />
         <h4 className="mx-auto mt-4 truncate text-center">{name}</h4>
         <p className="text-muted-foreground mx-auto truncate text-center">{email}</p>
       </CardContent>

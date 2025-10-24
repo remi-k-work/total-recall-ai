@@ -56,7 +56,7 @@ export default function ProfileDetailsForm({ user: { name: currentName, image: c
           </CardHeader>
           <CardContent>
             <div className="mb-4 flex flex-wrap items-center justify-around gap-4 sm:justify-between">
-              <UserAvatar name={currentName} avatar={currentImage ?? undefined} />
+              <UserAvatar />
               <div className="grid gap-4">
                 <UploadAvatar />
                 <DeleteAvatar currentImage={currentImage ?? undefined} />
