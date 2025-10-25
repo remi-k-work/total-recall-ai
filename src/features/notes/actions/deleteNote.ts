@@ -8,7 +8,7 @@ import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth
 
 // types
 export interface DeleteNoteActionResult {
-  actionStatus: "idle" | "succeeded" | "failed";
+  actionStatus: "idle" | "succeeded" | "failed" | "demoMode";
 }
 
 // This action deletes a user's note along with all associated note chunks
@@ -19,8 +19,11 @@ export default async function deleteNote(noteId: string): Promise<DeleteNoteActi
 
     // Access the user session data from the server side
     const {
-      user: { id: userId },
+      user: { id: userId, role },
     } = (await getUserSessionData())!;
+
+    // Return early if the current user is in demo mode
+    if (role === "demo") return { actionStatus: "demoMode" };
 
     // Delete a note for a user
     await deleteUserNote(noteId, userId);

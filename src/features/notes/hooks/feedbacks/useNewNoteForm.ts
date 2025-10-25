@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 // services, features, and other libraries
 import usePermanentMessageFeedback from "@/hooks/feedbacks/usePermanentMessage";
 import useFormToastFeedback from "@/hooks/feedbacks/useFormToast";
+import useDemoModeGuard from "@/hooks/useDemoModeGuard";
 
 // types
 import type { NewNoteFormActionResult } from "@/features/notes/actions/newNoteForm";
@@ -26,6 +27,9 @@ export default function useNewNoteFormFeedback({ actionStatus, errors }: NewNote
 
   // Generic hook for displaying toast notifications for form actions
   const showToast = useFormToastFeedback(FORM_NAME, { succeeded: SUCCEEDED_MESSAGE });
+
+  // Custom hook that observes an action's status and automatically opens the global demo mode modal
+  useDemoModeGuard(actionStatus);
 
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>;

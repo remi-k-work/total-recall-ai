@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/next";
 
 // components
 import { ThemeProvider } from "next-themes";
+import DemoModeProvider from "@/contexts/DemoMode";
 import { Toaster } from "@/components/ui/sonner";
 
 // assets
@@ -35,9 +36,11 @@ export default function Layout({ children }: LayoutProps<"/">) {
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          {children}
-          <Toaster richColors />
-          <Analytics debug={false} />
+          <DemoModeProvider>
+            {children}
+            <Toaster richColors />
+            <Analytics debug={false} />
+          </DemoModeProvider>
         </ThemeProvider>
       </body>
     </html>

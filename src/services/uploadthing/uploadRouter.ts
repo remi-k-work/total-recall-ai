@@ -18,6 +18,7 @@ export const uploadRouter = {
       // Access the user session data from the server side
       const userSessionData = await getUserSessionData();
       if (!userSessionData) throw new UploadThingError("Unauthorized!");
+      if (userSessionData.user.role === "demo") throw new UploadThingError("This action is disabled in demo mode.");
       return { userId: userSessionData.user.id };
     })
     .onUploadComplete(async ({ metadata: { userId }, file: { key, ufsUrl } }) => {

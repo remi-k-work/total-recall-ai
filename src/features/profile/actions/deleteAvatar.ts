@@ -15,7 +15,7 @@ import { utApi } from "@/services/uploadthing/utApi";
 
 // types
 export interface DeleteAvatarActionResult {
-  actionStatus: "idle" | "succeeded" | "failed" | "authError";
+  actionStatus: "idle" | "succeeded" | "failed" | "authError" | "demoMode";
   actionError?: string;
 }
 
@@ -27,8 +27,11 @@ export default async function deleteAvatar(): Promise<DeleteAvatarActionResult> 
 
     // Access the user session data from the server side
     const {
-      user: { id: userId },
+      user: { id: userId, role },
     } = (await getUserSessionData())!;
+
+    // Return early if the current user is in demo mode
+    if (role === "demo") return { actionStatus: "demoMode" };
 
     // Update the user information through the better-auth api by setting their image to null
     await auth.api.updateUser({ body: { image: null as unknown as undefined }, headers: await headers() });

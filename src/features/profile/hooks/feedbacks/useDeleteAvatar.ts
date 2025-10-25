@@ -4,6 +4,7 @@ import { useEffect } from "react";
 // services, features, and other libraries
 import { authClient } from "@/services/better-auth/auth-client";
 import useFormToastFeedback from "@/hooks/feedbacks/useFormToast";
+import useDemoModeGuard from "@/hooks/useDemoModeGuard";
 
 // types
 import type { DeleteAvatarActionResult } from "@/features/profile/actions/deleteAvatar";
@@ -20,6 +21,9 @@ export default function useDeleteAvatarFeedback({ actionStatus, actionError }: D
 
   // Generic hook for displaying toast notifications for form actions
   const showToast = useFormToastFeedback(FORM_NAME, { succeeded: SUCCEEDED_MESSAGE, failed: FAILED_MESSAGE, authError: actionError });
+
+  // Custom hook that observes an action's status and automatically opens the global demo mode modal
+  useDemoModeGuard(actionStatus);
 
   useEffect(() => {
     if (actionStatus === "succeeded") {

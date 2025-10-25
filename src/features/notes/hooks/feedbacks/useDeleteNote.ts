@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 // services, features, and other libraries
 import useFormToastFeedback from "@/hooks/feedbacks/useFormToast";
+import useDemoModeGuard from "@/hooks/useDemoModeGuard";
 
 // types
 import type { DeleteNoteActionResult } from "@/features/notes/actions/deleteNote";
@@ -22,6 +23,9 @@ export default function useDeleteNoteFeedback({ actionStatus }: DeleteNoteAction
 
   // Generic hook for displaying toast notifications for form actions
   const showToast = useFormToastFeedback(FORM_NAME, { succeeded: SUCCEEDED_MESSAGE, failed: FAILED_MESSAGE });
+
+  // Custom hook that observes an action's status and automatically opens the global demo mode modal
+  useDemoModeGuard(actionStatus);
 
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>;

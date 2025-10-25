@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { authClient } from "@/services/better-auth/auth-client";
 import usePermanentMessageFeedback from "@/hooks/feedbacks/usePermanentMessage";
 import useFormToastFeedback from "@/hooks/feedbacks/useFormToast";
+import useDemoModeGuard from "@/hooks/useDemoModeGuard";
 
 // types
 import type { ProfileDetailsFormActionResult } from "@/features/profile/actions/profileDetailsForm";
@@ -28,6 +29,9 @@ export default function useProfileDetailsFormFeedback(
 
   // Generic hook for displaying toast notifications for form actions
   const showToast = useFormToastFeedback(FORM_NAME, { succeeded: SUCCEEDED_MESSAGE, authError: actionError });
+
+  // Custom hook that observes an action's status and automatically opens the global demo mode modal
+  useDemoModeGuard(actionStatus);
 
   useEffect(() => {
     if (actionStatus === "succeeded") {

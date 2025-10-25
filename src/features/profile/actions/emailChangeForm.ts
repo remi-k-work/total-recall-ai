@@ -17,7 +17,7 @@ import { APIError } from "better-auth/api";
 import type { ServerFormState } from "@tanstack/react-form/nextjs";
 
 export interface EmailChangeFormActionResult extends ServerFormState<any, any> {
-  actionStatus: "idle" | "succeeded" | "failed" | "invalid" | "authError";
+  actionStatus: "idle" | "succeeded" | "failed" | "invalid" | "authError" | "demoMode";
   actionError?: string;
   needsApproval?: boolean;
 }
@@ -33,8 +33,11 @@ export default async function emailChange(_prevState: unknown, formData: FormDat
 
     // Access the user session data from the server side
     const {
-      user: { emailVerified },
+      user: { emailVerified, role },
     } = (await getUserSessionData())!;
+
+    // Return early if the current user is in demo mode
+    if (role === "demo") return { ...initialFormState, actionStatus: "demoMode" };
 
     // Only users with verified emails need to additionally approve their email change
     if (emailVerified) needsApproval = true;

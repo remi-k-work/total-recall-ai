@@ -4,6 +4,7 @@ import { useEffect } from "react";
 // services, features, and other libraries
 import usePermanentMessageFeedback from "@/hooks/feedbacks/usePermanentMessage";
 import useFormToastFeedback from "@/hooks/feedbacks/useFormToast";
+import useDemoModeGuard from "@/hooks/useDemoModeGuard";
 
 // types
 import type { PassChangeFormActionResult } from "@/features/profile/actions/passChangeForm";
@@ -30,6 +31,9 @@ export default function usePassChangeFormFeedback(
     succeeded: hasCredential ? SUCCEEDED_MESSAGE_CHANGE : SUCCEEDED_MESSAGE_SETUP,
     authError: actionError,
   });
+
+  // Custom hook that observes an action's status and automatically opens the global demo mode modal
+  useDemoModeGuard(actionStatus);
 
   useEffect(() => {
     if (actionStatus === "succeeded") {

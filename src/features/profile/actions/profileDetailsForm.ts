@@ -7,7 +7,7 @@ import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 
 // services, features, and other libraries
-import { makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
+import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 import { auth } from "@/services/better-auth/auth";
 import { initialFormState, ServerValidateError } from "@tanstack/react-form/nextjs";
 import { SERVER_VALIDATE } from "@/features/profile/constants/profileDetailsForm";
@@ -17,7 +17,7 @@ import { APIError } from "better-auth/api";
 import type { ServerFormState } from "@tanstack/react-form/nextjs";
 
 export interface ProfileDetailsFormActionResult extends ServerFormState<any, any> {
-  actionStatus: "idle" | "succeeded" | "failed" | "invalid" | "authError";
+  actionStatus: "idle" | "succeeded" | "failed" | "invalid" | "authError" | "demoMode";
   actionError?: string;
 }
 
@@ -26,6 +26,14 @@ export default async function profileDetails(_prevState: unknown, formData: Form
   try {
     // Make sure the current user is authenticated (the check runs on the server side)
     await makeSureUserIsAuthenticated();
+
+    // Access the user session data from the server side
+    const {
+      user: { role },
+    } = (await getUserSessionData())!;
+
+    // Return early if the current user is in demo mode
+    if (role === "demo") return { ...initialFormState, actionStatus: "demoMode" };
 
     // Validate the form on the server side and extract needed data
     const { name } = await SERVER_VALIDATE(formData);

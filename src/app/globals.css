@@ -184,4 +184,8 @@
   form {
     @apply grid;
   }
+
+  b {
+    @apply font-semibold;
+  }
 }

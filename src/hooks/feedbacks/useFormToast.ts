@@ -5,7 +5,7 @@ import { useCallback } from "react";
 import { toast } from "sonner";
 
 // types
-type ActionStatus = "idle" | "succeeded" | "failed" | "invalid" | "authError";
+type ActionStatus = "idle" | "succeeded" | "failed" | "invalid" | "authError" | "demoMode";
 type ToastMessages = Pick<Record<ActionStatus, string>, "succeeded"> & Partial<Record<Exclude<ActionStatus, "idle" | "succeeded" | "invalid">, string>>;
 
 // Generic hook for displaying toast notifications for form actions
@@ -24,6 +24,8 @@ export default function useFormToastFeedback(formName: string, { succeeded, fail
       } else if (actionStatus === "authError") {
         // "authError" may fall back to defaults if not provided
         toast.error("AUTHORIZATION ERROR!", { description: authError ?? "Something went wrong; please try again later." });
+      } else if (actionStatus === "demoMode") {
+        toast.error("DEMO MODE!", { description: "This action is disabled in demo mode." });
       }
     },
     [formName, succeeded, failed, authError],

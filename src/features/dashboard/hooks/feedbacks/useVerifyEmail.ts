@@ -4,6 +4,7 @@ import { useEffect } from "react";
 // services, features, and other libraries
 import usePermanentMessageFeedbackLoc from "@/hooks/feedbacks/usePermanentMessageLoc";
 import useFormToastFeedback from "@/hooks/feedbacks/useFormToast";
+import useDemoModeGuard from "@/hooks/useDemoModeGuard";
 
 // types
 import type { VerifyEmailActionResult } from "@/features/dashboard/actions/verifyEmail";
@@ -19,6 +20,9 @@ export default function useVerifyEmailFeedback({ actionStatus, actionError }: Ve
 
   // Generic hook for displaying toast notifications for form actions
   const showToast = useFormToastFeedback(FORM_NAME, { succeeded: SUCCEEDED_MESSAGE, authError: actionError });
+
+  // Custom hook that observes an action's status and automatically opens the global demo mode modal
+  useDemoModeGuard(actionStatus);
 
   useEffect(() => {
     if (actionStatus === "succeeded") {

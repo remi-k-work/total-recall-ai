@@ -19,7 +19,7 @@ import { generateNoteEmbeddings } from "@/features/notes/lib/embeddings2";
 import type { ServerFormState } from "@tanstack/react-form/nextjs";
 
 export interface NewNoteFormActionResult extends ServerFormState<any, any> {
-  actionStatus: "idle" | "succeeded" | "failed" | "invalid";
+  actionStatus: "idle" | "succeeded" | "failed" | "invalid" | "demoMode";
 }
 
 // The main server action that processes the form
@@ -30,8 +30,11 @@ export default async function newNote(_prevState: unknown, formData: FormData): 
 
     // Access the user session data from the server side
     const {
-      user: { id: userId },
+      user: { id: userId, role },
     } = (await getUserSessionData())!;
+
+    // Return early if the current user is in demo mode
+    if (role === "demo") return { ...initialFormState, actionStatus: "demoMode" };
 
     // Validate the form on the server side and extract needed data
     const { title, content } = await SERVER_VALIDATE(formData);

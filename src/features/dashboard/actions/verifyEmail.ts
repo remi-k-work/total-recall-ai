@@ -11,7 +11,7 @@ import { APIError } from "better-auth/api";
 
 // types
 export interface VerifyEmailActionResult {
-  actionStatus: "idle" | "succeeded" | "failed" | "authError";
+  actionStatus: "idle" | "succeeded" | "failed" | "authError" | "demoMode";
   actionError?: string;
 }
 
@@ -23,8 +23,11 @@ export default async function verifyEmail(): Promise<VerifyEmailActionResult> {
 
     // Access the user session data from the server side
     const {
-      user: { email },
+      user: { email, role },
     } = (await getUserSessionData())!;
+
+    // Return early if the current user is in demo mode
+    if (role === "demo") return { actionStatus: "demoMode" };
 
     // Trigger the email verification process manually for this user through the better-auth api
     await auth.api.sendVerificationEmail({ body: { email, callbackURL: "/email-verified" }, headers: await headers() });
