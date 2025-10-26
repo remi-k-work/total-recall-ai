@@ -38,7 +38,7 @@ export default function NewNoteForm() {
   return (
     <AppForm>
       <form action={formAction} onSubmit={() => handleSubmit()}>
-        <Card>
+        <Card className="max-w-4xl">
           <CardHeader>
             <CardTitle>New Note</CardTitle>
             <CardDescription>To create a new note</CardDescription>

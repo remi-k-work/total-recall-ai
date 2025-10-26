@@ -46,7 +46,7 @@ export default function EditNoteForm({ note: { id: noteId, title, content } }: E
   return (
     <AppForm>
       <form action={formAction} onSubmit={() => handleSubmit()}>
-        <Card>
+        <Card className="max-w-4xl">
           <CardHeader>
             <CardTitle>Edit Note</CardTitle>
             <CardDescription>To edit an existing note</CardDescription>
