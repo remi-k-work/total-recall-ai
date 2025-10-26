@@ -32,7 +32,11 @@ export default function NavItem({ href, match, title, icon, isExternal = false }
       title={title}
       prefetch={!isExternal}
       target={isExternal ? "_blank" : undefined}
-      className={cn("border p-3", "[&>svg]:size-11", isActive ? "border-accent transition-colors [&>svg]:size-13" : "hover:border-accent hover:scale-110")}
+      className={cn(
+        "bg-secondary border p-3",
+        "[&>svg]:size-11",
+        isActive ? "border-accent transition-colors [&>svg]:size-13" : "hover:border-accent hover:scale-110",
+      )}
     >
       {icon}
     </Link>

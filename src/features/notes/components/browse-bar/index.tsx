@@ -14,7 +14,7 @@ import type { BrowseBarProviderPropsWithoutChildren } from "./context/types";
 export default function BrowseBar({ ...props }: BrowseBarProviderPropsWithoutChildren) {
   return (
     <BrowseBarProvider {...props}>
-      <header className="bg-card flex flex-wrap items-center justify-around gap-4 p-3">
+      <header className="via-secondary flex flex-wrap items-center justify-around gap-4 bg-linear-to-b from-transparent to-transparent px-3 py-6">
         <Search />
         {props.kind === "notes-root" && (
           <>

@@ -34,7 +34,7 @@ export default async function Page({ params, searchParams }: PageProps<"/notes">
   } = (await getUserSessionData())!;
 
   // Retrieve all notes for a user, including only the essential fields, and shorten the content for preview purposes
-  const { notes, totalItems, totalPages } = await getNotesWithPagination(userId, searchTerm, currentPage, 3, sortByField, sortByDirection);
+  const { notes, totalItems, totalPages } = await getNotesWithPagination(userId, searchTerm, currentPage, 6, sortByField, sortByDirection);
 
   return (
     <>
@@ -49,6 +49,15 @@ export default async function Page({ params, searchParams }: PageProps<"/notes">
         currentPage={currentPage}
       />
       <NotesPreview notes={notes} />
+      <BrowseBar
+        kind="notes-root"
+        totalItems={totalItems}
+        totalPages={totalPages}
+        searchTerm={searchTerm}
+        sortByField={sortByField}
+        sortByDirection={sortByDirection}
+        currentPage={currentPage}
+      />
     </>
   );
 }

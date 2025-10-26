@@ -36,6 +36,8 @@ async function main() {
       },
     });
 
+    // const userId = "HePVdeWqffbAUg4VPYM1DMCjIeghprhj";
+
     console.log("Seeding notes and chunks...");
 
     for (const { title, content } of EXAMPLE_NOTES) {

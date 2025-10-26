@@ -22,9 +22,9 @@ import { REHYPE_PLUGINS } from "@/features/notes-assistant/constants/plugins";
 
 export default function NotePreview({ note: { title, contentPreview, createdAt, updatedAt } }: NotePreviewProps) {
   return (
-    <Card>
+    <Card className="rounded-[255px_15px_225px_15px_/_15px_225px_15px_255px]">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle className="text-muted-foreground normal-case">{title}</CardTitle>
       </CardHeader>
       <CardContent className="line-clamp-6">
         <Response rehypePlugins={REHYPE_PLUGINS}>{contentPreview}</Response>
