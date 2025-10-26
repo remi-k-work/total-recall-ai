@@ -178,4 +178,279 @@ A list of features I need to implement for the app.
 
 > Remember to check the Vercel AI SDK docs for the new \`tool\` helper. It seems very useful for the search function.`,
   },
+  {
+    title: "React Hook: useToggle",
+    content: `## Custom React Hook for Toggling State
+
+Here's a simple \`useToggle\` hook I wrote. It's useful for modals, dropdowns, etc.
+
+\`\`\`tsx
+import { useState, useCallback } from 'react';
+
+// Hook
+export const useToggle = (initialState: boolean = false): [boolean, () => void] => {
+  // Initialize the state
+  const [state, setState] = useState<boolean>(initialState);
+
+  // Define and memoize toggler function in case we pass it to child components
+  const toggle = useCallback((): void => {
+    setState(prevState => !prevState);
+  }, []);
+
+  return [state, toggle];
+};
+
+// --- Usage Example ---
+/*
+function App() {
+  const [isModalOpen, toggleModal] = useToggle(false);
+
+  return (
+    <>
+      <button onClick={toggleModal}>
+        {isModalOpen ? 'Close' : 'Open'} Modal
+      </button>
+      {isModalOpen && <div>My Modal Content</div>}
+    </>
+  );
+}
+*/
+\`\`\`
+
+I should remember to use \`useCallback\` to prevent unnecessary re-renders if the toggle function is passed as a prop.
+`,
+  },
+  {
+    title: "Book Notes: Atomic Habits",
+    content: `## Key Takeaways from "Atomic Habits" by James Clear
+
+### The Four Laws of Behavior Change
+To build a good habit, make it:
+1. **Obvious** (Cue)
+2. **Attractive** (Craving)
+3. **Easy** (Response)
+4. **Satisfying** (Reward)
+
+To break a bad habit, invert these:
+1. Make it **Invisible**
+2. Make it **Unattractive**
+3. Make it **Difficult**
+4. Make it **Unsatisfying**
+
+### Favorite Quote
+> "You do not rise to the level of your goals. You fall to the level of your systems."
+
+This is a reminder to focus on the process, not just the outcome. My system for jogging (from my other note) needs to be better. Maybe I should use habit stacking: "After I brew my morning coffee, I will put on my running shoes."
+`,
+  },
+  {
+    title: "ML Concepts: Gradient Descent",
+    content: `## Understanding Gradient Descent
+
+This is the core optimization algorithm used in most machine learning models. The goal is to find the values for a model's parameters (weights, $$\\theta$$) that minimize a cost function (or loss function), $$J(\\theta)$$.
+
+### The Update Rule
+The algorithm works by iteratively updating the parameters in the *opposite* direction of the gradient of the cost function.
+
+The update rule for a single parameter $$\\theta_j$$ is:
+
+$$
+\\theta_j := \\theta_j - \\alpha \\frac{\\partial}{\\partial \\theta_j} J(\\theta)
+$$
+
+Where:
+- $$\\theta_j$$ is the parameter we are updating.
+- $$\\alpha$$ (alpha) is the **learning rate**, which controls how big of a step we take.
+- $$\\frac{\partial}{\\partial \\theta_j} J(\\theta)$$ is the partial derivative of the cost function with respect to that parameter (i.e., the gradient).
+
+We repeat this update for all parameters $$\\theta_0, \\theta_1, ..., \\theta_n$$ simultaneously until the algorithm converges on a minimum.
+
+**Key point:** Choosing the right learning rate $$\\alpha$$ is critical. Too small, and it's too slow. Too large, and it might overshoot the minimum or even diverge.
+`,
+  },
+  {
+    title: "Family Birthdays & Gift Ideas",
+    content: `## Important Dates & Gifts
+
+I'm so bad at remembering this stuff. This note is my single source of truth.
+
+### Birthdays
+- **Mom:** March 5th
+    - *Likes:* Gardening, dark chocolate, mystery novels.
+    - *Ideas 2024:* New pruning shears, a subscription to a "book of the month" club.
+- **Dad:** June 22nd
+    - *Likes:* Grilling, old vinyl records (Classic Rock), anything for the dog.
+    - *Ideas 2024:* A high-quality meat thermometer, a Pink Floyd vinyl.
+- **Sarah (Sister):** October 30th
+    - *Likes:* Yoga, fancy tea, her cat (Miso).
+    - *Ideas 2024:* A Lululemon gift card, a set of high-end matcha.
+
+### Anniversaries
+- **Mom & Dad:** August 12th
+- **Me & Alex:** July 1st
+    - *Idea:* Plan a weekend trip to that cabin we talked about.
+`,
+  },
+  {
+    title: "Drizzle ORM Setup Guide",
+    content: `## Quick Guide: Setting up Drizzle + pgvector
+
+This is for my **Total Recall AI** project.
+
+### 1. Install Dependencies
+Need the core Drizzle package, the Postgres driver, and the pgvector type helper.
+\`\`\`bash
+npm install drizzle-orm postgres
+npm install -D drizzle-kit
+# Special package for pgvector types
+npm install @neondatabase/serverless
+\`\`\`
+*(I'm using \`postgres\` (node-postgres) as the driver).*
+
+### 2. Define Schema (\`schema.ts\`)
+The key is importing \`vector\` from the \`@neondatabase/serverless\` package.
+
+\`\`\`typescript
+import { pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
+import { vector } from '@neondatabase/serverless';
+
+export const notesTable = pgTable('notes', {
+  id: serial('id').primaryKey(),
+  title: text('title').notNull(),
+  content: text('content').notNull(),
+  createdAt: timestamp('created_at').defaultNow(),
+  
+  // The magic field for pgvector!
+  // Assuming 1536 dimensions for OpenAI's 'text-embedding-3-small'
+  embedding: vector('embedding', { dimensions: 1536 }),
+});
+\`\`\`
+
+### 3. Run Migration
+\`\`\`bash
+npx drizzle-kit generate:pg
+# Then run the generated SQL in the DB
+\`\`\`
+
+This setup should allow Drizzle to correctly handle the \`vector\` type when I insert and query data.
+`,
+  },
+  {
+    title: "Japan Trip Itinerary - Tokyo",
+    content: `## Tokyo Plan - November 2024
+
+**Flight:** AC1 - Arrives at NRT (Narita) - Nov 10th @ 4:30 PM
+**Confirmation:** \`8XF-3B2\`
+**Hotel:** Shinjuku Granbell Hotel (Check-in Nov 10, Check-out Nov 15)
+
+### Day 1: Arrival & Shinjuku
+- Land at NRT, pick up Pocket WiFi.
+- Take Narita Express (N'EX) to Shinjuku.
+- Check into hotel.
+- Dinner: Omoide Yokocho ("Piss Alley") for yakitori.
+- Walk around Shinjuku, see Godzilla head.
+
+### Day 2: Culture & Modernity
+- **Morning:** Meiji Jingu Shrine (quiet, peaceful).
+- **Lunch:** Harajuku (Takeshita Street for crepes, wild fashion).
+- **Afternoon:** Shibuya.
+    - Shibuya Crossing (famous scramble).
+    - Hachiko Statue.
+- **Evening:** Shibuya Sky Observatory for sunset views.
+
+### Day 3: Otaku & Tech
+- **Morning:** Akihabara ("Electric Town").
+    - Explore electronics stores (Yodobashi Camera).
+    - Arcades (Taito Station).
+- **Afternoon:** Ueno Park & Museums (Tokyo National Museum).
+- **Evening:** Dinner in Ginza (more upscale).
+
+### Day 4: Asakusa & Skytree
+- **Morning:** Senso-ji Temple in Asakusa (old Tokyo vibe).
+- **Afternoon:** Walk to Tokyo Skytree.
+- **Evening:** TeamLab Planets (digital art museum) - **MUST BOOK IN ADVANCE**.
+`,
+  },
+  {
+    title: "Character Bio: Kaelen",
+    content: `## Character Concept for D&D Campaign
+
+**Name:** Kaelen "Shadow" Vorlag
+**Race:** Wood Elf
+**Class:** Rogue (Assassin Archetype)
+
+### Backstory
+Kaelen was born in the deep woods, part of a reclusive clan that guarded an ancient ruin. His family was betrayed and slaughtered by a mercenary group called the **Crimson Hand**, who were seeking an artifact in the ruin. Kaelen was the only survivor, hiding in the shadows and watching the massacre.
+
+He spent the next decade on the streets of a human city, honing his skills in stealth, poison, and disguise, all while hunting down members of the Crimson Hand one by one.
+
+### Motivations
+1. **Revenge:** Find and eliminate the leader of the Crimson Hand, a man named Captain Drax.
+2. **Redemption:** He feels he failed his family by hiding. He's looking for a way to "atone," even if he doesn't know what that means.
+3. **Distrustful:** He is slow to trust anyone, especially mercenaries or those who seek power.
+
+### Appearance
+- Tall, lean, with sharp features.
+- Dark, unkempt hair.
+- Wears dark, practical leather armor.
+- Always carries at least three daggers. One is his father's, which he'll use on Drax.
+`,
+  },
+  {
+    title: "Simple Python Web Scraper",
+    content: `## Quick Scraper with BeautifulSoup & Requests
+
+Sometimes I just need to quickly grab the title of a webpage or all the links.
+
+Here's the basic template I always use.
+
+### Dependencies
+First, make sure to install the libraries:
+\`\`\`bash
+pip install requests
+pip install beautifulsoup4
+\`\`\`
+
+### Python Code
+This script will fetch a URL and print all the \`<a>\` (anchor) tags it finds.
+
+\`\`\`python
+import requests
+from bs4 import BeautifulSoup
+
+# The URL to scrape
+URL = 'https://example.com'
+
+try:
+    # Send an HTTP GET request to the URL
+    response = requests.get(URL)
+    
+    # Raise an exception if the request was unsuccessful
+    response.raise_for_status() 
+
+    # Parse the HTML content of the page
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    # Find the title of the page
+    page_title = soup.title.string
+    print(f"Page Title: {page_title}\\n")
+
+    # Find all <a> tags (links)
+    links = soup.find_all('a')
+
+    print("Found Links:")
+    if links:
+        for link in links:
+            href = link.get('href')
+            if href:
+                print(f"- {link.text.strip()}: {href}")
+    else:
+        print("No links found.")
+
+except requests.exceptions.RequestException as e:
+    print(f"Error fetching URL: {e}")
+
+\`\`\`
+`,
+  },
 ] as const;

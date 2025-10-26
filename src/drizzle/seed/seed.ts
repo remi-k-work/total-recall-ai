@@ -14,10 +14,8 @@ import { auth } from "@/services/better-auth/auth";
 import { generateNoteEmbeddings } from "@/features/notes/lib/embeddings2";
 
 // constants
+import { DEMO_USER_EMAIL, DEMO_USER_NAME, DEMO_USER_PASS } from "./constants";
 import { EXAMPLE_NOTES } from "./constants/notes";
-
-const DEMO_USER_EMAIL = "quinn.quaid@total-recall.ai";
-const DEMO_USER_NAME = "Quinn Quaid";
 
 async function main() {
   try {
@@ -32,7 +30,7 @@ async function main() {
     } = await auth.api.createUser({
       body: {
         email: DEMO_USER_EMAIL,
-        password: "password!",
+        password: DEMO_USER_PASS,
         name: DEMO_USER_NAME,
         role: "demo",
       },

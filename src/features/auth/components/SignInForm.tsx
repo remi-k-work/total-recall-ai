@@ -86,7 +86,7 @@ export default function SignInForm({ redirect }: SignInFormProps) {
               isPending={isPending}
               onClearedForm={hideFeedbackMessage}
             />
-            <section className="mx-6 mt-9 grid gap-4">
+            <section className="mt-9 grid gap-4 border-t border-b px-6 py-6">
               <SignInSocial provider="google" redirect={redirect} />
               <SignInSocial provider="github" redirect={redirect} />
             </section>
