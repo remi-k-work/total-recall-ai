@@ -21,10 +21,15 @@ import InfoLine from "@/components/form/InfoLine";
 // assets
 import { DocumentPlusIcon } from "@heroicons/react/24/outline";
 
+// types
+interface NewNoteFormProps {
+  inNoteModal?: boolean;
+}
+
 // constants
 import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/notes/constants/newNoteForm";
 
-export default function NewNoteForm() {
+export default function NewNoteForm({ inNoteModal = false }: NewNoteFormProps) {
   // The main server action that processes the form
   const [formState, formAction, isPending] = useActionState(newNote, INITIAL_FORM_STATE);
   const { AppField, AppForm, FormSubmit, handleSubmit, reset, store } = useAppForm({
@@ -39,10 +44,12 @@ export default function NewNoteForm() {
     <AppForm>
       <form action={formAction} onSubmit={() => handleSubmit()}>
         <Card className="max-w-4xl">
-          <CardHeader>
-            <CardTitle>New Note</CardTitle>
-            <CardDescription>To create a new note</CardDescription>
-          </CardHeader>
+          {!inNoteModal && (
+            <CardHeader>
+              <CardTitle>New Note</CardTitle>
+              <CardDescription>To create a new note</CardDescription>
+            </CardHeader>
+          )}
           <CardContent>
             <AppField
               name="title"

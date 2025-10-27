@@ -10,17 +10,12 @@ import { NoteDetailsPageSchema } from "@/features/notes/schemas/noteDetailsPage"
 import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
 // components
-import PageHeader from "@/components/PageHeader";
+import NoteModal from "@/features/notes/components/note-modal";
 import BrowseBar from "@/features/notes/components/browse-bar";
 import NoteDetails from "@/features/notes/components/NoteDetails";
 
-// types
-import type { Metadata } from "next";
-
-// constants
-export const metadata: Metadata = {
-  title: "Total Recall AI ► Note Details",
-};
+// assets
+import { DocumentIcon } from "@heroicons/react/24/outline";
 
 export default async function Page({ params, searchParams }: PageProps<"/notes/[id]">) {
   // Safely validate next.js route inputs (`params` and `searchParams`) against a zod schema; return typed data or trigger a 404 on failure
@@ -43,10 +38,8 @@ export default async function Page({ params, searchParams }: PageProps<"/notes/[
   if (!note) notFound();
 
   return (
-    <>
-      <PageHeader title="Note Details" description="Below are all your note details" />
-      <BrowseBar kind="note-details" noteId={noteId} />
-      <NoteDetails note={note} />
-    </>
+    <NoteModal icon={<DocumentIcon className="size-11 flex-none" />} title={note.title} browseBar={<BrowseBar kind="note-details" noteId={noteId} />}>
+      <NoteDetails note={note} inNoteModal />
+    </NoteModal>
   );
 }

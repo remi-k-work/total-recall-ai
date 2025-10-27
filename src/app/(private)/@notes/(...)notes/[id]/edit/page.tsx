@@ -6,27 +6,22 @@ import { getNote } from "@/features/notes/db";
 
 // services, features, and other libraries
 import { validatePageInputs } from "@/lib/helpers";
-import { NoteDetailsPageSchema } from "@/features/notes/schemas/noteDetailsPage";
+import { EditNotePageSchema } from "@/features/notes/schemas/editNotePage";
 import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
 // components
-import PageHeader from "@/components/PageHeader";
+import NoteModal from "@/features/notes/components/note-modal";
 import BrowseBar from "@/features/notes/components/browse-bar";
-import NoteDetails from "@/features/notes/components/NoteDetails";
+import EditNoteForm from "@/features/notes/components/EditNoteForm";
 
-// types
-import type { Metadata } from "next";
+// assets
+import { DocumentTextIcon } from "@heroicons/react/24/outline";
 
-// constants
-export const metadata: Metadata = {
-  title: "Total Recall AI ► Note Details",
-};
-
-export default async function Page({ params, searchParams }: PageProps<"/notes/[id]">) {
+export default async function Page({ params, searchParams }: PageProps<"/notes/[id]/edit">) {
   // Safely validate next.js route inputs (`params` and `searchParams`) against a zod schema; return typed data or trigger a 404 on failure
   const {
     params: { id: noteId },
-  } = await validatePageInputs(NoteDetailsPageSchema, { params, searchParams });
+  } = await validatePageInputs(EditNotePageSchema, { params, searchParams });
 
   // Make sure the current user is authenticated (the check runs on the server side)
   await makeSureUserIsAuthenticated();
@@ -43,10 +38,8 @@ export default async function Page({ params, searchParams }: PageProps<"/notes/[
   if (!note) notFound();
 
   return (
-    <>
-      <PageHeader title="Note Details" description="Below are all your note details" />
-      <BrowseBar kind="note-details" noteId={noteId} />
-      <NoteDetails note={note} />
-    </>
+    <NoteModal icon={<DocumentTextIcon className="size-11 flex-none" />} title={note.title} browseBar={<BrowseBar kind="note-edit" noteId={noteId} />}>
+      <EditNoteForm note={note} inNoteModal />
+    </NoteModal>
   );
 }

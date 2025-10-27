@@ -15,17 +15,20 @@ import type { getNote } from "@/features/notes/db";
 
 interface NoteDetailsProps {
   note: Exclude<Awaited<ReturnType<typeof getNote>>, undefined>;
+  inNoteModal?: boolean;
 }
 
 // constants
 import { REHYPE_PLUGINS } from "@/features/notes-assistant/constants/plugins";
 
-export default function NoteDetails({ note: { title, content, createdAt, updatedAt } }: NoteDetailsProps) {
+export default function NoteDetails({ note: { title, content, createdAt, updatedAt }, inNoteModal = false }: NoteDetailsProps) {
   return (
     <Card className="max-w-2xl rounded-[255px_15px_225px_15px_/_15px_225px_15px_255px]">
-      <CardHeader>
-        <CardTitle className="text-muted-foreground normal-case">{title}</CardTitle>
-      </CardHeader>
+      {!inNoteModal && (
+        <CardHeader>
+          <CardTitle className="text-muted-foreground normal-case">{title}</CardTitle>
+        </CardHeader>
+      )}
       <CardContent>
         <Response rehypePlugins={REHYPE_PLUGINS}>{content}</Response>
       </CardContent>

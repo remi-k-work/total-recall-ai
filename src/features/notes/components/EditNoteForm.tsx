@@ -26,12 +26,13 @@ import type { getNote } from "@/features/notes/db";
 
 interface EditNoteFormProps {
   note: Exclude<Awaited<ReturnType<typeof getNote>>, undefined>;
+  inNoteModal?: boolean;
 }
 
 // constants
 import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/notes/constants/editNoteForm";
 
-export default function EditNoteForm({ note: { id: noteId, title, content } }: EditNoteFormProps) {
+export default function EditNoteForm({ note: { id: noteId, title, content }, inNoteModal = false }: EditNoteFormProps) {
   // The main server action that processes the form
   const [formState, formAction, isPending] = useActionState(editNote.bind(null, noteId), INITIAL_FORM_STATE);
   const { AppField, AppForm, FormSubmit, handleSubmit, reset, store } = useAppForm({
@@ -47,10 +48,12 @@ export default function EditNoteForm({ note: { id: noteId, title, content } }: E
     <AppForm>
       <form action={formAction} onSubmit={() => handleSubmit()}>
         <Card className="max-w-4xl">
-          <CardHeader>
-            <CardTitle>Edit Note</CardTitle>
-            <CardDescription>To edit an existing note</CardDescription>
-          </CardHeader>
+          {!inNoteModal && (
+            <CardHeader>
+              <CardTitle>Edit Note</CardTitle>
+              <CardDescription>To edit an existing note</CardDescription>
+            </CardHeader>
+          )}
           <CardContent>
             <AppField
               name="title"

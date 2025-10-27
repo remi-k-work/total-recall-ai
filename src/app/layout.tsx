@@ -7,7 +7,7 @@ import { Analytics } from "@vercel/analytics/next";
 // components
 import { ThemeProvider } from "next-themes";
 import DemoModeProvider from "@/contexts/DemoMode";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/custom/sonner";
 
 // assets
 import { fontSans, fontMono } from "@/assets/fonts";
