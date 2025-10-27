@@ -7,6 +7,9 @@
 
 @plugin "@tailwindcss/typography";
 
+/* custom animations */
+@import "../styles/anim/cursor-blink.css";
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
