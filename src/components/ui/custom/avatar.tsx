@@ -4,7 +4,9 @@ import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import { cn } from "@/lib/utils";
 
 function Avatar({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Root>) {
-  return <AvatarPrimitive.Root data-slot="avatar" className={cn("relative flex size-36 shrink-0 overflow-hidden rounded-full", className)} {...props} />;
+  return (
+    <AvatarPrimitive.Root data-slot="avatar" className={cn("bg-background relative flex size-36 shrink-0 overflow-hidden rounded-xl", className)} {...props} />
+  );
 }
 
 function AvatarImage({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Image>) {
@@ -15,7 +17,7 @@ function AvatarFallback({ className, ...props }: React.ComponentProps<typeof Ava
   return (
     <AvatarPrimitive.Fallback
       data-slot="avatar-fallback"
-      className={cn("flex size-full items-center justify-center rounded-full border text-6xl select-none", className)}
+      className={cn("flex size-full items-center justify-center rounded-xl border text-6xl select-none", className)}
       {...props}
     />
   );

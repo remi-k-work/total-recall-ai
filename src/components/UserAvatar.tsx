@@ -3,6 +3,7 @@
 // services, features, and other libraries
 import { authClient } from "@/services/better-auth/auth-client";
 import { cn } from "@/lib/utils";
+import { getInitialsFromName, getUserAvatarUrl } from "@/lib/helpers";
 
 // components
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/custom/avatar";
@@ -24,13 +25,8 @@ export default function UserAvatar({ isSmall = false, isDemo = false, className,
     return (
       <section className="grid">
         <Avatar className={cn("mx-auto size-74", className)} {...props}>
-          <AvatarImage src={`https://robohash.org/${Date.now()}.png?set=set5`} alt={DEMO_USER_NAME} />
-          <AvatarFallback>
-            {DEMO_USER_NAME.split(" ")
-              .filter(Boolean)
-              .map((part) => part[0])
-              .join("")}
-          </AvatarFallback>
+          <AvatarImage src={getUserAvatarUrl()} alt={DEMO_USER_NAME} />
+          <AvatarFallback>{getInitialsFromName(DEMO_USER_NAME)}</AvatarFallback>
         </Avatar>
         <h4 className="mt-4 max-w-none truncate text-center">{DEMO_USER_NAME}</h4>
         <p className="text-muted-foreground max-w-none truncate text-center">{DEMO_USER_EMAIL}</p>
@@ -53,14 +49,8 @@ export default function UserAvatar({ isSmall = false, isDemo = false, className,
   return (
     <Avatar className={cn(isSmall && "size-11", className)} {...props}>
       {/* If the user is a demo user, use a different avatar image (always random per session) */}
-      <AvatarImage src={role === "demo" ? `https://robohash.org/${sessionId}.png?set=set5` : (image ?? undefined)} alt={name} />
-      <AvatarFallback className={cn(isSmall && "border-none text-3xl")}>
-        {name
-          .split(" ")
-          .filter(Boolean)
-          .map((part) => part[0])
-          .join("")}
-      </AvatarFallback>
+      <AvatarImage src={role === "demo" ? getUserAvatarUrl(sessionId) : (image ?? undefined)} alt={name} />
+      <AvatarFallback className={cn(isSmall && "border-none text-3xl")}>{getInitialsFromName(name)}</AvatarFallback>
     </Avatar>
   );
 }

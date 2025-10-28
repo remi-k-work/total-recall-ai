@@ -12,7 +12,6 @@ export async function expandQueryWithHypotheticalAnswer(question: string): Promi
     const { text } = await generateText({ model: google("gemini-2.5-flash"), prompt: EXPAND_QUERY_PROMPT(question), temperature: 0 });
 
     // By generating a hypothetical answer, you create an embedding that is semantically much closer to the specific note chunk you are seeking
-    console.log("Expanded query:", text);
     return text;
   } catch (error) {
     console.error("Error expanding query:", error);

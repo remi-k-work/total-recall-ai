@@ -15,7 +15,13 @@ export default function TypeWriterOutput({ fullText }: TypeWriterOutputProps) {
   return (
     <>
       <p className="sr-only">{fullText}</p>
-      <p ref={elementRef} className={cn("mx-auto min-h-64 max-w-[1200px] text-wrap", isRunning && "after:animate-cursor-blink after:content-['▋']")} />
+      <p
+        ref={elementRef}
+        className={cn(
+          "dark:text-background h-64 max-w-none overflow-y-auto px-6 text-wrap sm:text-xl",
+          isRunning && "after:animate-cursor-blink after:content-['▋']",
+        )}
+      />
     </>
   );
 }

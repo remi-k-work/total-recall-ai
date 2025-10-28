@@ -10,7 +10,7 @@ export default function Page() {
     <>
       <PageHeader title="Home" description="Welcome to Total Recall AI!" />
       <Hero />
-      <SectionHeader title="Testimonials from our Satisfied Users" />
+      <SectionHeader title="Testimonials from our Satisfied? Users" />
       <TestimonialSlider />
       <SectionHeader title="Try out Total Recall AI right now!" />
       <SignInDemoUser />

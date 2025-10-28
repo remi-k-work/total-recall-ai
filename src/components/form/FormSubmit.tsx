@@ -30,7 +30,7 @@ export default function FormSubmit({ submitIcon, submitText, isPending, showCanc
   const { back } = useRouter();
 
   return (
-    <section className="flex flex-wrap items-center gap-6 px-6 *:flex-1">
+    <section className="flex flex-wrap items-center gap-6 *:flex-1">
       <Subscribe selector={(formState) => [formState.canSubmit, formState.isSubmitting, formState.isPristine]}>
         {([canSubmit, isSubmitting, isPristine]) => (
           <Button type="submit" disabled={isPending || !canSubmit || isPristine}>

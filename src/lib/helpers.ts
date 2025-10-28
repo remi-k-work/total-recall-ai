@@ -34,3 +34,41 @@ export function createServerValidateWithTransforms<TSchema extends z.ZodTypeAny>
     return schema.parseAsync(Object.fromEntries(formData.entries()));
   };
 }
+
+// Get a robohash avatar url for a user
+export function getUserAvatarUrl(sessionId?: string) {
+  return `https://robohash.org/${sessionId ?? getRandomSeed()}.png?set=set${sessionId ? (hashStringToNumber(sessionId) % 5) + 1 : getRandomInt(1, 5)}`;
+}
+
+// Get the initials from a name
+export function getInitialsFromName(name: string) {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 0) return "";
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+// Generate a random integer between min and max (inclusive)
+function getRandomInt(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// Generate a random 3-character alphanumeric seed (A–Z, 0–9)
+function getRandomSeed(length = 3) {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let result = "";
+  for (let i = 0; i < length; i++) result += chars.charAt(getRandomInt(0, chars.length - 1));
+
+  return result;
+}
+
+// Simple deterministic hash -> number
+function hashStringToNumber(str: string) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash |= 0; // Convert to 32-bit int
+  }
+
+  return Math.abs(hash);
+}

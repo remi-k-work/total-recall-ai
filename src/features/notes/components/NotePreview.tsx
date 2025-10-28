@@ -29,7 +29,7 @@ export default function NotePreview({ note: { title, contentPreview, createdAt, 
       <CardContent className="line-clamp-6">
         <Response rehypePlugins={REHYPE_PLUGINS}>{contentPreview}</Response>
       </CardContent>
-      <CardFooter className="flex flex-wrap items-center justify-around gap-6 border-t px-6 pt-6">
+      <CardFooter className="flex flex-wrap items-center justify-around gap-6 border-t pt-6">
         <section>
           <div className="flex items-center justify-center gap-2 uppercase">
             <CalendarIcon className="size-9" />

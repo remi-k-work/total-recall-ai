@@ -1,3 +1,6 @@
+// services, features, and other libraries
+import { getInitialsFromName, getUserAvatarUrl } from "@/lib/helpers";
+
 // components
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/custom/avatar";
 
@@ -19,16 +22,10 @@ export default function Slide({ testimonial: { stars, byWhom, testimonial } }: S
           <StarIcon key={index} className="text-accent size-13" />
         ))}
       </header>
-      <p className="mt-4 text-xl">
-        <Avatar className="float-left size-32">
-          <AvatarImage src={`https://robohash.org/${Date.now()}.png?set=set5`} alt={byWhom} />
-          <AvatarFallback className="text-xl">
-            {byWhom
-              .split(" ")
-              .filter(Boolean)
-              .map((part) => part[0])
-              .join("")}
-          </AvatarFallback>
+      <p className="mt-4 sm:text-xl">
+        <Avatar className="float-left mr-4 mb-4 size-24 sm:size-32">
+          <AvatarImage src={getUserAvatarUrl()} alt={byWhom} />
+          <AvatarFallback className="text-4xl">{getInitialsFromName(byWhom)}</AvatarFallback>
         </Avatar>
         {testimonial}
       </p>

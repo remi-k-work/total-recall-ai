@@ -42,7 +42,7 @@ function CardContent({ className, ...props }: React.ComponentProps<"section">) {
 }
 
 function CardFooter({ className, ...props }: React.ComponentProps<"footer">) {
-  return <footer data-slot="card-footer" className={className} {...props} />;
+  return <footer data-slot="card-footer" className={cn("px-6", className)} {...props} />;
 }
 
 export { Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent };
