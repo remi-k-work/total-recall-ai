@@ -6,42 +6,36 @@ import { useState } from "react";
 // next
 import Link from "next/link";
 
-// services, features, and other libraries
-import { authClient } from "@/services/better-auth/auth-client";
-
 // components
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/custom/button";
-import UserAvatar from "@/components/UserAvatar";
+import UserAvatar, { UserAvatarSkeleton } from "@/components/avatar/user";
 import SignOut from "./SignOut";
 
 // assets
 import { UserIcon } from "@heroicons/react/24/outline";
 
-export default function UserPopover() {
-  // Access the user session data from the client side
-  const { data: userSessionData } = authClient.useSession();
+// types
+import type { Session, User } from "@/services/better-auth/auth";
 
+interface UserPopoverProps {
+  user: User;
+  session: Session;
+}
+
+export default function UserPopover({ user, user: { email, name }, session }: UserPopoverProps) {
   // Whether or not the user popover is open
   const [isOpen, setIsOpen] = useState(false);
-
-  // If there is no user session data, do not render anything
-  if (!userSessionData) return null;
-
-  // Destructure the user session data
-  const {
-    user: { email, name },
-  } = userSessionData;
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button type="button" variant="ghost" size="icon" title={name}>
-          <UserAvatar isSmall />
+          <UserAvatar user={user} session={session} isSmall />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="grid">
-        <UserAvatar className="mx-auto" />
+        <UserAvatar user={user} session={session} className="mx-auto" />
         <h4 className="mt-4 truncate text-center">{name}</h4>
         <p className="text-muted-foreground truncate text-center">{email}</p>
         <div className="mt-4 grid gap-4">
@@ -55,5 +49,13 @@ export default function UserPopover() {
         </div>
       </PopoverContent>
     </Popover>
+  );
+}
+
+export function UserPopoverSkeleton() {
+  return (
+    <Button type="button" variant="ghost" size="icon" title="User" disabled>
+      <UserAvatarSkeleton isSmall />
+    </Button>
   );
 }

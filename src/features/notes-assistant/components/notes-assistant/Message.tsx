@@ -1,36 +1,25 @@
-// services, features, and other libraries
-import { authClient } from "@/services/better-auth/auth-client";
-
 // components
 import { Message as AIEMessage, MessageContent } from "@/components/ai-elements/custom/message";
 import { Response } from "@/components/ai-elements/response";
 import { Tool, ToolContent, ToolHeader, ToolInput, ToolOutput } from "@/components/ai-elements/custom/tool";
-import UserAvatar from "@/components/UserAvatar";
-import AgentAvatar from "@/components/AgentAvatar";
+import UserAvatar from "@/components/avatar/user";
+import AgentAvatar from "@/components/avatar/Agent";
 
 // types
 import type { UIMessage, useChat } from "@ai-sdk/react";
+import type { Session, User } from "@/services/better-auth/auth";
 
 interface MessageProps {
   message: UIMessage;
   status: ReturnType<typeof useChat>["status"];
+  user: User;
+  session: Session;
 }
 
 // constants
 import { REHYPE_PLUGINS } from "@/features/notes-assistant/constants/plugins";
 
-export default function Message({ message: { id, role, parts }, status }: MessageProps) {
-  // Access the user session data from the client side
-  const { data: userSessionData } = authClient.useSession();
-
-  // If there is no user session data, do not render anything
-  if (!userSessionData) return null;
-
-  // Destructure the user session data
-  const {
-    user: { name, image, role: userRole },
-  } = userSessionData;
-
+export default function Message({ message: { id, role, parts }, status, user, session }: MessageProps) {
   return (
     <AIEMessage from={role}>
       <MessageContent>
@@ -66,7 +55,7 @@ export default function Message({ message: { id, role, parts }, status }: Messag
           }
         })}
       </MessageContent>
-      {role === "user" ? <UserAvatar isSmall /> : <AgentAvatar isSmall />}
+      {role === "user" ? <UserAvatar user={user} session={session} isSmall /> : <AgentAvatar isSmall />}
     </AIEMessage>
   );
 }

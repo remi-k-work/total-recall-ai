@@ -3,19 +3,20 @@ import { format } from "date-fns";
 
 // components
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
-import UserAvatar from "@/components/UserAvatar";
+import UserAvatar from "@/components/avatar/user";
 
 // assets
 import { CalendarIcon } from "@heroicons/react/24/outline";
 
 // types
-import type { User } from "@/services/better-auth/auth";
+import type { Session, User } from "@/services/better-auth/auth";
 
 interface ProfileInfoProps {
   user: User;
+  session: Session;
 }
 
-export default function ProfileInfo({ user: { email, name, createdAt } }: ProfileInfoProps) {
+export default function ProfileInfo({ user, user: { email, name, createdAt }, session }: ProfileInfoProps) {
   return (
     <Card>
       <CardHeader>
@@ -23,7 +24,7 @@ export default function ProfileInfo({ user: { email, name, createdAt } }: Profil
         <CardDescription>Your account details and current status</CardDescription>
       </CardHeader>
       <CardContent>
-        <UserAvatar className="mx-auto" />
+        <UserAvatar user={user} session={session} className="mx-auto" />
         <h4 className="mx-auto mt-4 truncate text-center">{name}</h4>
         <p className="text-muted-foreground mx-auto truncate text-center">{email}</p>
       </CardContent>

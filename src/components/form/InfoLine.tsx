@@ -20,7 +20,7 @@ export default function InfoLine({ message, className }: InfoLineProps) {
         <motion.p
           role="status"
           aria-live="polite"
-          className={cn("text-muted-foreground border-input mx-6 mb-4 flex max-w-none items-center gap-2 border px-3 py-2", className)}
+          className={cn("text-muted-foreground border-input mb-4 flex max-w-none items-center gap-2 border px-3 py-2", className)}
           layout
           initial={{ opacity: 0, scale: 0, height: 0 }}
           animate={{ opacity: 1, scale: 1, height: "auto" }}

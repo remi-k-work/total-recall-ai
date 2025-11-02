@@ -1,6 +1,6 @@
 // components
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
-import UserAvatar from "@/components/UserAvatar";
+import DemoAvatar from "@/components/avatar/Demo";
 import SignInDemo from "./SignInDemo";
 
 // types
@@ -18,7 +18,7 @@ export default function SignInDemoUser({ redirect }: SignInDemoUserProps) {
         <CardDescription>To test drive the application</CardDescription>
       </CardHeader>
       <CardContent>
-        <UserAvatar isDemo />
+        <DemoAvatar />
       </CardContent>
       <CardFooter>
         <SignInDemo redirect={redirect} />

@@ -1,3 +1,6 @@
+// react
+import { Suspense } from "react";
+
 // drizzle and db access
 import { getMostRecentNotes } from "@/features/notes/db";
 
@@ -19,7 +22,17 @@ export const metadata: Metadata = {
   title: "Total Recall AI ► Dashboard",
 };
 
-export default async function Page() {
+// Page remains the fast, static shell
+export default function Page() {
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <PageContent />
+    </Suspense>
+  );
+}
+
+// This new async component contains the dynamic logic
+async function PageContent() {
   // Make sure the current user is authenticated (the check runs on the server side)
   await makeSureUserIsAuthenticated();
 
@@ -27,6 +40,7 @@ export default async function Page() {
   const {
     user,
     user: { id: userId },
+    session,
   } = (await getUserSessionData())!;
 
   // Retrieve the most recently updated notes for a user, with an optional limit
@@ -36,11 +50,20 @@ export default async function Page() {
     <>
       <PageHeader title="Dashboard" description="Welcome back! Below is your account overview" />
       <article className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <ProfileInfo user={user} />
+        <ProfileInfo user={user} session={session} />
         <VerifyEmail user={user} />
       </article>
       <SectionHeader title="Your most recent notes" />
       <NotesPreview notes={notes} />
+    </>
+  );
+}
+
+function PageSkeleton() {
+  return (
+    <>
+      <PageHeader title="Dashboard" description="Welcome back! Below is your account overview" />
+      <SectionHeader title="Your most recent notes" />
     </>
   );
 }

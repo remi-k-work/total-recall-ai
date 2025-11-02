@@ -1,3 +1,6 @@
+// react
+import { Suspense } from "react";
+
 // next
 import { notFound } from "next/navigation";
 
@@ -22,7 +25,17 @@ export const metadata: Metadata = {
   title: "Total Recall AI ► Note Details",
 };
 
-export default async function Page({ params, searchParams }: PageProps<"/notes/[id]">) {
+// Page remains the fast, static shell
+export default function Page({ params, searchParams }: PageProps<"/notes/[id]">) {
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <PageContent params={params} searchParams={searchParams} />
+    </Suspense>
+  );
+}
+
+// This new async component contains the dynamic logic
+async function PageContent({ params, searchParams }: PageProps<"/notes/[id]">) {
   // Safely validate next.js route inputs (`params` and `searchParams`) against a zod schema; return typed data or trigger a 404 on failure
   const {
     params: { id: noteId },
@@ -47,6 +60,14 @@ export default async function Page({ params, searchParams }: PageProps<"/notes/[
       <PageHeader title="Note Details" description="Below are all your note details" />
       <BrowseBar kind="note-details" noteId={noteId} />
       <NoteDetails note={note} />
+    </>
+  );
+}
+
+function PageSkeleton() {
+  return (
+    <>
+      <PageHeader title="Note Details" description="Below are all your note details" />
     </>
   );
 }

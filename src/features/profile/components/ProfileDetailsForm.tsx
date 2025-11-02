@@ -16,7 +16,7 @@ import useProfileDetailsFormFeedback from "@/features/profile/hooks/feedbacks/us
 
 // components
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
-import UserAvatar from "@/components/UserAvatar";
+import UserAvatar from "@/components/avatar/user";
 import UploadAvatar from "./UploadAvatar";
 import DeleteAvatar from "./DeleteAvatar";
 import InfoLine from "@/components/form/InfoLine";
@@ -25,16 +25,17 @@ import InfoLine from "@/components/form/InfoLine";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 
 // types
-import type { User } from "@/services/better-auth/auth";
+import type { Session, User } from "@/services/better-auth/auth";
 
 interface ProfileDetailsFormProps {
   user: User;
+  session: Session;
 }
 
 // constants
 import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/profile/constants/profileDetailsForm";
 
-export default function ProfileDetailsForm({ user: { name: currentName, image: currentImage } }: ProfileDetailsFormProps) {
+export default function ProfileDetailsForm({ user, user: { name: currentName, image: currentImage }, session }: ProfileDetailsFormProps) {
   // The main server action that processes the form
   const [formState, formAction, isPending] = useActionState(profileDetails, INITIAL_FORM_STATE);
   const { AppField, AppForm, FormSubmit, handleSubmit, reset, store } = useAppForm({
@@ -56,7 +57,7 @@ export default function ProfileDetailsForm({ user: { name: currentName, image: c
           </CardHeader>
           <CardContent>
             <div className="mb-4 flex flex-wrap items-center justify-around gap-4 sm:justify-between">
-              <UserAvatar />
+              <UserAvatar user={user} session={session} />
               <div className="grid gap-4">
                 <UploadAvatar />
                 <DeleteAvatar currentImage={currentImage ?? undefined} />

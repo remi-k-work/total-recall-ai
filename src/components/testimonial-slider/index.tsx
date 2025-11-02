@@ -1,10 +1,13 @@
 "use client";
 
+// react
+import { Suspense } from "react";
+
 // other libraries
 import useEmblaCarousel from "embla-carousel-react";
 
 // components
-import Slide from "./slide";
+import Slide, { SlideSkeleton } from "./slide";
 import Prev from "./buttons/Prev";
 import Next from "./buttons/Next";
 import Dot from "./buttons/Dot";
@@ -22,7 +25,9 @@ export default function TestimonialSlider() {
           <div className="-ms-4 flex touch-pan-y touch-pinch-zoom">
             {TESTIMONIALS.map((testimonial, index) => (
               <div key={index} className="min-w-0 shrink-0 grow-0 basis-full ps-4">
-                <Slide testimonial={testimonial} />
+                <Suspense fallback={<SlideSkeleton testimonial={testimonial} />}>
+                  <Slide testimonial={testimonial} />
+                </Suspense>
               </div>
             ))}
           </div>

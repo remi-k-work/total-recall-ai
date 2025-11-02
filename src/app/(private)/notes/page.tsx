@@ -1,3 +1,6 @@
+// react
+import { Suspense } from "react";
+
 // drizzle and db access
 import { getNotesWithPagination } from "@/features/notes/db";
 
@@ -19,7 +22,17 @@ export const metadata: Metadata = {
   title: "Total Recall AI ► Notes",
 };
 
-export default async function Page({ params, searchParams }: PageProps<"/notes">) {
+// Page remains the fast, static shell
+export default function Page({ params, searchParams }: PageProps<"/notes">) {
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <PageContent params={params} searchParams={searchParams} />
+    </Suspense>
+  );
+}
+
+// This new async component contains the dynamic logic
+async function PageContent({ params, searchParams }: PageProps<"/notes">) {
   // Safely validate next.js route inputs (`params` and `searchParams`) against a zod schema; return typed data or trigger a 404 on failure
   const {
     searchParams: { str: searchTerm, crp: currentPage, sbf: sortByField, sbd: sortByDirection },
@@ -58,6 +71,14 @@ export default async function Page({ params, searchParams }: PageProps<"/notes">
         sortByDirection={sortByDirection}
         currentPage={currentPage}
       />
+    </>
+  );
+}
+
+function PageSkeleton() {
+  return (
+    <>
+      <PageHeader title="Notes" description="Welcome back! Below are all your notes" />
     </>
   );
 }

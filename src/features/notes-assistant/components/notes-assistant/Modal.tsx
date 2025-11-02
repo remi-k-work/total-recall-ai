@@ -13,15 +13,18 @@ import Footer from "./Footer";
 
 // types
 import type { ComponentPropsWithoutRef } from "react";
+import type { Session, User } from "@/services/better-auth/auth";
 
 interface ModalProps extends ComponentPropsWithoutRef<"dialog"> {
+  user: User;
+  session: Session;
   onClosed: () => void;
 }
 
 // constants
 import { INITIAL_MESSAGE } from "@/features/notes-assistant/constants/messages";
 
-export default function Modal({ onClosed, className, ...props }: ModalProps) {
+export default function Modal({ user, session, onClosed, className, ...props }: ModalProps) {
   // To be able to call showModal() method on the dialog
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -59,7 +62,7 @@ export default function Modal({ onClosed, className, ...props }: ModalProps) {
             transition={{ ease: "easeOut", duration: 0.5 }}
           >
             <Header onClosed={() => setIsOpen(false)} />
-            <Messages messages={messages} status={status} />
+            <Messages messages={messages} status={status} user={user} session={session} />
             <Footer sendMessage={sendMessage} status={status} />
           </motion.div>
         )}

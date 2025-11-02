@@ -42,3 +42,11 @@ export default function NavItem({ href, match, title, icon, isExternal = false }
     </Link>
   );
 }
+
+export function NavItemSkeleton({ href, title, icon, isExternal = false }: NavItemProps) {
+  return (
+    <Link href={href} title={title} prefetch={!isExternal} target={isExternal ? "_blank" : undefined} className="bg-secondary border p-3 [&>svg]:size-11">
+      {icon}
+    </Link>
+  );
+}

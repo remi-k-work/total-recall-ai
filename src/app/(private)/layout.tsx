@@ -1,13 +1,13 @@
 // components
 import Header from "@/components/header";
 
-export default function Layout({ notes, children }: LayoutProps<"/">) {
+export default function Layout({ children, notes }: LayoutProps<"/">) {
   return (
     <>
       <Header />
       <main className="mx-4 [grid-area:main]">
-        {notes}
         {children}
+        {notes}
       </main>
     </>
   );

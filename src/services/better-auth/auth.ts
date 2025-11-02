@@ -15,7 +15,7 @@ import { UserTable, SessionTable, AccountTable, VerificationTable } from "@/driz
 import { sendEmailChange, sendResetPassword, sendVerifyEmail } from "@/emails/sender";
 
 // types
-export type Session = typeof auth.$Infer.Session;
+export type Session = typeof auth.$Infer.Session.session;
 export type User = typeof auth.$Infer.Session.user;
 
 export const auth = betterAuth({
