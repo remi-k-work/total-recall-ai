@@ -11,8 +11,11 @@ import { DocumentPlusIcon } from "@heroicons/react/24/outline";
 
 export default async function Page() {
   // Make sure the current user is authenticated (the check runs on the server side)
-  await makeSureUserIsAuthenticated();
-
+  try {
+    await makeSureUserIsAuthenticated();
+  } catch (error) {
+    console.error(error);
+  }
   return (
     <NoteModal icon={<DocumentPlusIcon className="size-11 flex-none" />} title="New Note" browseBar={<BrowseBar kind="note-new" />}>
       <NewNoteForm inNoteModal />
