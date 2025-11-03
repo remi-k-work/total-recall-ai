@@ -19,6 +19,8 @@ export type Session = typeof auth.$Infer.Session.session;
 export type User = typeof auth.$Infer.Session.user;
 
 export const auth = betterAuth({
+  trustedOrigins: ["http://localhost:3000", "https://total-recall-ai.vercel.app", "https://total-recall-ai-git-cachec-remis-projects-738a757c.vercel.app"],
+
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: { user: UserTable, session: SessionTable, account: AccountTable, verification: VerificationTable },
