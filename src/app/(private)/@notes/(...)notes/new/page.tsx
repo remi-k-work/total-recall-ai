@@ -1,3 +1,6 @@
+// next
+import { connection } from "next/server";
+
 // services, features, and other libraries
 import { makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
@@ -10,6 +13,8 @@ import NewNoteForm from "@/features/notes/components/NewNoteForm";
 import { DocumentPlusIcon } from "@heroicons/react/24/outline";
 
 export default async function Page() {
+  await connection();
+
   // Make sure the current user is authenticated (the check runs on the server side)
   try {
     await makeSureUserIsAuthenticated();
