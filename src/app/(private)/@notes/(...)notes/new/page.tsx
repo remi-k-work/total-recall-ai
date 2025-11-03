@@ -1,9 +1,6 @@
 // react
 import { Suspense } from "react";
 
-// next
-import { connection } from "next/server";
-
 // services, features, and other libraries
 import { makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
@@ -26,8 +23,6 @@ export default function Page() {
 
 // This new async component contains the dynamic logic
 async function PageContent() {
-  await connection();
-
   // Make sure the current user is authenticated (the check runs on the server side)
   await makeSureUserIsAuthenticated();
 

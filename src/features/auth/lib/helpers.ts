@@ -17,6 +17,9 @@ export const getUserSessionData = async () => {
 
 // Make sure the current user is authenticated (the check runs on the server side)
 export async function makeSureUserIsAuthenticated() {
+  "use cache: private";
+  cacheLife({ stale: 60 });
+
   if (!(await getUserSessionData())) unauthorized();
 }
 
