@@ -1,6 +1,3 @@
-// react
-import { Suspense } from "react";
-
 // next
 import { notFound } from "next/navigation";
 
@@ -20,17 +17,7 @@ import NoteDetails from "@/features/notes/components/NoteDetails";
 // assets
 import { DocumentIcon } from "@heroicons/react/24/outline";
 
-// Page remains the fast, static shell
-export default function Page({ params, searchParams }: PageProps<"/notes/[id]">) {
-  return (
-    <Suspense fallback={<PageSkeleton />}>
-      <PageContent params={params} searchParams={searchParams} />
-    </Suspense>
-  );
-}
-
-// This new async component contains the dynamic logic
-async function PageContent({ params, searchParams }: PageProps<"/notes/[id]">) {
+export default async function Page({ params, searchParams }: PageProps<"/notes/[id]">) {
   // Safely validate next.js route inputs (`params` and `searchParams`) against a zod schema; return typed data or trigger a 404 on failure
   const {
     params: { id: noteId },
@@ -55,8 +42,4 @@ async function PageContent({ params, searchParams }: PageProps<"/notes/[id]">) {
       <NoteDetails note={note} inNoteModal />
     </NoteModal>
   );
-}
-
-function PageSkeleton() {
-  return null;
 }
