@@ -1,5 +1,5 @@
 // next
-import { connection } from "next/server";
+import { cacheLife } from "next/cache";
 
 // services, features, and other libraries
 import { makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
@@ -13,14 +13,12 @@ import NewNoteForm from "@/features/notes/components/NewNoteForm";
 import { DocumentPlusIcon } from "@heroicons/react/24/outline";
 
 export default async function Page() {
-  await connection();
+  "use cache: private";
+  cacheLife({ stale: 60 });
 
   // Make sure the current user is authenticated (the check runs on the server side)
-  try {
-    await makeSureUserIsAuthenticated();
-  } catch (error) {
-    console.error(error);
-  }
+  await makeSureUserIsAuthenticated();
+
   return (
     <NoteModal icon={<DocumentPlusIcon className="size-11 flex-none" />} title="New Note" browseBar={<BrowseBar kind="note-new" />}>
       <NewNoteForm inNoteModal />
