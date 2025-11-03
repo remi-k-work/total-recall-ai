@@ -1,5 +1,8 @@
+// react
+import { Suspense } from "react";
+
 // next
-import { cacheLife } from "next/cache";
+import { connection } from "next/server";
 
 // services, features, and other libraries
 import { makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
@@ -12,9 +15,18 @@ import NewNoteForm from "@/features/notes/components/NewNoteForm";
 // assets
 import { DocumentPlusIcon } from "@heroicons/react/24/outline";
 
-export default async function Page() {
-  "use cache: private";
-  cacheLife({ stale: 60 });
+// Page remains the fast, static shell
+export default function Page() {
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <PageContent />
+    </Suspense>
+  );
+}
+
+// This new async component contains the dynamic logic
+async function PageContent() {
+  await connection();
 
   // Make sure the current user is authenticated (the check runs on the server side)
   await makeSureUserIsAuthenticated();
@@ -24,4 +36,8 @@ export default async function Page() {
       <NewNoteForm inNoteModal />
     </NoteModal>
   );
+}
+
+function PageSkeleton() {
+  return null;
 }
