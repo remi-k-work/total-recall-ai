@@ -45,7 +45,7 @@ export default function UserPopover({ user, user: { email, name }, session }: Us
               Profile
             </Link>
           </Button>
-          <SignOut onSignedOut={() => setIsOpen(false)} />
+          <SignOut />
         </div>
       </PopoverContent>
     </Popover>
