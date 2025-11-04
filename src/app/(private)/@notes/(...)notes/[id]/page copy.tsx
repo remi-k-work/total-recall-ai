@@ -10,8 +10,11 @@ import NoteDetails from "@/features/notes/components/NoteDetails";
 // assets
 import { DocumentIcon } from "@heroicons/react/24/outline";
 
-export default function Page() {
-  const noteId = "03078c3d-420b-402e-a533-19cf55cbb494";
+export default async function Page({ params, searchParams }: PageProps<"/notes/[id]">) {
+  // Safely validate next.js route inputs (`params` and `searchParams`) against a zod schema; return typed data or trigger a 404 on failure
+  const {
+    params: { id: noteId },
+  } = await validatePageInputs(NoteDetailsPageSchema, { params, searchParams });
 
   return (
     <NoteModal icon={<DocumentIcon className="size-11 flex-none" />} noteId={noteId} browseBar={<BrowseBar kind="note-details" noteId={noteId} />}>
