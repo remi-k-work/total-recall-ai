@@ -1,7 +1,7 @@
 "use client";
 
 // react
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // next
 import { useRouter } from "next/navigation";
@@ -16,10 +16,11 @@ import Content from "./Content";
 // types
 import type { ComponentPropsWithoutRef } from "react";
 import type { ReactNode } from "react";
+import type { getNote } from "@/features/notes/db";
 
 interface NoteModalProps extends ComponentPropsWithoutRef<"dialog"> {
   icon: ReactNode;
-  title: string;
+  noteId?: string;
   browseBar: ReactNode;
   children: ReactNode;
 }
@@ -27,7 +28,25 @@ interface NoteModalProps extends ComponentPropsWithoutRef<"dialog"> {
 // constants
 const CLOSE_DURATION = 1000;
 
-export default function NoteModal({ icon, title, browseBar, children, className, ...props }: NoteModalProps) {
+export default function NoteModal({ icon, noteId, browseBar, children, className, ...props }: NoteModalProps) {
+  const [currNote, setCurrNote] = useState<Awaited<ReturnType<typeof getNote>>>(undefined);
+
+  useEffect(() => {
+    if (!noteId) return;
+    const controller = new AbortController();
+
+    (async () => {
+      try {
+        const res = await fetch(`/api/notes/${noteId}`, { credentials: "include", signal: controller.signal });
+        if (res.ok) setCurrNote(await res.json());
+      } catch (error) {
+        if (error instanceof Error && error.name !== "AbortError") console.error(error);
+      }
+    })();
+
+    return () => controller.abort();
+  }, [noteId]);
+
   // To be able to call showModal() method on the dialog
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -65,7 +84,7 @@ export default function NoteModal({ icon, title, browseBar, children, className,
       {...props}
     >
       <div className="bg-background grid max-h-[min(95dvb,100%)] max-w-[min(96ch,100%)] grid-rows-[auto_1fr] items-start overflow-hidden">
-        <Header icon={icon} title={title} onClosed={() => dialogRef.current?.close()} />
+        <Header icon={icon} title={currNote?.title ?? "New Note"} onClosed={() => dialogRef.current?.close()} />
         <Content>
           {browseBar}
           {children}

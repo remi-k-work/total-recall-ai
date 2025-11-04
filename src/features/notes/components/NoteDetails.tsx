@@ -1,5 +1,8 @@
 "use client";
 
+// react
+import { useEffect, useState } from "react";
+
 // services, features, and other libraries
 import { format } from "date-fns";
 
@@ -14,17 +17,38 @@ import { CalendarIcon } from "@heroicons/react/24/outline";
 import type { getNote } from "@/features/notes/db";
 
 interface NoteDetailsProps {
-  note: Exclude<Awaited<ReturnType<typeof getNote>>, undefined>;
-  inNoteModal?: boolean;
+  note?: Exclude<Awaited<ReturnType<typeof getNote>>, undefined>;
+  noteId?: string;
 }
 
 // constants
 import { REHYPE_PLUGINS } from "@/features/notes-assistant/constants/plugins";
 
-export default function NoteDetails({ note: { title, content, createdAt, updatedAt }, inNoteModal = false }: NoteDetailsProps) {
+export default function NoteDetails({ note, noteId }: NoteDetailsProps) {
+  const [currNote, setCurrNote] = useState(note);
+
+  useEffect(() => {
+    if (!noteId) return;
+    const controller = new AbortController();
+
+    (async () => {
+      try {
+        const res = await fetch(`/api/notes/${noteId}`, { credentials: "include", signal: controller.signal });
+        if (res.ok) setCurrNote(await res.json());
+      } catch (error) {
+        if (error instanceof Error && error.name !== "AbortError") console.error(error);
+      }
+    })();
+
+    return () => controller.abort();
+  }, [noteId]);
+
+  if (!currNote) return null;
+  const { title, content, createdAt, updatedAt } = currNote;
+
   return (
     <Card className="max-w-2xl rounded-[255px_15px_225px_15px_/_15px_225px_15px_255px]">
-      {!inNoteModal && (
+      {!noteId && (
         <CardHeader>
           <CardTitle className="text-muted-foreground normal-case">{title}</CardTitle>
         </CardHeader>

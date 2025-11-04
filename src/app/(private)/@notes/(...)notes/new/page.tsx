@@ -27,7 +27,7 @@ async function PageContent() {
   await makeSureUserIsAuthenticated();
 
   return (
-    <NoteModal icon={<DocumentPlusIcon className="size-11 flex-none" />} title="New Note" browseBar={<BrowseBar kind="note-new" />}>
+    <NoteModal icon={<DocumentPlusIcon className="size-11 flex-none" />} browseBar={<BrowseBar kind="note-new" />}>
       <NewNoteForm inNoteModal />
     </NoteModal>
   );

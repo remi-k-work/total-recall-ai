@@ -11,12 +11,28 @@ interface PageInputPromises {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
+interface RouteHandlerInputs {
+  params: Record<string, string>;
+  searchParams: URLSearchParams;
+}
+
 // Safely validate next.js route inputs (`params` and `searchParams`) against a zod schema; return typed data or trigger a 404 on failure
 export async function validatePageInputs<TSchema extends z.ZodTypeAny>(schema: TSchema, data: PageInputPromises): Promise<z.infer<TSchema>> {
   // Await both in parallel for performance
   const [params, searchParams] = await Promise.all([data.params, data.searchParams]);
 
   const result = schema.safeParse({ params, searchParams });
+  if (!result.success) notFound();
+
+  return result.data;
+}
+
+// For route handlers — validates params and searchParams, throws 404 if invalid
+export function validateRouteInputs<TSchema extends z.ZodTypeAny>(schema: TSchema, data: RouteHandlerInputs): z.infer<TSchema> {
+  // Convert URLSearchParams → object
+  const searchParamsObj = Object.fromEntries(data.searchParams.entries());
+
+  const result = schema.safeParse({ params: data.params, searchParams: searchParamsObj });
   if (!result.success) notFound();
 
   return result.data;
