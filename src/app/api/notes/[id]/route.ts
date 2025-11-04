@@ -14,24 +14,36 @@ import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth
 import type { NextRequest } from "next/server";
 
 export async function GET(_req: NextRequest, ctx: RouteContext<"/api/notes/[id]">) {
-  // For route handlers — validates params and searchParams, throws 404 if invalid
-  const {
-    params: { id: noteId },
-  } = validateRouteInputs(NoteDetailsPageSchema, { params: await ctx.params, searchParams: _req.nextUrl.searchParams });
+  try {
+    // For route handlers — validates params and searchParams, throws 404 if invalid
+    const {
+      params: { id: noteId },
+    } = validateRouteInputs(NoteDetailsPageSchema, { params: await ctx.params, searchParams: _req.nextUrl.searchParams });
 
-  // Make sure the current user is authenticated (the check runs on the server side)
-  await makeSureUserIsAuthenticated();
+    console.log("Note ID:", noteId);
 
-  // Access the user session data from the server side
-  const {
-    user: { id: userId },
-  } = (await getUserSessionData())!;
+    // Make sure the current user is authenticated (the check runs on the server side)
+    await makeSureUserIsAuthenticated();
 
-  // Get a single note for a user
-  const note = await getNote(noteId, userId);
+    console.log("makeSureUserIsAuthenticated() passed");
 
-  // If the note is not found, return a 404
-  if (!note) notFound();
+    // Access the user session data from the server side
+    const {
+      user: { id: userId },
+    } = (await getUserSessionData())!;
 
-  return NextResponse.json(note);
+    console.log("User ID:", userId);
+
+    // Get a single note for a user
+    const note = await getNote(noteId, userId);
+
+    console.log("Note:", note);
+
+    // If the note is not found, return a 404
+    if (!note) notFound();
+
+    return NextResponse.json(note);
+  } catch (error) {
+    console.log(error);
+  }
 }
