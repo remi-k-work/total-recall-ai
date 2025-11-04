@@ -23,8 +23,12 @@ export default function Page() {
 
 // This new async component contains the dynamic logic
 async function PageContent() {
-  // Make sure the current user is authenticated (the check runs on the server side)
-  await makeSureUserIsAuthenticated();
+  try {
+    // Make sure the current user is authenticated (the check runs on the server side)
+    await makeSureUserIsAuthenticated();
+  } catch (error) {
+    console.error(error);
+  }
 
   return (
     <NoteModal icon={<DocumentPlusIcon className="size-11 flex-none" />} browseBar={<BrowseBar kind="note-new" />}>
