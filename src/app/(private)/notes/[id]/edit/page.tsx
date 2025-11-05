@@ -58,7 +58,7 @@ async function PageContent({ params, searchParams }: PageProps<"/notes/[id]/edit
   return (
     <>
       <PageHeader title="Edit Note" description="Use the form below to edit an existing note" />
-      <BrowseBar kind="note-edit" noteId={noteId} />
+      <BrowseBar kind="note-edit" />
       <EditNoteForm note={note} />
     </>
   );

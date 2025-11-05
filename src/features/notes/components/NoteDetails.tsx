@@ -3,6 +3,9 @@
 // react
 import { useEffect, useState } from "react";
 
+// next
+import { useParams } from "next/navigation";
+
 // services, features, and other libraries
 import { format } from "date-fns";
 
@@ -18,13 +21,13 @@ import type { getNote } from "@/features/notes/db";
 
 interface NoteDetailsProps {
   note?: Exclude<Awaited<ReturnType<typeof getNote>>, undefined>;
-  noteId?: string;
 }
 
 // constants
 import { REHYPE_PLUGINS } from "@/features/notes-assistant/constants/plugins";
 
-export default function NoteDetails({ note, noteId }: NoteDetailsProps) {
+export default function NoteDetails({ note }: NoteDetailsProps) {
+  const { id: noteId } = useParams<{ id: string }>();
   const [currNote, setCurrNote] = useState(note);
 
   useEffect(() => {

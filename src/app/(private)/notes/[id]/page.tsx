@@ -58,7 +58,7 @@ async function PageContent({ params, searchParams }: PageProps<"/notes/[id]">) {
   return (
     <>
       <PageHeader title="Note Details" description="Below are all your note details" />
-      <BrowseBar kind="note-details" noteId={noteId} />
+      <BrowseBar kind="note-details" />
       <NoteDetails note={note} />
     </>
   );

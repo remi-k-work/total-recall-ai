@@ -5,6 +5,9 @@
 // react
 import { useActionState, useEffect, useState } from "react";
 
+// next
+import { useParams } from "next/navigation";
+
 // server actions and mutations
 import editNote from "@/features/notes/actions/editNoteForm";
 
@@ -26,13 +29,13 @@ import type { getNote } from "@/features/notes/db";
 
 interface EditNoteFormProps {
   note?: Exclude<Awaited<ReturnType<typeof getNote>>, undefined>;
-  noteId?: string;
 }
 
 // constants
 import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/notes/constants/editNoteForm";
 
-export default function EditNoteForm({ note, noteId }: EditNoteFormProps) {
+export default function EditNoteForm({ note }: EditNoteFormProps) {
+  const { id: noteId } = useParams<{ id: string }>();
   const [currNote, setCurrNote] = useState(note);
 
   useEffect(() => {

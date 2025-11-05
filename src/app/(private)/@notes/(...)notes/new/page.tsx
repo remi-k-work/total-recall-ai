@@ -6,7 +6,6 @@ import NewNoteForm from "@/features/notes/components/NewNoteForm";
 // assets
 import { DocumentPlusIcon } from "@heroicons/react/24/outline";
 
-// Page remains the fast, static shell
 export default function Page() {
   return (
     <NoteModal icon={<DocumentPlusIcon className="size-11 flex-none" />} browseBar={<BrowseBar kind="note-new" />}>

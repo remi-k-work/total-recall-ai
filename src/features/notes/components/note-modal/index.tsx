@@ -4,7 +4,7 @@
 import { useEffect, useRef, useState } from "react";
 
 // next
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 // services, features, and other libraries
 import { cn } from "@/lib/utils";
@@ -20,7 +20,6 @@ import type { getNoteTitle } from "@/features/notes/db";
 
 interface NoteModalProps extends ComponentPropsWithoutRef<"dialog"> {
   icon: ReactNode;
-  noteId?: string;
   browseBar: ReactNode;
   children: ReactNode;
 }
@@ -28,7 +27,8 @@ interface NoteModalProps extends ComponentPropsWithoutRef<"dialog"> {
 // constants
 const CLOSE_DURATION = 1000;
 
-export default function NoteModal({ icon, noteId, browseBar, children, className, ...props }: NoteModalProps) {
+export default function NoteModal({ icon, browseBar, children, className, ...props }: NoteModalProps) {
+  const { id: noteId } = useParams<{ id: string }>();
   const [currNoteTitle, setCurrNoteTitle] = useState<Awaited<ReturnType<typeof getNoteTitle>>>(undefined);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function NoteModal({ icon, noteId, browseBar, children, className
 
     (async () => {
       try {
-        const res = await fetch(`/api/notes/${noteId}`, { credentials: "include", signal: controller.signal });
+        const res = await fetch(`/api/notes/${noteId}?title=true`, { credentials: "include", signal: controller.signal });
         if (res.ok) setCurrNoteTitle(await res.json());
       } catch (error) {
         if (error instanceof Error && error.name !== "AbortError") console.error(error);

@@ -41,7 +41,7 @@ export interface Actions {
 export type BrowseBarContextType = (NotesRoot | NoteDetails | NoteNew | NoteEdit) & Actions;
 export type BrowseBarProviderPropsWithoutChildren =
   | Omit<NotesRoot, "searchRoute" | "sortByFields">
-  | Omit<NoteDetails, "searchRoute">
+  | Omit<NoteDetails, "searchRoute" | "noteId">
   | Omit<NoteNew, "searchRoute">
-  | Omit<NoteEdit, "searchRoute">;
+  | Omit<NoteEdit, "searchRoute" | "noteId">;
 export type BrowseBarProviderProps = BrowseBarProviderPropsWithoutChildren & { children: ReactNode };
