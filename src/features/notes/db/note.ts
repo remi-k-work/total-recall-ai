@@ -69,6 +69,10 @@ export const getMostRecentNotes = (userId: string, limit?: number) => {
 // Get a single note for a user
 export const getNote = (id: string, userId: string) => db.query.NoteTable.findFirst({ where: and(eq(NoteTable.id, id), eq(NoteTable.userId, userId)) });
 
+// Get the title of a note for a user
+export const getNoteTitle = (id: string, userId: string) =>
+  db.query.NoteTable.findFirst({ columns: { title: true }, where: and(eq(NoteTable.id, id), eq(NoteTable.userId, userId)) });
+
 // Insert a new note for a user (supports normal db or transaction)
 export const insertNote = (userId: string, data: Omit<typeof NoteTable.$inferInsert, "userId">, tx: DbOrTx = db) =>
   tx

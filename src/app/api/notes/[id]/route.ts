@@ -3,11 +3,11 @@ import { NextResponse } from "next/server";
 import { notFound } from "next/navigation";
 
 // drizzle and db access
-import { getNote } from "@/features/notes/db";
+import { getNote, getNoteTitle } from "@/features/notes/db";
 
 // services, features, and other libraries
 import { validateRouteInputs } from "@/lib/helpers";
-import { NoteDetailsPageSchema } from "@/features/notes/schemas/noteDetailsPage";
+import { NoteDetailsRouteSchema } from "@/features/notes/schemas/noteDetailsPage";
 import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
 // types
@@ -18,7 +18,8 @@ export async function GET(_req: NextRequest, ctx: RouteContext<"/api/notes/[id]"
     // For route handlers — validates params and searchParams, throws 404 if invalid
     const {
       params: { id: noteId },
-    } = validateRouteInputs(NoteDetailsPageSchema, { params: await ctx.params, searchParams: _req.nextUrl.searchParams });
+      searchParams: { title },
+    } = validateRouteInputs(NoteDetailsRouteSchema, { params: await ctx.params, searchParams: _req.nextUrl.searchParams });
 
     console.log("Note ID:", noteId);
 
@@ -34,15 +35,15 @@ export async function GET(_req: NextRequest, ctx: RouteContext<"/api/notes/[id]"
 
     console.log("User ID:", userId);
 
-    // Get a single note for a user
-    const note = await getNote(noteId, userId);
+    // Retrieve a single note for a user, or just the title if specifically requested
+    const noteOrTitle = title ? await getNoteTitle(noteId, userId) : await getNote(noteId, userId);
 
-    console.log("Note:", note);
+    console.log("Note:", noteOrTitle);
 
     // If the note is not found, return a 404
-    if (!note) notFound();
+    if (!noteOrTitle) notFound();
 
-    return NextResponse.json(note);
+    return NextResponse.json(noteOrTitle);
   } catch (error) {
     console.log(error);
   }

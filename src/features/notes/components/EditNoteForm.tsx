@@ -55,7 +55,7 @@ export default function EditNoteForm({ note, noteId }: EditNoteFormProps) {
   const [formState, formAction, isPending] = useActionState(editNote.bind(null, currNote?.id ?? noteId!), INITIAL_FORM_STATE);
   const { AppField, AppForm, FormSubmit, handleSubmit, reset, store } = useAppForm({
     ...FORM_OPTIONS,
-    defaultValues: { ...FORM_OPTIONS.defaultValues, title: currNote?.title, content: currNote?.content },
+    defaultValues: { ...FORM_OPTIONS.defaultValues, title: currNote?.title ?? "", content: currNote?.content ?? "" },
     transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
   });
 

@@ -16,7 +16,7 @@ import Content from "./Content";
 // types
 import type { ComponentPropsWithoutRef } from "react";
 import type { ReactNode } from "react";
-import type { getNote } from "@/features/notes/db";
+import type { getNoteTitle } from "@/features/notes/db";
 
 interface NoteModalProps extends ComponentPropsWithoutRef<"dialog"> {
   icon: ReactNode;
@@ -29,7 +29,7 @@ interface NoteModalProps extends ComponentPropsWithoutRef<"dialog"> {
 const CLOSE_DURATION = 1000;
 
 export default function NoteModal({ icon, noteId, browseBar, children, className, ...props }: NoteModalProps) {
-  const [currNote, setCurrNote] = useState<Awaited<ReturnType<typeof getNote>>>(undefined);
+  const [currNoteTitle, setCurrNoteTitle] = useState<Awaited<ReturnType<typeof getNoteTitle>>>(undefined);
 
   useEffect(() => {
     if (!noteId) return;
@@ -38,7 +38,7 @@ export default function NoteModal({ icon, noteId, browseBar, children, className
     (async () => {
       try {
         const res = await fetch(`/api/notes/${noteId}`, { credentials: "include", signal: controller.signal });
-        if (res.ok) setCurrNote(await res.json());
+        if (res.ok) setCurrNoteTitle(await res.json());
       } catch (error) {
         if (error instanceof Error && error.name !== "AbortError") console.error(error);
       }
@@ -84,7 +84,7 @@ export default function NoteModal({ icon, noteId, browseBar, children, className
       {...props}
     >
       <div className="bg-background grid max-h-[min(95dvb,100%)] max-w-[min(96ch,100%)] grid-rows-[auto_1fr] items-start overflow-hidden">
-        <Header icon={icon} title={currNote?.title ?? "New Note"} onClosed={() => dialogRef.current?.close()} />
+        <Header icon={icon} title={currNoteTitle?.title ?? "New Note"} onClosed={() => dialogRef.current?.close()} />
         <Content>
           {browseBar}
           {children}
