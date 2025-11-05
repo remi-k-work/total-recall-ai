@@ -31,7 +31,8 @@ export default function NoteDetails({ note }: NoteDetailsProps) {
   const [currNote, setCurrNote] = useState(note);
 
   useEffect(() => {
-    if (!noteId) return;
+    // If the note is already passed from the server or the note id is not available, do nothing
+    if (note || !noteId) return;
     const controller = new AbortController();
 
     (async () => {
@@ -44,14 +45,15 @@ export default function NoteDetails({ note }: NoteDetailsProps) {
     })();
 
     return () => controller.abort();
-  }, [noteId]);
+  }, [note, noteId]);
 
   if (!currNote) return null;
   const { title, content, createdAt, updatedAt } = currNote;
 
   return (
     <Card className="max-w-2xl rounded-[255px_15px_225px_15px_/_15px_225px_15px_255px]">
-      {!noteId && (
+      {/* The note has been passed from the server, which means we are in the full-page mode */}
+      {note && (
         <CardHeader>
           <CardTitle className="text-muted-foreground normal-case">{title}</CardTitle>
         </CardHeader>

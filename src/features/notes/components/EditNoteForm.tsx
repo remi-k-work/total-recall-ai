@@ -39,7 +39,8 @@ export default function EditNoteForm({ note }: EditNoteFormProps) {
   const [currNote, setCurrNote] = useState(note);
 
   useEffect(() => {
-    if (!noteId) return;
+    // If the note is already passed from the server or the note id is not available, do nothing
+    if (note || !noteId) return;
     const controller = new AbortController();
 
     (async () => {
@@ -52,7 +53,7 @@ export default function EditNoteForm({ note }: EditNoteFormProps) {
     })();
 
     return () => controller.abort();
-  }, [noteId]);
+  }, [note, noteId]);
 
   // The main server action that processes the form
   const [formState, formAction, isPending] = useActionState(editNote.bind(null, currNote?.id ?? noteId!), INITIAL_FORM_STATE);
@@ -69,7 +70,8 @@ export default function EditNoteForm({ note }: EditNoteFormProps) {
     <AppForm>
       <form action={formAction} onSubmit={() => handleSubmit()}>
         <Card className="max-w-4xl">
-          {!noteId && (
+          {/* The note has been passed from the server, which means we are in the full-page mode */}
+          {note && (
             <CardHeader>
               <CardTitle>Edit Note</CardTitle>
               <CardDescription>To edit an existing note</CardDescription>
