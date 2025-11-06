@@ -7,12 +7,13 @@ import PasswordField from "./fields/Password";
 import TextAreaField from "./fields/TextArea";
 import CheckBoxField from "./fields/CheckBox";
 import SelectField from "./fields/Select";
+import MarkdownField from "./fields/Markdown";
 import FormSubmit from "./FormSubmit";
 
 export const { fieldContext, useFieldContext, formContext, useFormContext } = createFormHookContexts();
 
 export const { useAppForm } = createFormHook({
-  fieldComponents: { TextField, PasswordField, TextAreaField, CheckBoxField, SelectField },
+  fieldComponents: { TextField, PasswordField, TextAreaField, CheckBoxField, SelectField, MarkdownField },
   formComponents: { FormSubmit },
   fieldContext,
   formContext,

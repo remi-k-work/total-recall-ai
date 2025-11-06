@@ -7,7 +7,7 @@ import { makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 // components
 import PageHeader from "@/components/PageHeader";
 import BrowseBar from "@/features/notes/components/browse-bar";
-import NewNoteForm from "@/features/notes/components/NewNoteForm";
+import NewNoteForm from "@/features/notes/components/NewNoteForm2";
 
 // types
 import type { Metadata } from "next";
