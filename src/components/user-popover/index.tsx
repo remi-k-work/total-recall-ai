@@ -3,9 +3,6 @@
 // react
 import { useState } from "react";
 
-// next
-import Link from "next/link";
-
 // components
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/custom/button";
@@ -39,11 +36,16 @@ export default function UserPopover({ user, user: { email, name }, session }: Us
         <h4 className="mt-4 truncate text-center">{name}</h4>
         <p className="text-muted-foreground truncate text-center">{email}</p>
         <div className="mt-4 grid gap-4">
-          <Button variant="ghost" asChild>
-            <Link href="/profile" onClick={() => setIsOpen(false)}>
-              <UserIcon className="size-9" />
-              Profile
-            </Link>
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => {
+              setIsOpen(false);
+              window.location.href = "/profile";
+            }}
+          >
+            <UserIcon className="size-9" />
+            Profile
           </Button>
           <SignOut />
         </div>

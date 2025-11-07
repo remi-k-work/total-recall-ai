@@ -1,7 +1,7 @@
 // components
 import NoteModal from "@/features/notes/components/note-modal";
 import BrowseBar from "@/features/notes/components/browse-bar";
-import EditNoteForm from "@/features/notes/components/EditNoteForm";
+import EditNoteForm from "@/features/notes/components/EditNoteForm2";
 
 // assets
 import { DocumentTextIcon } from "@heroicons/react/24/outline";

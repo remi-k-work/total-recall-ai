@@ -13,7 +13,7 @@ import FieldErrors from "@/components/form/field-errors";
 import type { ComponentPropsWithoutRef } from "react";
 
 interface TextAreaFieldProps extends ComponentPropsWithoutRef<typeof Textarea> {
-  label: string;
+  label?: string;
 }
 
 export default function TextAreaField({ label, ...props }: TextAreaFieldProps) {
@@ -30,7 +30,7 @@ export default function TextAreaField({ label, ...props }: TextAreaFieldProps) {
 
   return (
     <>
-      <Label htmlFor={id}>{label}</Label>
+      {label && <Label htmlFor={id}>{label}</Label>}
       <Textarea id={id} name={name} value={value} onChange={(ev) => handleChange(ev.target.value)} onBlur={handleBlur} {...props} />
       <FieldErrors />
     </>

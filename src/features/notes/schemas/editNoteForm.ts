@@ -8,4 +8,5 @@ export const EditNoteFormSchema = z.object({
     .trim()
     .min(1, "What do you want to write in your note? This is a mandatory field")
     .max(2048, "Please keep the content to a maximum of 2048 characters"),
+  markdown: z.string().trim().optional(),
 });
