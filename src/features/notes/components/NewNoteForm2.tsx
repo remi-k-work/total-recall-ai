@@ -3,7 +3,7 @@
 "use client";
 
 // react
-import { useActionState } from "react";
+import { useActionState, useRef } from "react";
 
 // server actions and mutations
 import newNote from "@/features/notes/actions/newNoteForm";
@@ -22,6 +22,8 @@ import InfoLine from "@/components/form/InfoLine";
 import { DocumentPlusIcon } from "@heroicons/react/24/outline";
 
 // types
+import type { MDXEditorMethods } from "@mdxeditor/editor";
+
 interface NewNoteFormProps {
   inNoteModal?: boolean;
 }
@@ -39,6 +41,9 @@ export default function NewNoteForm({ inNoteModal = false }: NewNoteFormProps) {
 
   // Provide feedback to the user regarding this form actions
   const { feedbackMessage, hideFeedbackMessage } = useNewNoteFormFeedback(formState, reset, store);
+
+  // Create a ref to the editor component
+  const markdownFieldRef = useRef<MDXEditorMethods>(null);
 
   return (
     <AppForm>
@@ -58,13 +63,33 @@ export default function NewNoteForm({ inNoteModal = false }: NewNoteFormProps) {
             />
             <AppField
               name="content"
-              validators={{ onChange: NewNoteFormSchema.shape.content }}
+              listeners={{
+                onChange: ({ value }) => {
+                  markdownFieldRef.current?.setMarkdown(value);
+                },
+              }}
+              validators={{ onChange: NewNoteFormSchema.shape.content, onBlur: NewNoteFormSchema.shape.content }}
+              children={(field) => (
+                <field.TextAreaField
+                  label="Content"
+                  cols={50}
+                  rows={8}
+                  maxLength={2049}
+                  spellCheck={false}
+                  autoComplete="off"
+                  placeholder="e.g. Buy cat food. Call mom. Pay electricity bill. Remember to bring umbrella tomorrow in case it rains."
+                />
+              )}
+            />
+            <AppField
+              name="markdown"
               children={(field) => (
                 <field.MarkdownField
-                  label="Content"
-                  markdown=""
-                  spellCheck
+                  ref={markdownFieldRef}
+                  markdown={field.form.getFieldValue("content")}
+                  spellCheck={false}
                   placeholder="e.g. Buy cat food. Call mom. Pay electricity bill. Remember to bring umbrella tomorrow in case it rains."
+                  onChange={(markdown) => field.form.setFieldValue("content", markdown)}
                 />
               )}
             />

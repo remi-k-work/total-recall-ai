@@ -1,4 +1,8 @@
+// component css styles
+import "@mdxeditor/editor/style.css";
+
 // services, features, and other libraries
+import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 
 // components
@@ -13,17 +17,16 @@ interface MarkdownEditorProps extends MDXEditorProps {
   ref?: Ref<MDXEditorMethods>;
 }
 
-export default function MarkdownEditor({ ref, ...props }: MarkdownEditorProps) {
+export default function MarkdownEditor({ ref, className, ...props }: MarkdownEditorProps) {
   const { resolvedTheme } = useTheme();
   const isDarkMode = resolvedTheme === "dark";
 
   return (
     <MDXEditor
       {...props}
-      key={resolvedTheme}
       ref={ref}
-      className="prose prose-neutral dark:prose-invert max-w-none"
-      // contentEditableClassName="prose prose-neutral dark:prose-invert max-w-none"
+      className={cn("prose prose-neutral dark:prose-invert min-h-64 max-w-none font-mono", isDarkMode && "dark-theme", className)}
+      contentEditableClassName="prose prose-neutral dark:prose-invert max-w-none font-mono min-h-64"
       suppressHtmlProcessing
       plugins={[
         headingsPlugin(),

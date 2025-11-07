@@ -8,7 +8,7 @@ import { createServerValidateWithTransforms } from "@/lib/helpers";
 import type { NewNoteFormActionResult } from "@/features/notes/actions/newNoteForm";
 
 // constants
-const DEFAULT_VALUES: z.input<typeof NewNoteFormSchema> = { title: "", content: "" };
+const DEFAULT_VALUES: z.input<typeof NewNoteFormSchema> = { title: "", content: "", markdown: "" };
 
 export const FORM_OPTIONS = formOptions({ defaultValues: DEFAULT_VALUES });
 export const INITIAL_FORM_STATE: NewNoteFormActionResult = { ...initialFormState, actionStatus: "idle" };
