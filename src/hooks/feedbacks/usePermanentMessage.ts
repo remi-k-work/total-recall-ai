@@ -1,5 +1,5 @@
 // react
-import { useEffect } from "react";
+import { useEffect, useEffectEvent } from "react";
 
 // services, features, and other libraries
 import usePermanentMessageFeedbackLoc from "./usePermanentMessageLoc";
@@ -17,10 +17,15 @@ export default function usePermanentMessageFeedback(formStore: AnyFormApi["store
   const isSubmitting = useStore(formStore, (state) => state.isSubmitting);
   const isDefaultValue = useStore(formStore, (state) => state.isDefaultValue);
 
+  // Function to be called when the user interacted with the form
+  const onUserInteracted = useEffectEvent(() => {
+    hideFeedbackMessage();
+  });
+
   useEffect(() => {
     // Clear the permanent feedback message when the user interacts with the form
-    if (isSubmitting || !isDefaultValue) hideFeedbackMessage();
-  }, [isSubmitting, isDefaultValue, hideFeedbackMessage]);
+    if (isSubmitting || !isDefaultValue) onUserInteracted();
+  }, [isSubmitting, isDefaultValue]);
 
   return { feedbackMessage, showFeedbackMessage, hideFeedbackMessage };
 }

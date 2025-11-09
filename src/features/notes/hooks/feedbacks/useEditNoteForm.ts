@@ -1,15 +1,16 @@
 // react
-import { useEffect } from "react";
+import { useEffect, useEffectEvent } from "react";
 
 // next
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
 // services, features, and other libraries
 import usePermanentMessageFeedback from "@/hooks/feedbacks/usePermanentMessage";
 import useFormToastFeedback from "@/hooks/feedbacks/useFormToast";
-import useDemoModeGuard from "@/hooks/useDemoModeGuard";
+import useDemoModeGuard from "@/hooks/useDemoModeGuard2";
 
 // types
+import type { RefObject } from "react";
 import type { EditNoteFormActionResult } from "@/features/notes/actions/editNoteForm";
 import type { AnyFormApi } from "@tanstack/react-form";
 
@@ -18,10 +19,12 @@ const FORM_NAME = "[EDIT NOTE]";
 const SUCCEEDED_MESSAGE = "The note has been updated.";
 
 // Provide feedback to the user regarding this form actions
-export default function useEditNoteFormFeedback({ actionStatus, errors }: EditNoteFormActionResult, reset: () => void, formStore: AnyFormApi["store"]) {
-  // To be able to redirect the user after a successful note update
-  const router = useRouter();
-
+export default function useEditNoteFormFeedback(
+  hasPressedSubmitRef: RefObject<boolean>,
+  { actionStatus, errors }: EditNoteFormActionResult,
+  reset: () => void,
+  formStore: AnyFormApi["store"],
+) {
   // Generic hook for managing a permanent feedback message
   const { feedbackMessage, showFeedbackMessage, hideFeedbackMessage } = usePermanentMessageFeedback(formStore);
 
@@ -29,11 +32,10 @@ export default function useEditNoteFormFeedback({ actionStatus, errors }: EditNo
   const showToast = useFormToastFeedback(FORM_NAME, { succeeded: SUCCEEDED_MESSAGE });
 
   // Custom hook that observes an action's status and automatically opens the global demo mode modal
-  useDemoModeGuard(actionStatus);
+  const guardForDemoMode = useDemoModeGuard(actionStatus);
 
-  useEffect(() => {
-    let timeoutId: ReturnType<typeof setTimeout>;
-
+  // Function to be called when feedback is needed
+  const onFeedbackNeeded = useEffectEvent(() => {
     if (actionStatus === "succeeded") {
       // Display a success message
       showToast("succeeded");
@@ -45,16 +47,24 @@ export default function useEditNoteFormFeedback({ actionStatus, errors }: EditNo
       showFeedbackMessage(SUCCEEDED_MESSAGE);
 
       // Redirect the user after successful note update
-      timeoutId = setTimeout(() => router.push("/notes"), 3000);
+      return setTimeout(() => redirect("/notes"), 3000);
     } else {
+      // Was a restricted operation attempted under the demo account? Inform the user
+      guardForDemoMode();
+
       // All other statuses ("invalid", "failed", "authError") handled centrally
       showToast(actionStatus);
     }
+  });
+
+  useEffect(() => {
+    if (hasPressedSubmitRef.current === false) return;
+    const timeoutId = onFeedbackNeeded();
 
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [actionStatus, errors, showToast, reset, showFeedbackMessage, router]);
+  }, [hasPressedSubmitRef.current, actionStatus, errors]);
 
   return { feedbackMessage, hideFeedbackMessage };
 }

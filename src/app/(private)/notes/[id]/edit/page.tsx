@@ -15,7 +15,7 @@ import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth
 // components
 import PageHeader from "@/components/PageHeader";
 import BrowseBar from "@/features/notes/components/browse-bar";
-import EditNoteForm from "@/features/notes/components/EditNoteForm2";
+import EditNoteForm from "@/features/notes/components/EditNoteForm";
 
 // types
 import type { Metadata } from "next";

@@ -3,7 +3,7 @@
 "use client";
 
 // react
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 
 // next
 import { useParams } from "next/navigation";
@@ -26,6 +26,7 @@ import { DocumentTextIcon } from "@heroicons/react/24/outline";
 
 // types
 import type { getNote } from "@/features/notes/db";
+import type { MDXEditorMethods } from "@mdxeditor/editor";
 
 interface EditNoteFormProps {
   note?: Exclude<Awaited<ReturnType<typeof getNote>>, undefined>;
@@ -38,6 +39,9 @@ export default function EditNoteForm({ note }: EditNoteFormProps) {
   const { id: noteId } = useParams<{ id: string }>();
   const [currNote, setCurrNote] = useState(note);
 
+  // Create a ref to the editor component
+  const markdownFieldRef = useRef<MDXEditorMethods>(null);
+
   useEffect(() => {
     // If the note is already passed from the server or the note id is not available, do nothing
     if (note || !noteId) return;
@@ -46,7 +50,11 @@ export default function EditNoteForm({ note }: EditNoteFormProps) {
     (async () => {
       try {
         const res = await fetch(`/api/notes/${noteId}`, { credentials: "include", signal: controller.signal });
-        if (res.ok) setCurrNote(await res.json());
+        if (res.ok) {
+          const fetchedNote = (await res.json()) as Awaited<ReturnType<typeof getNote>>;
+          setCurrNote(fetchedNote);
+          markdownFieldRef.current?.setMarkdown(fetchedNote?.content ?? "");
+        }
       } catch (error) {
         if (error instanceof Error && error.name !== "AbortError") console.error(error);
       }
@@ -59,16 +67,41 @@ export default function EditNoteForm({ note }: EditNoteFormProps) {
   const [formState, formAction, isPending] = useActionState(editNote.bind(null, currNote?.id ?? noteId!), INITIAL_FORM_STATE);
   const { AppField, AppForm, FormSubmit, handleSubmit, reset, store } = useAppForm({
     ...FORM_OPTIONS,
-    defaultValues: { ...FORM_OPTIONS.defaultValues, title: currNote?.title ?? "", content: currNote?.content ?? "" },
+    defaultValues: { ...FORM_OPTIONS.defaultValues, title: currNote?.title ?? "", content: currNote?.content ?? "", markdown: currNote?.content ?? "" },
     transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
   });
 
+  // Track if the user has pressed the submit button
+  const hasPressedSubmitRef = useRef(false);
+
+  // All this new cleanup code is for the <Activity /> boundary
+  useEffect(() => {
+    // Reset the flag when the component unmounts
+    return () => {
+      hasPressedSubmitRef.current = false;
+    };
+  }, []);
+
   // Provide feedback to the user regarding this form actions
-  const { feedbackMessage, hideFeedbackMessage } = useEditNoteFormFeedback(formState, reset, store);
+  const { feedbackMessage, hideFeedbackMessage } = useEditNoteFormFeedback(
+    hasPressedSubmitRef,
+    formState,
+    () => {
+      reset();
+      markdownFieldRef.current?.setMarkdown("");
+    },
+    store,
+  );
 
   return (
     <AppForm>
-      <form action={formAction} onSubmit={() => handleSubmit()}>
+      <form
+        action={formAction}
+        onSubmit={async () => {
+          await handleSubmit();
+          hasPressedSubmitRef.current = true;
+        }}
+      >
         <Card className="max-w-4xl">
           {/* The note has been passed from the server, which means we are in the full-page mode */}
           {note && (
@@ -84,17 +117,30 @@ export default function EditNoteForm({ note }: EditNoteFormProps) {
               children={(field) => <field.TextField label="Title" size={40} maxLength={51} spellCheck autoComplete="off" placeholder="e.g. Quick Reminder" />}
             />
             <AppField
+              name="markdown"
+              children={(field) => (
+                <field.MarkdownField
+                  ref={markdownFieldRef}
+                  label="Content"
+                  markdown=""
+                  spellCheck={false}
+                  placeholder="e.g. Buy cat food. Call mom. Pay electricity bill. Remember to bring umbrella tomorrow in case it rains."
+                  onChange={(markdown) => field.form.setFieldValue("content", markdown)}
+                />
+              )}
+            />
+            <AppField
               name="content"
               validators={{ onChange: EditNoteFormSchema.shape.content }}
               children={(field) => (
                 <field.TextAreaField
-                  label="Content"
                   cols={50}
                   rows={8}
                   maxLength={2049}
-                  spellCheck
+                  spellCheck={false}
                   autoComplete="off"
                   placeholder="e.g. Buy cat food. Call mom. Pay electricity bill. Remember to bring umbrella tomorrow in case it rains."
+                  hidden
                 />
               )}
             />
@@ -105,7 +151,10 @@ export default function EditNoteForm({ note }: EditNoteFormProps) {
               submitIcon={<DocumentTextIcon className="size-9" />}
               submitText="Update Note"
               isPending={isPending}
-              onClearedForm={hideFeedbackMessage}
+              onClearedForm={() => {
+                hideFeedbackMessage();
+                markdownFieldRef.current?.setMarkdown(currNote?.content ?? "");
+              }}
             />
           </CardFooter>
         </Card>

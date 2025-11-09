@@ -50,8 +50,8 @@ export default function MarkdownEditor({ ref, className, ...props }: MarkdownEdi
     <MDXEditor
       {...props}
       ref={ref}
-      className={cn("prose prose-neutral dark:prose-invert min-h-64 max-w-none font-mono", isDarkMode && "dark-theme", className)}
-      contentEditableClassName="prose prose-neutral dark:prose-invert max-w-none font-mono min-h-64"
+      className={cn("prose dark:prose-invert min-h-64 max-w-none font-mono", isDarkMode && "dark-theme", className)}
+      contentEditableClassName="prose dark:prose-invert min-h-64 max-w-none font-mono"
       suppressHtmlProcessing
       plugins={[
         headingsPlugin(),
@@ -63,23 +63,24 @@ export default function MarkdownEditor({ ref, className, ...props }: MarkdownEdi
         codeBlockPlugin({ defaultCodeBlockLanguage: "" }),
         codeMirrorPlugin({
           codeBlockLanguages: {
-            css: "css",
-            txt: "txt",
-            sql: "sql",
-            html: "html",
-            sass: "sass",
-            scss: "scss",
-            bash: "bash",
-            json: "json",
-            js: "javascript",
-            ts: "typescript",
-            "": "unspecified",
+            css: "CSS",
+            txt: "TXT",
+            sql: "SQL",
+            html: "HTML",
+            sass: "SASS",
+            scss: "SCSS",
+            bash: "BASH",
+            json: "JSON",
+            js: "JavaScript",
+            ts: "TypeScript",
+            "": "Unspecified",
             tsx: "TypeScript (React)",
             jsx: "JavaScript (React)",
+            py: "Python",
           },
           autoLoadLanguageSupport: true,
         }),
-        diffSourcePlugin({ viewMode: "rich-text", diffMarkdown: "" }),
+        diffSourcePlugin({ viewMode: "rich-text", diffMarkdown: "", readOnlyDiff: true }),
         toolbarPlugin({
           toolbarContents: () => (
             <DiffSourceToggleWrapper>

@@ -1,5 +1,5 @@
 // react
-import { startTransition, useActionState, useState } from "react";
+import { startTransition, useActionState, useEffect, useRef, useState } from "react";
 
 // server actions and mutations
 import deleteNote from "@/features/notes/actions/deleteNote";
@@ -28,20 +28,49 @@ export default function DeleteNote() {
     actionStatus: "idle" as DeleteNoteActionResult["actionStatus"],
   });
 
+  // Track if the user has pressed the submit button
+  const hasPressedSubmitRef = useRef(false);
+
+  // All this new cleanup code is for the <Activity /> boundary
+  useEffect(() => {
+    // Reset the flag when the component unmounts
+    return () => {
+      hasPressedSubmitRef.current = false;
+      setIsOpen(false);
+    };
+  }, []);
+
   // Provide feedback to the user regarding this server action
-  useDeleteNoteFeedback(deleteNoteState);
+  useDeleteNoteFeedback(hasPressedSubmitRef, deleteNoteState);
 
   // Whether or not the confirm modal is open
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      <Button type="button" variant="destructive" className="flex-col whitespace-pre-line" disabled={deleteNoteIsPending} onClick={() => setIsOpen(true)}>
+      <Button
+        type="button"
+        variant="destructive"
+        className="flex-col whitespace-pre-line"
+        disabled={deleteNoteIsPending}
+        onClick={() => {
+          setIsOpen(true);
+        }}
+      >
         {deleteNoteIsPending ? <Loader2 className="size-11 animate-spin" /> : <TrashIcon className="size-11" />}
         {"Delete Note".replaceAll(" ", "\n")}
       </Button>
       {isOpen && (
-        <ConfirmModal onConfirmed={() => startTransition(deleteNoteAction)} onClosed={() => setIsOpen(false)}>
+        <ConfirmModal
+          onConfirmed={() => {
+            startTransition(deleteNoteAction);
+            hasPressedSubmitRef.current = true;
+          }}
+          onClosed={() => {
+            setIsOpen(false);
+            hasPressedSubmitRef.current = false;
+          }}
+        >
           <p className="text-center text-xl">
             Are you sure you want to <b className="text-destructive">delete</b> this note?
           </p>

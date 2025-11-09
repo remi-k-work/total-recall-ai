@@ -119,7 +119,7 @@ $$
     content: `### Type-Safe \`Object.keys\`
 A helper function I keep using to get properly typed keys from an object in TypeScript, instead of just \`string[]\`.
 
-\`\`\`typescript
+\`\`\`ts
 function objectKeys<T extends object>(obj: T): (keyof T)[] {
   return Object.keys(obj) as (keyof T)[];
 }
@@ -310,7 +310,7 @@ npm install @neondatabase/serverless
 ### 2. Define Schema (\`schema.ts\`)
 The key is importing \`vector\` from the \`@neondatabase/serverless\` package.
 
-\`\`\`typescript
+\`\`\`ts
 import { pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
 import { vector } from '@neondatabase/serverless';
 
@@ -414,7 +414,7 @@ pip install beautifulsoup4
 ### Python Code
 This script will fetch a URL and print all the \`<a>\` (anchor) tags it finds.
 
-\`\`\`python
+\`\`\`py
 import requests
 from bs4 import BeautifulSoup
 
