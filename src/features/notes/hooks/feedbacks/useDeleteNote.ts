@@ -18,7 +18,7 @@ const SUCCEEDED_MESSAGE = "Your note has been deleted.";
 const FAILED_MESSAGE = "Your note could not be deleted; please try again later.";
 
 // Provide feedback to the user regarding this server action
-export default function useDeleteNoteFeedback(hasPressedSubmitRef: RefObject<boolean>, { actionStatus }: DeleteNoteActionResult) {
+export default function useDeleteNoteFeedback(hasPressedConfirmRef: RefObject<boolean>, { actionStatus }: DeleteNoteActionResult) {
   // Generic hook for displaying toast notifications for form actions
   const showToast = useFormToastFeedback(FORM_NAME, { succeeded: SUCCEEDED_MESSAGE, failed: FAILED_MESSAGE });
 
@@ -43,11 +43,13 @@ export default function useDeleteNoteFeedback(hasPressedSubmitRef: RefObject<boo
   });
 
   useEffect(() => {
-    if (hasPressedSubmitRef.current === false) return;
+    console.log("hasPressedSubmitRef.current", hasPressedConfirmRef.current);
+    console.log("actionStatus", actionStatus);
+    if (hasPressedConfirmRef.current === false) return;
     const timeoutId = onFeedbackNeeded();
 
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [hasPressedSubmitRef.current, actionStatus]);
+  }, [hasPressedConfirmRef.current, actionStatus]);
 }
