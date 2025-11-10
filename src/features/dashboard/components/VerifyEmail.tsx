@@ -1,7 +1,7 @@
 "use client";
 
 // react
-import { startTransition, useActionState } from "react";
+import { startTransition, useActionState, useEffect, useRef } from "react";
 
 // server actions and mutations
 import verifyEmail from "@/features/dashboard/actions/verifyEmail";
@@ -29,8 +29,19 @@ export default function VerifyEmail({ user: { emailVerified } }: VerifyEmailProp
   // Triggers the email verification process for the current user
   const [verifyEmailState, verifyEmailAction, verifyEmailsPending] = useActionState(verifyEmail, { actionStatus: "idle" });
 
+  // Track if the user has pressed the submit button
+  const hasPressedSubmitRef = useRef(false);
+
+  // All this new cleanup code is for the <Activity /> boundary
+  useEffect(() => {
+    // Reset the flag when the component unmounts
+    return () => {
+      hasPressedSubmitRef.current = false;
+    };
+  }, []);
+
   // Provide feedback to the user regarding this server action
-  const { feedbackMessage, hideFeedbackMessage } = useVerifyEmailFeedback(verifyEmailState);
+  const { feedbackMessage, hideFeedbackMessage } = useVerifyEmailFeedback(hasPressedSubmitRef, verifyEmailState);
 
   return (
     <Card>
@@ -47,11 +58,12 @@ export default function VerifyEmail({ user: { emailVerified } }: VerifyEmailProp
             <Button
               type="button"
               disabled={verifyEmailsPending}
+              className="mx-auto"
               onClick={() => {
                 hideFeedbackMessage();
                 startTransition(verifyEmailAction);
+                hasPressedSubmitRef.current = true;
               }}
-              className="mx-auto"
             >
               {verifyEmailsPending ? <Loader2 className="size-9 animate-spin" /> : <CheckBadgeIcon className="size-9" />}
               Verify Email

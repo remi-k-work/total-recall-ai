@@ -1,5 +1,5 @@
 // react
-import { useEffect } from "react";
+import { useEffect, useEffectEvent } from "react";
 
 // services, features, and other libraries
 import { authClient } from "@/services/better-auth/auth-client";
@@ -8,6 +8,7 @@ import useFormToastFeedback from "@/hooks/feedbacks/useFormToast";
 import useDemoModeGuard from "@/hooks/useDemoModeGuard";
 
 // types
+import type { RefObject } from "react";
 import type { EmailChangeFormActionResult } from "@/features/profile/actions/emailChangeForm";
 import type { AnyFormApi } from "@tanstack/react-form";
 
@@ -18,6 +19,7 @@ const SUCCEEDED_MESSAGE_TWO = "Your email has been changed successfully. A verif
 
 // Provide feedback to the user regarding this form actions
 export default function useEmailChangeFormFeedback(
+  hasPressedSubmitRef: RefObject<boolean>,
   { actionStatus, actionError, needsApproval, errors }: EmailChangeFormActionResult,
   reset: () => void,
   formStore: AnyFormApi["store"],
@@ -32,9 +34,10 @@ export default function useEmailChangeFormFeedback(
   const showToast = useFormToastFeedback(FORM_NAME, { succeeded: needsApproval ? SUCCEEDED_MESSAGE_ONE : SUCCEEDED_MESSAGE_TWO, authError: actionError });
 
   // Custom hook that observes an action's status and automatically opens the global demo mode modal
-  useDemoModeGuard(actionStatus);
+  const guardForDemoMode = useDemoModeGuard(actionStatus);
 
-  useEffect(() => {
+  // Function to be called when feedback is needed
+  const onFeedbackNeeded = useEffectEvent(() => {
     if (actionStatus === "succeeded") {
       // Display a success message
       showToast("succeeded");
@@ -48,10 +51,18 @@ export default function useEmailChangeFormFeedback(
       // Show the permanent feedback message as well
       showFeedbackMessage(needsApproval ? SUCCEEDED_MESSAGE_ONE : SUCCEEDED_MESSAGE_TWO);
     } else {
+      // Was a restricted operation attempted under the demo account? Inform the user
+      guardForDemoMode();
+
       // All other statuses ("invalid", "failed", "authError") handled centrally
       showToast(actionStatus);
     }
-  }, [actionStatus, needsApproval, errors, showToast, reset, refetch, showFeedbackMessage]);
+  });
+
+  useEffect(() => {
+    if (hasPressedSubmitRef.current === false) return;
+    onFeedbackNeeded();
+  }, [hasPressedSubmitRef.current, actionStatus, errors]);
 
   return { feedbackMessage, hideFeedbackMessage };
 }

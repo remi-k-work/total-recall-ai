@@ -3,7 +3,7 @@
 "use client";
 
 // react
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef } from "react";
 
 // server actions and mutations
 import emailChange from "@/features/profile/actions/emailChangeForm";
@@ -40,12 +40,29 @@ export default function EmailChangeForm({ user: { email: currentEmail } }: Email
     transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
   });
 
+  // Track if the user has pressed the submit button
+  const hasPressedSubmitRef = useRef(false);
+
+  // All this new cleanup code is for the <Activity /> boundary
+  useEffect(() => {
+    // Reset the flag when the component unmounts
+    return () => {
+      hasPressedSubmitRef.current = false;
+    };
+  }, []);
+
   // Provide feedback to the user regarding this form actions
-  const { feedbackMessage, hideFeedbackMessage } = useEmailChangeFormFeedback(formState, reset, store);
+  const { feedbackMessage, hideFeedbackMessage } = useEmailChangeFormFeedback(hasPressedSubmitRef, formState, reset, store);
 
   return (
     <AppForm>
-      <form action={formAction} onSubmit={() => handleSubmit()}>
+      <form
+        action={formAction}
+        onSubmit={async () => {
+          await handleSubmit();
+          hasPressedSubmitRef.current = true;
+        }}
+      >
         <Card>
           <CardHeader>
             <CardTitle>Email Change</CardTitle>

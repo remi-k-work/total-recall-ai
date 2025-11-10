@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 
 // services, features, and other libraries
 import useFormToastFeedback from "@/hooks/feedbacks/useFormToast";
-import useDemoModeGuard from "@/hooks/useDemoModeGuard2";
+import useDemoModeGuard from "@/hooks/useDemoModeGuard";
 
 // types
 import type { RefObject } from "react";
@@ -43,8 +43,6 @@ export default function useDeleteNoteFeedback(hasPressedConfirmRef: RefObject<bo
   });
 
   useEffect(() => {
-    console.log("hasPressedSubmitRef.current", hasPressedConfirmRef.current);
-    console.log("actionStatus", actionStatus);
     if (hasPressedConfirmRef.current === false) return;
     const timeoutId = onFeedbackNeeded();
 

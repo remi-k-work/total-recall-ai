@@ -1,5 +1,5 @@
 // react
-import { startTransition, useActionState, useRef, useState } from "react";
+import { startTransition, useActionState } from "react";
 
 // server actions and mutations
 import deleteNote from "@/features/notes/actions/deleteNote";
@@ -11,7 +11,6 @@ import useDeleteNoteFeedback from "@/features/notes/hooks/feedbacks/useDeleteNot
 
 // components
 import { Button } from "@/components/ui/custom/button";
-import ConfirmModal from "@/components/ConfirmModal2";
 
 // assets
 import { TrashIcon } from "@heroicons/react/24/outline";

@@ -1,5 +1,5 @@
 // react
-import { useEffect } from "react";
+import { useEffect, useEffectEvent } from "react";
 
 // services, features, and other libraries
 import usePermanentMessageFeedback from "@/hooks/feedbacks/usePermanentMessage";
@@ -7,6 +7,7 @@ import useFormToastFeedback from "@/hooks/feedbacks/useFormToast";
 import useDemoModeGuard from "@/hooks/useDemoModeGuard";
 
 // types
+import type { RefObject } from "react";
 import type { PassChangeFormActionResult } from "@/features/profile/actions/passChangeForm";
 import type { AnyFormApi } from "@tanstack/react-form";
 
@@ -18,6 +19,7 @@ const SUCCEEDED_MESSAGE_SETUP = "Your password has been setup.";
 
 // Provide feedback to the user regarding this form actions
 export default function usePassChangeFormFeedback(
+  hasPressedSubmitRef: RefObject<boolean>,
   { actionStatus, actionError, errors }: PassChangeFormActionResult,
   reset: () => void,
   formStore: AnyFormApi["store"],
@@ -33,9 +35,10 @@ export default function usePassChangeFormFeedback(
   });
 
   // Custom hook that observes an action's status and automatically opens the global demo mode modal
-  useDemoModeGuard(actionStatus);
+  const guardForDemoMode = useDemoModeGuard(actionStatus);
 
-  useEffect(() => {
+  // Function to be called when feedback is needed
+  const onFeedbackNeeded = useEffectEvent(() => {
     if (actionStatus === "succeeded") {
       // Display a success message
       showToast("succeeded");
@@ -46,10 +49,18 @@ export default function usePassChangeFormFeedback(
       // Show the permanent feedback message as well
       showFeedbackMessage(hasCredential ? SUCCEEDED_MESSAGE_CHANGE : SUCCEEDED_MESSAGE_SETUP);
     } else {
+      // Was a restricted operation attempted under the demo account? Inform the user
+      guardForDemoMode();
+
       // All other statuses ("invalid", "failed", "authError") handled centrally
       showToast(actionStatus);
     }
-  }, [actionStatus, errors, showToast, reset, showFeedbackMessage, hasCredential]);
+  });
+
+  useEffect(() => {
+    if (hasPressedSubmitRef.current === false) return;
+    onFeedbackNeeded();
+  }, [hasPressedSubmitRef.current, actionStatus, errors]);
 
   return { feedbackMessage, hideFeedbackMessage };
 }

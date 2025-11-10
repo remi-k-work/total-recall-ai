@@ -4,7 +4,7 @@
 import { createContext, use, useState, useCallback, useRef } from "react";
 
 // components
-import ConfirmModal from "@/components/ConfirmModal2";
+import ConfirmModal from "@/components/ConfirmModal";
 
 // types
 import type { ReactNode, RefObject } from "react";

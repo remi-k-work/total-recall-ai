@@ -1,5 +1,5 @@
 // react
-import { useEffect, useEffectEvent } from "react";
+import { useCallback } from "react";
 
 // services, features, and other libraries
 import { useDemoModeContext } from "@/contexts/DemoMode";
@@ -9,13 +9,10 @@ export default function useDemoModeGuard(actionStatus: string) {
   // Access the demo mode context and retrieve all necessary information
   const { openDemoMode } = useDemoModeContext();
 
-  // Function to be called when a restricted operation is attempted
-  const onRestrictedOperation = useEffectEvent(() => {
-    openDemoMode();
-  });
+  // Was a restricted operation attempted under the demo account? Inform the user
+  const guardForDemoMode = useCallback(() => {
+    if (actionStatus === "demoMode") openDemoMode();
+  }, [actionStatus, openDemoMode]);
 
-  useEffect(() => {
-    // Was a restricted operation attempted under the demo account? Inform the user
-    if (actionStatus === "demoMode") onRestrictedOperation();
-  }, [actionStatus]);
+  return guardForDemoMode;
 }

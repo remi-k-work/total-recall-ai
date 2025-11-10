@@ -1,11 +1,12 @@
 // react
-import { useEffect } from "react";
+import { useEffect, useEffectEvent } from "react";
 
 // services, features, and other libraries
 import usePermanentMessageFeedback from "@/hooks/feedbacks/usePermanentMessage";
 import useFormToastFeedback from "@/hooks/feedbacks/useFormToast";
 
 // types
+import type { RefObject } from "react";
 import type { ForgotPassFormActionResult } from "@/features/auth/actions/forgotPassForm";
 import type { AnyFormApi } from "@tanstack/react-form";
 
@@ -15,6 +16,7 @@ const SUCCEEDED_MESSAGE = "We have sent the password reset link.";
 
 // Provide feedback to the user regarding this form actions
 export default function useForgotPassFormFeedback(
+  hasPressedSubmitRef: RefObject<boolean>,
   { actionStatus, actionError, errors }: ForgotPassFormActionResult,
   reset: () => void,
   formStore: AnyFormApi["store"],
@@ -25,7 +27,8 @@ export default function useForgotPassFormFeedback(
   // Generic hook for displaying toast notifications for form actions
   const showToast = useFormToastFeedback(FORM_NAME, { succeeded: SUCCEEDED_MESSAGE, authError: actionError });
 
-  useEffect(() => {
+  // Function to be called when feedback is needed
+  const onFeedbackNeeded = useEffectEvent(() => {
     if (actionStatus === "succeeded") {
       // Display a success message
       showToast("succeeded");
@@ -39,7 +42,12 @@ export default function useForgotPassFormFeedback(
       // All other statuses ("invalid", "failed", "authError") handled centrally
       showToast(actionStatus);
     }
-  }, [actionStatus, errors, showToast, reset, showFeedbackMessage]);
+  });
+
+  useEffect(() => {
+    if (hasPressedSubmitRef.current === false) return;
+    onFeedbackNeeded();
+  }, [hasPressedSubmitRef.current, actionStatus, errors]);
 
   return { feedbackMessage, hideFeedbackMessage };
 }

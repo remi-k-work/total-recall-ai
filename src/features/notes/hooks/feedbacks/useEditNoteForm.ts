@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 // services, features, and other libraries
 import usePermanentMessageFeedback from "@/hooks/feedbacks/usePermanentMessage";
 import useFormToastFeedback from "@/hooks/feedbacks/useFormToast";
-import useDemoModeGuard from "@/hooks/useDemoModeGuard2";
+import useDemoModeGuard from "@/hooks/useDemoModeGuard";
 
 // types
 import type { RefObject } from "react";

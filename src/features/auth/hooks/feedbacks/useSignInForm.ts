@@ -1,14 +1,15 @@
 // react
-import { useEffect } from "react";
+import { useEffect, useEffectEvent } from "react";
 
 // next
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
 // services, features, and other libraries
 import usePermanentMessageFeedback from "@/hooks/feedbacks/usePermanentMessage";
 import useFormToastFeedback from "@/hooks/feedbacks/useFormToast";
 
 // types
+import type { RefObject } from "react";
 import type { SignInFormActionResult } from "@/features/auth/actions/signInForm";
 import type { AnyFormApi } from "@tanstack/react-form";
 import type { Route } from "next";
@@ -19,23 +20,20 @@ const SUCCEEDED_MESSAGE = "You signed in successfully.";
 
 // Provide feedback to the user regarding this form actions
 export default function useSignInFormFeedback(
+  hasPressedSubmitRef: RefObject<boolean>,
   { actionStatus, actionError, errors }: SignInFormActionResult,
   reset: () => void,
   formStore: AnyFormApi["store"],
-  redirect?: Route,
+  redirectTo?: Route,
 ) {
-  // To be able to redirect the user after a successful sign in
-  const router = useRouter();
-
   // Generic hook for managing a permanent feedback message
   const { feedbackMessage, showFeedbackMessage, hideFeedbackMessage } = usePermanentMessageFeedback(formStore);
 
   // Generic hook for displaying toast notifications for form actions
   const showToast = useFormToastFeedback(FORM_NAME, { succeeded: SUCCEEDED_MESSAGE, authError: actionError });
 
-  useEffect(() => {
-    let timeoutId: ReturnType<typeof setTimeout>;
-
+  // Function to be called when feedback is needed
+  const onFeedbackNeeded = useEffectEvent(() => {
     if (actionStatus === "succeeded") {
       // Display a success message
       showToast("succeeded");
@@ -47,16 +45,21 @@ export default function useSignInFormFeedback(
       showFeedbackMessage(SUCCEEDED_MESSAGE);
 
       // Redirect the user after successful sign in
-      timeoutId = setTimeout(() => router.push(redirect ?? "/dashboard"), 3000);
+      return setTimeout(() => redirect(redirectTo ?? "/dashboard"), 3000);
     } else {
       // All other statuses ("invalid", "failed", "authError") handled centrally
       showToast(actionStatus);
     }
+  });
+
+  useEffect(() => {
+    if (hasPressedSubmitRef.current === false) return;
+    const timeoutId = onFeedbackNeeded();
 
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [actionStatus, errors, showToast, reset, showFeedbackMessage, router, redirect]);
+  }, [hasPressedSubmitRef.current, actionStatus, errors]);
 
   return { feedbackMessage, hideFeedbackMessage };
 }

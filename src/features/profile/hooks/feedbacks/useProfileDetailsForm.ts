@@ -1,5 +1,5 @@
 // react
-import { useEffect } from "react";
+import { useEffect, useEffectEvent } from "react";
 
 // services, features, and other libraries
 import { authClient } from "@/services/better-auth/auth-client";
@@ -8,6 +8,7 @@ import useFormToastFeedback from "@/hooks/feedbacks/useFormToast";
 import useDemoModeGuard from "@/hooks/useDemoModeGuard";
 
 // types
+import type { RefObject } from "react";
 import type { ProfileDetailsFormActionResult } from "@/features/profile/actions/profileDetailsForm";
 import type { AnyFormApi } from "@tanstack/react-form";
 
@@ -17,6 +18,7 @@ const SUCCEEDED_MESSAGE = "Your profile details have been updated.";
 
 // Provide feedback to the user regarding this form actions
 export default function useProfileDetailsFormFeedback(
+  hasPressedSubmitRef: RefObject<boolean>,
   { actionStatus, actionError, errors }: ProfileDetailsFormActionResult,
   reset: () => void,
   formStore: AnyFormApi["store"],
@@ -31,9 +33,10 @@ export default function useProfileDetailsFormFeedback(
   const showToast = useFormToastFeedback(FORM_NAME, { succeeded: SUCCEEDED_MESSAGE, authError: actionError });
 
   // Custom hook that observes an action's status and automatically opens the global demo mode modal
-  useDemoModeGuard(actionStatus);
+  const guardForDemoMode = useDemoModeGuard(actionStatus);
 
-  useEffect(() => {
+  // Function to be called when feedback is needed
+  const onFeedbackNeeded = useEffectEvent(() => {
     if (actionStatus === "succeeded") {
       // Display a success message
       showToast("succeeded");
@@ -47,10 +50,18 @@ export default function useProfileDetailsFormFeedback(
       // Show the permanent feedback message as well
       showFeedbackMessage(SUCCEEDED_MESSAGE);
     } else {
+      // Was a restricted operation attempted under the demo account? Inform the user
+      guardForDemoMode();
+
       // All other statuses ("invalid", "failed", "authError") handled centrally
       showToast(actionStatus);
     }
-  }, [actionStatus, errors, showToast, reset, refetch, showFeedbackMessage]);
+  });
+
+  useEffect(() => {
+    if (hasPressedSubmitRef.current === false) return;
+    onFeedbackNeeded();
+  }, [hasPressedSubmitRef.current, actionStatus, errors]);
 
   return { feedbackMessage, hideFeedbackMessage };
 }
