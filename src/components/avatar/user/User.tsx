@@ -9,13 +9,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/custom/avat
 import type { ComponentPropsWithoutRef } from "react";
 import type { Session, User } from "@/services/better-auth/auth";
 
-interface UserProps extends ComponentPropsWithoutRef<typeof Avatar> {
+export interface UserAvatarProps extends ComponentPropsWithoutRef<typeof Avatar> {
   user: User;
   session: Session;
   isSmall?: boolean;
 }
 
-export default function User({ user: { name, image, role }, session: { id: sessionId }, isSmall = false, className, ...props }: UserProps) {
+export default function UserAvatar({ user: { name, image, role }, session: { id: sessionId }, isSmall = false, className, ...props }: UserAvatarProps) {
   return (
     <Avatar className={cn(isSmall && "size-11", className)} {...props}>
       {/* If the user is a demo user, use a different avatar image (always random per session) */}

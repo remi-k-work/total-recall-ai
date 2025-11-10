@@ -5,15 +5,10 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import Image from "next/image";
 
-// components
-const LogoImg = dynamic(() => import("./LogoImg"), { ssr: false });
-
 // assets
 import logoD from "@/assets/logo.png";
 
-export default function Logo() {
-  return <LogoImg />;
-}
+export const Logo = dynamic(() => import("./Logo"), { ssr: false });
 
 export function LogoSkeleton() {
   return (

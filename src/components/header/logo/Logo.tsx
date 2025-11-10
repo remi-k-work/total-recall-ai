@@ -9,7 +9,7 @@ import { useTheme } from "next-themes";
 import logoD from "@/assets/logo.png";
 import logoL from "@/assets/logo.webp";
 
-export default function LogoImg() {
+export default function Logo() {
   const { resolvedTheme } = useTheme();
   const isDarkMode = resolvedTheme === "dark";
 

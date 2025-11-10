@@ -3,7 +3,7 @@ import { format } from "date-fns";
 
 // components
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
-import UserAvatar from "@/components/avatar/user";
+import { UserAvatar } from "@/components/avatar/user";
 
 // assets
 import { CalendarIcon } from "@heroicons/react/24/outline";

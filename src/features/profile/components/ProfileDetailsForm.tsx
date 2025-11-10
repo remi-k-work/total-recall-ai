@@ -16,7 +16,7 @@ import useProfileDetailsFormFeedback from "@/features/profile/hooks/feedbacks/us
 
 // components
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
-import UserAvatar from "@/components/avatar/user";
+import { UserAvatar } from "@/components/avatar/user";
 import UploadAvatar from "./UploadAvatar";
 import DeleteAvatar from "./DeleteAvatar";
 import InfoLine from "@/components/form/InfoLine";

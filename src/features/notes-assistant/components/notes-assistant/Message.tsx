@@ -2,7 +2,7 @@
 import { Message as AIEMessage, MessageContent } from "@/components/ai-elements/custom/message";
 import { Response } from "@/components/ai-elements/response";
 import { Tool, ToolContent, ToolHeader, ToolInput, ToolOutput } from "@/components/ai-elements/custom/tool";
-import UserAvatar from "@/components/avatar/user";
+import { UserAvatar } from "@/components/avatar/user";
 import AgentAvatar from "@/components/avatar/Agent";
 
 // types

@@ -6,11 +6,11 @@ import { cn } from "@/lib/utils";
 import { getUserSessionData } from "@/features/auth/lib/helpers";
 
 // components
-import Logo, { LogoSkeleton } from "./logo";
+import { Logo, LogoSkeleton } from "./logo";
 import NavItem, { NavItemSkeleton } from "./NavItem";
 import NotesAssistant, { NotesAssistantSkeleton } from "@/features/notes-assistant/components/notes-assistant";
 import UserPopover, { UserPopoverSkeleton } from "@/components/user-popover";
-import ThemeChanger, { ThemeChangerSkeleton } from "@/components/theme-changer";
+import { ThemeChanger, ThemeChangerSkeleton } from "@/components/theme-changer";
 
 // constants
 import { NAV_ITEMS } from "./constants";

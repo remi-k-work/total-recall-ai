@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/custom/button";
 // assets
 import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 
-export default function Changer() {
+export default function ThemeChanger() {
   const { resolvedTheme, setTheme } = useTheme();
   const isDarkMode = resolvedTheme === "dark";
 
