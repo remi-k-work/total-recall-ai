@@ -453,4 +453,269 @@ except requests.exceptions.RequestException as e:
 \`\`\`
 `,
   },
+  {
+    title: "Coffee Brewing Methods",
+    content: `## Comparing My Favorite Brew Methods
+
+I'm always trying to perfect my morning coffee. Here's a quick comparison table to remind me of the key variables.
+
+| Method | Grind Size | Brew Time | Flavor Profile |
+| :--- | :---: | :---: | :--- |
+| **French Press** | Coarse | 4-5 min | Full-bodied, rich, some sediment |
+| **V60 (Pour Over)** | Med-Fine | 2-3 min | Clean, bright, highlights acidity |
+| **AeroPress** | Fine | 1-2 min | Smooth, clean, versatile (can be like espresso or drip) |
+| **Moka Pot** | Fine | ~5 min | Strong, "espresso-like", intense |
+
+**Key takeaway:** The V60 is best for my light roast Ethiopian beans, but the French Press is better for the dark roast Sumatran. Don't use the V60 grind size in the AeroPress unless I'm using the inverted method.`,
+  },
+  {
+    title: "App Ideas Brainstorm",
+    content: `## Random App Ideas - "Dumb" ideas allowed
+Just a place to dump ideas so I don't forget them.
+
+- **"Is It Ripe?"**: An app that uses the phone's camera and some simple ML model to tell you if an avocado is ripe. Probably impossible but would be amazing.
+- **"Pantry Pal"**: Scan receipts, and it auto-adds expiration dates to a list. Sends notifications before milk expires.
+- **"CommuteCast"**: A podcast app that auto-downloads a playlist *exactly* the length of your commute. Connects to Google Maps API.
+- **"Local Lingo"**: A travel app that *only* teaches you the 10-15 most essential phrases (hello, thank you, "where is the bathroom?", "another beer, please").
+- **Total Recall AI**: (Wait, I'm already building this one.)
+- **"Plant Sitter"**: A social network to find people in your neighborhood to water your plants when you're on vacation.
+`,
+  },
+  {
+    title: "Math Concept: Euler's Identity",
+    content: `## Euler's Identity: The Most Beautiful Equation
+
+Often called the most beautiful equation in mathematics, it links five of the most fundamental constants.
+
+The identity is:
+$$
+e^{i\\pi} + 1 = 0
+$$
+
+### The Components
+1.  **$$e$$ (Euler's Number):** The base of the natural logarithm, an irrational number approximately equal to 2.71828.
+2.  **$$i$$ (The Imaginary Unit):** Defined as the square root of -1 (i.e., $$i^2 = -1$$). It's the foundation of complex numbers.
+3.  **$$\\pi$$ (Pi):** The ratio of a circle's circumference to its diameter, an irrational number approximately equal to 3.14159.
+4.  **$$1$$ (One):** The multiplicative identity.
+5.  **$$0$$ (Zero):** The additive identity.
+
+### The Source (Euler's Formula)
+The identity is a special case of **Euler's Formula**, which states that for any real number $$x$$:
+
+$$
+e^{ix} = \\cos(x) + i \\sin(x)
+$$
+
+If we substitute $$x = \\pi$$:
+- $$\\cos(\\pi) = -1$$
+- $$\\sin(\\pi) = 0$$
+
+So the formula becomes:
+$$
+e^{i\\pi} = -1 + i(0)
+$$
+$$
+e^{i\\pi} = -1
+$$
+
+By simply adding 1 to both sides, we get the famous identity:
+$$
+e^{i\\pi} + 1 = 0
+$$
+
+It's amazing because it connects geometry ($$\\pi$$), algebra ($$i$$), and analysis ($$e$$) in one simple, profound statement.`,
+  },
+  {
+    title: "Journal Entry - Oct 22",
+    content: `Today was a long day. The \`/api/v2/analytics\` endpoint for **Project Phoenix** is still giving us trouble. David thinks it's a database query issue, but I'm still convinced caching with Redis (like I suggested in the meeting) is the right long-term fix. I'll spike it out tomorrow.
+
+On a personal note, I re-read my note on "Atomic Habits." My jogging routine has been non-existent. I need to apply the "Make it Obvious" rule. My new system: **"After I brush my teeth in the morning, I will immediately put on my running clothes."** No excuses. Let's see if this works.`,
+  },
+  {
+    title: "How to set up my new dev environment",
+    content: `## New M1 Mac Setup Guide
+A checklist for the next time I get a new machine.
+
+### 1. Core Tools
+- [x] Install **Homebrew**: \`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"\`
+- [x] Install **Git**: \`brew install git\`
+- [x] Configure Git:
+    \`git config --global user.name "My Name"\`
+    \`git config --global user.email "my.email@example.com"\`
+- [ ] Install **Oh My Zsh**: \`sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"\`
+- [ ] Install **nvm** (Node Version Manager)
+
+### 2. Applications (via Brew Cask)
+\`\`\`bash
+brew install --cask visual-studio-code
+brew install --cask docker
+brew install --cask slack
+brew install --cask figma
+brew install --cask arc
+\`\`\`
+
+### 3. Database
+- [ ] Install **PostgreSQL** services: \`brew install postgresql@16\`
+- [ ] Start service: \`brew services start postgresql@16\`
+- [ ] Create my default user: \`createuser -s postgres\`
+- [ ] Don't forget to install the \`pgvector\` extension for the Total Recall AI project!
+
+> **Important:** Remember to add the Homebrew bin directory to the Zsh path in \`~/.zshrc\`!`,
+  },
+  {
+    title: "Decision: New Apartment",
+    content: `## Should I move to the downtown apartment?
+
+Trying to make a logical decision. My current lease is up in 3 months.
+
+### Option 1: Stay in Current Apt
+- **Pros:**
+    - Cheaper rent ($1800/mo)
+    - I know the area
+    - No moving hassle
+- **Cons:**
+    - 45 min commute (one-way)
+    - Getting small
+    - Old appliances
+
+### Option 2: Move to Downtown Apt
+- **Pros:**
+    - 10 min walk to work!
+    - New building, great gym
+    - Very spacious
+    - Feels more "energizing"
+- **Cons:**
+    - **Much** more expensive ($2600/mo)
+    - Noisy neighborhood
+    - Less green space nearby
+
+### Financial Breakdown
+- Current Commute Cost: ~$50/mo (gas) + (45*2*20) = 1800 min/mo = 30 hours/mo.
+- Downtown Commute Cost: $0.
+- Is 30 hours of my time + $50 in gas worth the $800 rent difference?
+- $800 / 30 hours = ~$26.67 per hour.
+- My time is definitely worth more than that. This makes the move seem much more reasonable.`,
+  },
+  {
+    title: "Brainstorming: Total Recall AI - Future Features",
+    content: `## V2 Feature Ideas (Blue Sky)
+
+- **Smart Folders / Dynamic Collections**:
+    - Automatically group notes based on *inferred* topics.
+    - Example: A collection for "Project Phoenix" that automatically pulls any note that mentions "phoenix", "sarah", or "david".
+- **Voice Memos**:
+    - Record a voice note -> Transcribe to text -> Embed the text.
+    - The AI could answer questions from my spoken thoughts.
+- **Image/OCR Integration**:
+    - Upload a photo (e.g., a whiteboard, a page from a book).
+    - Run OCR to extract text.
+    - Make the text from images searchable. This would be *huge*.
+- **"On This Day" Feature**:
+    - Surfaces notes you wrote on this day 1, 2, 5 years ago. Good for reflection.
+- **Web Clipper**:
+    - A browser extension to save articles or snippets directly as a new note.
+    - The AI could then "read" all my saved articles.
+- **Inter-note Linking (Bi-directional)**:
+    - Something like \`[[Note Title]]\` to link notes.
+    - A graph view to see how ideas connect. (Maybe too much?)
+`,
+  },
+  {
+    title: "Fitness Plan - Week 44",
+    content: `## My Weekly Workout Split
+
+Trying to be consistent, as I wrote in my 'Jogging Routine' note. This is a more structured plan based on the 'Atomic Habits' principles (making it specific and schedulable).
+
+### The Plan
+- **Monday:** Push Day (Chest/Shoulders/Tris)
+    - Bench Press: 3 sets x 5-8 reps
+    - Overhead Press: 3 sets x 8-10 reps
+    - Incline DB Press: 3 sets x 10-12 reps
+    - Tricep Pushdowns: 3 sets x 12-15 reps
+- **Tuesday:** Pull Day (Back/Biceps)
+    - Deadlift: 1 set x 5 reps (heavy) **OR** Pull-ups: 3 sets x AMRAP (As Many Reps As Possible)
+    - Barbell Row: 3 sets x 8-10 reps
+    - Lat Pulldowns: 3 sets x 10-12 reps
+    - Bicep Curls: 3 sets x 12-15 reps
+- **Wednesday:** Rest or Active Recovery
+    - Light jog (see 'Jogging Routine')
+    - Stretching
+- **Thursday:** Push Day 2 (Volume focus)
+    - Overhead Press: 3 sets x 5-8 reps
+    - Bench Press: 3 sets x 10-12 reps
+    - Lateral Raises: 4 sets x 15-20 reps
+- **Friday:** Pull Day 2 (Volume focus)
+    - T-Bar Row: 3 sets x 10-12 reps
+    - Seated Cable Row: 3 sets x 12-15 reps
+    - Face Pulls: 4 sets x 15-20 reps
+- **Saturday:** Leg Day
+    - Squats: 3 sets x 5-8 reps
+    - Romanian Deadlift (RDL): 3 sets x 10-12 reps
+    - Leg Press: 3 sets x 15-20 reps
+- **Sunday:** Rest
+`,
+  },
+  {
+    title: "CSS Snippet: Cool Gradient Text",
+    content: `## How to make gradient text in CSS
+
+I always forget this trick. You have to make the background a gradient and then *clip* it to the text.
+
+\`\`\`css
+.gradient-text {
+  /* 1. Set the background to the gradient you want */
+  background: linear-gradient(
+    90deg, 
+    rgba(131,58,180,1) 0%, 
+    rgba(253,29,29,1) 50%, 
+    rgba(252,176,69,1) 100%
+  );
+
+  /* 2. Clip the background to the text */
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  /* 3. Make the text color transparent */
+  /* This is the magic part! */
+  color: transparent;
+
+  /* Optional: Make it stand out */
+  font-size: 3rem;
+  font-weight: bold;
+}
+\`\`\`
+
+### Example HTML
+\`\`\`html
+<h1 class="gradient-text">
+  Hello World!
+</h1>
+\`\`\`
+This is great for hero sections.
+`,
+  },
+  {
+    title: "Quotes to Remember",
+    content: `A collection of quotes that I find motivating or insightful.
+
+> "We are what we repeatedly do. Excellence, then, is not an act, but a habit."
+> — Will Durant (often misattributed to Aristotle)
+
+This connects well with my "Atomic Habits" notes. The system is everything.
+
+> "The reasonable man adapts himself to the world: the unreasonable one persists in trying to adapt the world to himself. Therefore all progress depends on the unreasonable man."
+> — George Bernard Shaw
+
+> "Stay hungry. Stay foolish."
+> — Steve Jobs
+
+> "The best time to plant a tree was 20 years ago. The second best time is now."
+> — Chinese Proverb
+
+A good reminder for my finances, my health (jogging!), and learning new things. No more "it's too late to start."
+
+> "Talk is cheap. Show me the code."
+> — Linus Torvalds
+`,
+  },
 ] as const;

@@ -23,7 +23,7 @@ async function main() {
     console.log("Creating demo user...");
 
     // Drop the demo user and their notes
-    db.delete(UserTable).where(eq(UserTable.email, DEMO_USER_EMAIL));
+    await db.delete(UserTable).where(eq(UserTable.email, DEMO_USER_EMAIL));
 
     const {
       user: { id: userId },
