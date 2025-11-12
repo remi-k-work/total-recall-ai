@@ -1,6 +1,7 @@
 secrets.txt
 .env
 docs/
+uploads/
 
 # dependencies
 /node_modules
