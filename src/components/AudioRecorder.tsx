@@ -1,11 +1,29 @@
 "use client";
 
 // react
-import { useRef, useState } from "react";
+import { useRef, useState, useTransition } from "react";
 
-export default function AudioRecorder() {
+// components
+import { Button } from "@/components/ui/custom/button";
+
+// assets
+import { MicrophoneIcon } from "@heroicons/react/24/outline";
+import { Loader2 } from "lucide-react";
+
+// types
+interface ProcessRecordingActionResult {
+  actionStatus: "idle" | "succeeded" | "failed";
+}
+export type ProcessRecordingAction = (formData: FormData, recordingFieldName: string) => Promise<ProcessRecordingActionResult>;
+
+interface AudioRecorderProps {
+  recordingFieldName: string;
+  processRecordingAction: ProcessRecordingAction;
+}
+
+export default function AudioRecorder({ recordingFieldName, processRecordingAction }: AudioRecorderProps) {
   const [isRecording, setIsRecording] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
+  const [isProcessing, startProcessing] = useTransition();
   const [recordingTime, setRecordingTime] = useState(0);
 
   const mediaRecorderRef = useRef<MediaRecorder>(undefined);
@@ -36,8 +54,14 @@ export default function AudioRecorder() {
     mediaRecorder.onstop = () => {
       const mimeType = mediaRecorder.mimeType ?? "audio/webm";
       const audioBlob = new Blob(chunksRef.current, { type: mimeType });
-      handleRecordingCompleted(audioBlob);
       stream.getTracks().forEach((track) => track.stop());
+
+      // Upload the audio blob to the server and process it
+      const formData = new FormData();
+      formData.append(recordingFieldName, audioBlob);
+      startProcessing(async () => {
+        await processRecordingAction(formData, recordingFieldName);
+      });
     };
 
     // Start recording, and collect data every second
@@ -57,20 +81,13 @@ export default function AudioRecorder() {
     clearInterval(timerRef.current);
   };
 
-  const handleRecordingCompleted = async (audioBlob: Blob) => {
-    setIsUploading(true);
-    // Upload the audio blob to the server
-    const formData = new FormData();
-    formData.append("recording", audioBlob, "recording.webm");
-    await fetch("/api/notes/recording", { method: "POST", body: formData });
-    setIsUploading(false);
-  };
-
   return (
     <div>
-      <button onClick={isRecording ? stopRecording : startRecording}>{isRecording ? "Stop Recording" : "Start Recording"}</button>
+      <Button type="button" disabled={isProcessing} onClick={isRecording ? stopRecording : startRecording}>
+        {isProcessing ? <Loader2 className="size-9 animate-spin" /> : <MicrophoneIcon className="size-9" />}
+        {isProcessing ? "Processing..." : isRecording ? "Stop Recording" : "Start Recording"}
+      </Button>
       {isRecording && <p>Recording for {recordingTime} seconds</p>}
-      {isUploading && <p>Uploading...</p>}
     </div>
   );
 }
