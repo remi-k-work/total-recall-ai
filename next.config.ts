@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
 
   experimental: {
     authInterrupts: true,
+    serverActions: {
+      bodySizeLimit: "2mb",
+    },
   },
 
   images: {
