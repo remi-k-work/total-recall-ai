@@ -1,5 +1,5 @@
 // server actions and mutations
-import transcribeNote from "@/features/notes/actions/transcribeNote2";
+import transcribeNote from "@/features/notes/actions/transcribeNote3";
 
 // components
 import PageHeader from "@/components/PageHeader";

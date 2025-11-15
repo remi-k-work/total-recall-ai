@@ -12,7 +12,7 @@ import Link from "next/link";
 import signIn from "@/features/auth/actions/signInForm";
 
 // services, features, and other libraries
-import { mergeForm, useTransform } from "@tanstack/react-form";
+import { mergeForm, useTransform } from "@tanstack/react-form-nextjs";
 import { useAppForm } from "@/components/form";
 import { SignInFormSchema } from "@/features/auth/schemas/signInForm";
 import useSignInFormFeedback from "@/features/auth/hooks/feedbacks/useSignInForm";

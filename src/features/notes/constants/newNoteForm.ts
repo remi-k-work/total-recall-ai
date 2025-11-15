@@ -1,6 +1,6 @@
 // services, features, and other libraries
 import { z } from "zod";
-import { formOptions, initialFormState } from "@tanstack/react-form/nextjs";
+import { formOptions, initialFormState } from "@tanstack/react-form-nextjs";
 import { NewNoteFormSchema } from "@/features/notes/schemas/newNoteForm";
 import { createServerValidateWithTransforms } from "@/lib/helpers";
 

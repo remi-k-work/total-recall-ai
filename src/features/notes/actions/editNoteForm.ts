@@ -11,12 +11,12 @@ import { deleteNoteChunks, insertNoteChunks, updateNote } from "@/features/notes
 
 // services, features, and other libraries
 import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
-import { initialFormState, ServerValidateError } from "@tanstack/react-form/nextjs";
+import { initialFormState, ServerValidateError } from "@tanstack/react-form-nextjs";
 import { SERVER_VALIDATE } from "@/features/notes/constants/editNoteForm";
 import { generateNoteEmbeddings } from "@/features/notes/lib/embeddings2";
 
 // types
-import type { ServerFormState } from "@tanstack/react-form/nextjs";
+import type { ServerFormState } from "@tanstack/react-form-nextjs";
 
 export interface EditNoteFormActionResult extends ServerFormState<any, any> {
   actionStatus: "idle" | "succeeded" | "failed" | "invalid" | "demoMode";

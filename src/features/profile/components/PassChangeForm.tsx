@@ -10,7 +10,7 @@ import { useActionState, useEffect, useRef } from "react";
 import passChange from "@/features/profile/actions/passChangeForm";
 
 // services, features, and other libraries
-import { mergeForm, useTransform } from "@tanstack/react-form";
+import { mergeForm, useTransform } from "@tanstack/react-form-nextjs";
 import { useAppForm } from "@/components/form";
 import { PassChangeFormSchema, PassSetupFormSchema } from "@/features/profile/schemas/passChangeForm";
 import usePassChangeFormFeedback from "@/features/profile/hooks/feedbacks/usePassChangeForm";

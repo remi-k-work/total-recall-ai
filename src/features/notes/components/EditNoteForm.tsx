@@ -12,7 +12,7 @@ import { useParams } from "next/navigation";
 import editNote from "@/features/notes/actions/editNoteForm";
 
 // services, features, and other libraries
-import { mergeForm, useTransform } from "@tanstack/react-form";
+import { mergeForm, useTransform } from "@tanstack/react-form-nextjs";
 import { useAppForm } from "@/components/form";
 import { EditNoteFormSchema } from "@/features/notes/schemas/editNoteForm";
 import useEditNoteFormFeedback from "@/features/notes/hooks/feedbacks/useEditNoteForm";

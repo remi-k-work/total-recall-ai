@@ -3,10 +3,14 @@
 // services, features, and other libraries
 import { makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 import { google } from "@ai-sdk/google";
-import { generateText } from "ai";
+import { generateObject } from "ai";
+import { TranscriptionSchema } from "@/features/notes/schemas/transcription";
 
 // types
 import type { ProcessRecordingAction } from "@/components/AudioRecorder";
+
+// constants
+import { TRANSCRIBE_SYSTEM_MESSAGE, USER_INSTRUCTION_EXISTING_NOTE, USER_INSTRUCTION_NEW_NOTE } from "@/features/notes/constants/messages";
 
 // This action transcribes a user's note from the provided audio file of the recorded note
 const transcribeNote: ProcessRecordingAction = async (formData, recordingFieldName) => {
@@ -18,10 +22,12 @@ const transcribeNote: ProcessRecordingAction = async (formData, recordingFieldNa
     const recordingAudioFile = formData.get(recordingFieldName);
     if (!recordingAudioFile || !(recordingAudioFile instanceof File)) throw new Error("Invalid recording audio file!");
 
-    const { text: transcript } = await generateText({
+    const isNewNote = true;
+
+    const { object } = await generateObject({
       model: google("gemini-2.5-flash"),
-      system:
-        "You are an AI audio transcriber. Users will upload an audio file, and you should transcribe it, responding only with the text content of the audio file and nothing else. Users may also provide custom instructions, which you should take into account. If you hear no words, respond with 'No speech detected.'",
+      schema: TranscriptionSchema,
+      system: TRANSCRIBE_SYSTEM_MESSAGE,
       messages: [
         {
           role: "user",
@@ -31,12 +37,16 @@ const transcribeNote: ProcessRecordingAction = async (formData, recordingFieldNa
               mediaType: "audio/webm",
               data: await recordingAudioFile.arrayBuffer(),
             },
+            {
+              type: "text",
+              text: isNewNote ? USER_INSTRUCTION_NEW_NOTE : USER_INSTRUCTION_EXISTING_NOTE,
+            },
           ],
         },
       ],
     });
 
-    console.log("transcript", transcript);
+    console.log("Structured Transcription:", object);
   } catch (error) {
     // Some other error occurred
     console.error(error);

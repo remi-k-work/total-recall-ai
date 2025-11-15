@@ -9,7 +9,7 @@ import { useActionState, useEffect, useRef } from "react";
 import profileDetails from "@/features/profile/actions/profileDetailsForm";
 
 // services, features, and other libraries
-import { mergeForm, useTransform } from "@tanstack/react-form";
+import { mergeForm, useTransform } from "@tanstack/react-form-nextjs";
 import { useAppForm } from "@/components/form";
 import { ProfileDetailsFormSchema } from "@/features/profile/schemas/profileDetailsForm";
 import useProfileDetailsFormFeedback from "@/features/profile/hooks/feedbacks/useProfileDetailsForm";

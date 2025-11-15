@@ -7,12 +7,12 @@ import { revalidatePath } from "next/cache";
 
 // services, features, and other libraries
 import { auth } from "@/services/better-auth/auth";
-import { initialFormState, ServerValidateError } from "@tanstack/react-form/nextjs";
+import { initialFormState, ServerValidateError } from "@tanstack/react-form-nextjs";
 import { SERVER_VALIDATE } from "@/features/auth/constants/resetPassForm";
 import { APIError } from "better-auth/api";
 
 // types
-import type { ServerFormState } from "@tanstack/react-form/nextjs";
+import type { ServerFormState } from "@tanstack/react-form-nextjs";
 
 export interface ResetPassFormActionResult extends ServerFormState<any, any> {
   actionStatus: "idle" | "succeeded" | "failed" | "invalid" | "authError";

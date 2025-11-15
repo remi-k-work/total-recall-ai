@@ -9,7 +9,7 @@ import { useActionState, useEffect, useRef } from "react";
 import newNote from "@/features/notes/actions/newNoteForm";
 
 // services, features, and other libraries
-import { mergeForm, useTransform } from "@tanstack/react-form";
+import { mergeForm, useTransform } from "@tanstack/react-form-nextjs";
 import { useAppForm } from "@/components/form";
 import { NewNoteFormSchema } from "@/features/notes/schemas/newNoteForm";
 import useNewNoteFormFeedback from "@/features/notes/hooks/feedbacks/useNewNoteForm";
@@ -92,7 +92,7 @@ export default function NewNoteForm({ inNoteModal = false }: NewNoteFormProps) {
                 <field.MarkdownField
                   ref={markdownFieldRef}
                   label="Content"
-                  markdown={field.form.getFieldValue("content")}
+                  markdown=""
                   spellCheck={false}
                   placeholder="e.g. Buy cat food. Call mom. Pay electricity bill. Remember to bring umbrella tomorrow in case it rains."
                   onChange={(markdown) => field.form.setFieldValue("content", markdown)}

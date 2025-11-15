@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 // services, features, and other libraries
 import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 
 // components
 import { Button } from "@/components/ui/custom/button";

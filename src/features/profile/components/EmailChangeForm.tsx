@@ -9,7 +9,7 @@ import { useActionState, useEffect, useRef } from "react";
 import emailChange from "@/features/profile/actions/emailChangeForm";
 
 // services, features, and other libraries
-import { mergeForm, useTransform } from "@tanstack/react-form";
+import { mergeForm, useTransform } from "@tanstack/react-form-nextjs";
 import { useAppForm } from "@/components/form";
 import { EmailChangeFormSchema } from "@/features/profile/schemas/emailChangeForm";
 import useEmailChangeFormFeedback from "@/features/profile/hooks/feedbacks/useEmailChangeForm";

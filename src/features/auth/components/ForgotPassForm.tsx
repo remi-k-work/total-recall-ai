@@ -9,7 +9,7 @@ import { useActionState, useEffect, useRef } from "react";
 import forgotPass from "@/features/auth/actions/forgotPassForm";
 
 // services, features, and other libraries
-import { mergeForm, useTransform } from "@tanstack/react-form";
+import { mergeForm, useTransform } from "@tanstack/react-form-nextjs";
 import { useAppForm } from "@/components/form";
 import { ForgotPassFormSchema } from "@/features/auth/schemas/forgotPassForm";
 import useForgotPassFormFeedback from "@/features/auth/hooks/feedbacks/useForgotPassForm";

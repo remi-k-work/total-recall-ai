@@ -9,7 +9,7 @@ import { useActionState, useEffect, useRef } from "react";
 import signUp from "@/features/auth/actions/signUpForm";
 
 // services, features, and other libraries
-import { mergeForm, useTransform } from "@tanstack/react-form";
+import { mergeForm, useTransform } from "@tanstack/react-form-nextjs";
 import { useAppForm } from "@/components/form";
 import { SignUpFormSchema } from "@/features/auth/schemas/signUpForm";
 import useSignUpFormFeedback from "@/features/auth/hooks/feedbacks/useSignUpForm";

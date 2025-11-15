@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 // services, features, and other libraries
 import { cn } from "@/lib/utils";
 import { useChat } from "@ai-sdk/react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 
 // components
 import Header from "./Header";
