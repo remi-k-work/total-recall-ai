@@ -13,8 +13,8 @@ export const getUserSessionData = cache(async () => await auth.api.getSession({ 
 
 // Make sure the current user is authenticated (the check runs on the server side)
 export async function makeSureUserIsAuthenticated() {
-  // if (!(await getUserSessionData())) unauthorized();
-  if (!(await getUserSessionData())) redirect("/unauthorized");
+  if (!(await getUserSessionData())) unauthorized();
+  // if (!(await getUserSessionData())) redirect("/unauthorized");
 }
 
 // Only check if the current user is authenticated (the check runs on the server side)
