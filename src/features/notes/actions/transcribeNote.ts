@@ -5,13 +5,15 @@ import { join } from "path";
 import { mkdir, writeFile } from "fs/promises";
 
 // services, features, and other libraries
+import { z } from "zod";
 import { makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
+import { TranscriptionSchema } from "@/features/notes/schemas/transcription";
 
 // types
 import type { ProcessRecordingAction } from "@/components/AudioRecorder";
 
 // This action transcribes a user's note from the provided audio file of the recorded note
-const transcribeNote: ProcessRecordingAction = async (formData, recordingFieldName) => {
+const transcribeNote: ProcessRecordingAction<z.infer<typeof TranscriptionSchema>> = async (formData, recordingFieldName) => {
   try {
     // Make sure the current user is authenticated (the check runs on the server side)
     await makeSureUserIsAuthenticated();
@@ -40,11 +42,11 @@ const transcribeNote: ProcessRecordingAction = async (formData, recordingFieldNa
   } catch (error) {
     // Some other error occurred
     console.error(error);
-    return { actionStatus: "failed" };
+    return { actionStatus: "failed", result: null };
   }
 
   // The form has successfully validated and submitted!
-  return { actionStatus: "succeeded" };
+  return { actionStatus: "succeeded", result: null };
 };
 
 export default transcribeNote;

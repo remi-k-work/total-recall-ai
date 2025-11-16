@@ -3,13 +3,14 @@
 "use client";
 
 // react
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useCallback, useEffect, useRef, useState } from "react";
 
 // next
 import { useParams } from "next/navigation";
 
 // server actions and mutations
 import editNote from "@/features/notes/actions/editNoteForm";
+import transcribeNote from "@/features/notes/actions/transcribeNote3";
 
 // services, features, and other libraries
 import { mergeForm, useTransform } from "@tanstack/react-form-nextjs";
@@ -18,8 +19,9 @@ import { EditNoteFormSchema } from "@/features/notes/schemas/editNoteForm";
 import useEditNoteFormFeedback from "@/features/notes/hooks/feedbacks/useEditNoteForm";
 
 // components
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
+import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
 import InfoLine from "@/components/form/InfoLine";
+import AudioRecorder from "@/components/AudioRecorder";
 
 // assets
 import { DocumentTextIcon } from "@heroicons/react/24/outline";
@@ -93,6 +95,19 @@ export default function EditNoteForm({ note }: EditNoteFormProps) {
     store,
   );
 
+  // Function to be called when the transcription is processed
+  const handleRecordingProcessed = useCallback(({ actionStatus, result }: Awaited<ReturnType<typeof transcribeNote>>) => {
+    // Only update the form if the transcription was successful
+    if (actionStatus !== "succeeded" || !result) return;
+
+    // Extract only the content from the result
+    const { content } = result;
+
+    // Insert the transcribed content into the markdown field at the cursor's location
+    markdownFieldRef.current?.focus();
+    markdownFieldRef.current?.insertMarkdown(content);
+  }, []);
+
   return (
     <AppForm>
       <form
@@ -104,10 +119,31 @@ export default function EditNoteForm({ note }: EditNoteFormProps) {
       >
         <Card className="max-w-4xl">
           {/* The note has been passed from the server, which means we are in the full-page mode */}
-          {note && (
+          {note ? (
             <CardHeader>
               <CardTitle>Edit Note</CardTitle>
               <CardDescription>To edit an existing note</CardDescription>
+              <CardAction>
+                <AudioRecorder
+                  recordingFieldName="recording"
+                  processRecordingAction={transcribeNote}
+                  onRecordingProcessed={handleRecordingProcessed}
+                  startRecordingText="Start Transcribing"
+                  stopRecordingText="Stop Transcribing"
+                />
+              </CardAction>
+            </CardHeader>
+          ) : (
+            <CardHeader>
+              <CardAction>
+                <AudioRecorder
+                  recordingFieldName="recording"
+                  processRecordingAction={transcribeNote}
+                  onRecordingProcessed={handleRecordingProcessed}
+                  startRecordingText="Start Transcribing"
+                  stopRecordingText="Stop Transcribing"
+                />
+              </CardAction>
             </CardHeader>
           )}
           <CardContent>

@@ -12,22 +12,40 @@ import { MicrophoneIcon } from "@heroicons/react/24/outline";
 import { Loader2 } from "lucide-react";
 
 // types
-interface ProcessRecordingActionResult {
+interface ProcessRecordingActionResult<T> {
   actionStatus: "idle" | "succeeded" | "failed";
+  result: T | null;
 }
-export type ProcessRecordingAction = (formData: FormData, recordingFieldName: string) => Promise<ProcessRecordingActionResult>;
+export type ProcessRecordingAction<T> = (
+  formData: FormData,
+  recordingFieldName: string,
+  otherFields?: Record<string, string>,
+) => Promise<ProcessRecordingActionResult<T>>;
 
-interface AudioRecorderProps {
+interface AudioRecorderProps<T> {
   recordingFieldName: string;
-  processRecordingAction: ProcessRecordingAction;
+  processRecordingAction: ProcessRecordingAction<T>;
+  onRecordingProcessed: (result: ProcessRecordingActionResult<T>) => void;
+  startRecordingText?: string;
+  stopRecordingText?: string;
+  otherFields?: Record<string, string>;
 }
 
 // constants
 const MEDIA_RECORDER_OPTIONS = { mimeType: 'audio/webm;codecs="opus"' } as const;
 const MEDIA_STREAM_CONSTRAINTS = { audio: { echoCancellation: true, noiseSuppression: true, sampleRate: 16000, channelCount: 1 } } as const;
 const MAX_RECORD_SECONDS = 60;
+const START_RECORDING_TEXT = "Start Recording";
+const STOP_RECORDING_TEXT = "Stop Recording";
 
-export default function AudioRecorder({ recordingFieldName, processRecordingAction }: AudioRecorderProps) {
+export default function AudioRecorder<T>({
+  recordingFieldName,
+  processRecordingAction,
+  onRecordingProcessed,
+  startRecordingText = START_RECORDING_TEXT,
+  stopRecordingText = STOP_RECORDING_TEXT,
+  otherFields,
+}: AudioRecorderProps<T>) {
   // The UI state
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, startProcessing] = useTransition();
@@ -105,8 +123,9 @@ export default function AudioRecorder({ recordingFieldName, processRecordingActi
     const formData = new FormData();
     formData.append(recordingFieldName, audioBlob);
     startProcessing(async () => {
-      const result = await processRecordingAction(formData, recordingFieldName);
+      const result = await processRecordingAction(formData, recordingFieldName, otherFields);
       if (result.actionStatus === "failed") setError("Processing failed. Please try again.");
+      onRecordingProcessed(result);
     });
   }, [cleanUpResources, processRecordingAction, recordingFieldName, startProcessing]);
 
@@ -171,11 +190,11 @@ export default function AudioRecorder({ recordingFieldName, processRecordingActi
     <section className="grid gap-1">
       <Button type="button" variant={isRecording ? "destructive" : "default"} disabled={isProcessing} onClick={isRecording ? stopRecording : startRecording}>
         {isProcessing ? <Loader2 className="size-9 animate-spin" /> : <MicrophoneIcon className="size-9" />}
-        {isProcessing ? "Processing..." : isRecording ? "Stop Recording" : "Start Recording"}
+        {isProcessing ? "Processing..." : isRecording ? stopRecordingText : startRecordingText}
       </Button>
       {isRecording && (
         <footer className="grid">
-          <div className="bg-muted col-span-full row-span-full overflow-clip">
+          <div className="bg-background col-span-full row-span-full overflow-clip">
             <div
               className="from-primary to-destructive h-full bg-linear-to-r transition-all duration-1000 ease-linear"
               style={{ width: `${(recordingTime / MAX_RECORD_SECONDS) * 100}%` }}

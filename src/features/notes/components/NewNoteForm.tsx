@@ -3,10 +3,11 @@
 "use client";
 
 // react
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useCallback, useEffect, useRef } from "react";
 
 // server actions and mutations
 import newNote from "@/features/notes/actions/newNoteForm";
+import transcribeNote from "@/features/notes/actions/transcribeNote3";
 
 // services, features, and other libraries
 import { mergeForm, useTransform } from "@tanstack/react-form-nextjs";
@@ -15,8 +16,9 @@ import { NewNoteFormSchema } from "@/features/notes/schemas/newNoteForm";
 import useNewNoteFormFeedback from "@/features/notes/hooks/feedbacks/useNewNoteForm";
 
 // components
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
+import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
 import InfoLine from "@/components/form/InfoLine";
+import AudioRecorder from "@/components/AudioRecorder";
 
 // assets
 import { DocumentPlusIcon } from "@heroicons/react/24/outline";
@@ -37,7 +39,7 @@ export default function NewNoteForm({ inNoteModal = false }: NewNoteFormProps) {
 
   // The main server action that processes the form
   const [formState, formAction, isPending] = useActionState(newNote, INITIAL_FORM_STATE);
-  const { AppField, AppForm, FormSubmit, handleSubmit, reset, store } = useAppForm({
+  const { AppField, AppForm, FormSubmit, handleSubmit, reset, store, getFieldValue, setFieldValue } = useAppForm({
     ...FORM_OPTIONS,
     transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
   });
@@ -64,6 +66,25 @@ export default function NewNoteForm({ inNoteModal = false }: NewNoteFormProps) {
     store,
   );
 
+  // Function to be called when the transcription is processed
+  const handleRecordingProcessed = useCallback(
+    ({ actionStatus, result }: Awaited<ReturnType<typeof transcribeNote>>) => {
+      // Only update the form if the transcription was successful
+      if (actionStatus !== "succeeded" || !result) return;
+
+      // Extract the title and content from the result
+      const { title, content } = result;
+
+      // Only update the note title if it has not been established yet
+      if (!getFieldValue("title")) setFieldValue("title", title ?? "");
+
+      // Insert the transcribed content into the markdown field at the cursor's location
+      markdownFieldRef.current?.focus();
+      markdownFieldRef.current?.insertMarkdown(content);
+    },
+    [getFieldValue, setFieldValue],
+  );
+
   return (
     <AppForm>
       <form
@@ -74,10 +95,33 @@ export default function NewNoteForm({ inNoteModal = false }: NewNoteFormProps) {
         }}
       >
         <Card className="max-w-4xl">
-          {!inNoteModal && (
+          {!inNoteModal ? (
             <CardHeader>
               <CardTitle>New Note</CardTitle>
               <CardDescription>To create a new note</CardDescription>
+              <CardAction>
+                <AudioRecorder
+                  recordingFieldName="recording"
+                  processRecordingAction={transcribeNote}
+                  onRecordingProcessed={handleRecordingProcessed}
+                  startRecordingText="Start Transcribing"
+                  stopRecordingText="Stop Transcribing"
+                  otherFields={{ isNewNote: "true" }}
+                />
+              </CardAction>
+            </CardHeader>
+          ) : (
+            <CardHeader>
+              <CardAction>
+                <AudioRecorder
+                  recordingFieldName="recording"
+                  processRecordingAction={transcribeNote}
+                  onRecordingProcessed={handleRecordingProcessed}
+                  startRecordingText="Start Transcribing"
+                  stopRecordingText="Stop Transcribing"
+                  otherFields={{ isNewNote: "true" }}
+                />
+              </CardAction>
             </CardHeader>
           )}
           <CardContent>
