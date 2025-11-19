@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   other: { google: "notranslate" },
 };
 
-export default function Layout({ children }: LayoutProps<"/">) {
+export default function Layout({ notes, children }: LayoutProps<"/">) {
   return (
     <html lang="en" translate="no" suppressHydrationWarning>
       <body
@@ -39,6 +39,7 @@ export default function Layout({ children }: LayoutProps<"/">) {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <DemoModeProvider>
             <ConfirmModalProvider>
+              {notes}
               {children}
               <Toaster richColors />
               <Analytics debug={false} />
