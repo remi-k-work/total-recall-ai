@@ -1,12 +1,7 @@
 "use client";
 
-// react
-import { useEffect, useState } from "react";
-
-// next
-import { useParams } from "next/navigation";
-
 // services, features, and other libraries
+import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 
 // components
@@ -21,34 +16,29 @@ import type { getNote } from "@/features/notes/db";
 
 interface NoteDetailsProps {
   note?: Exclude<Awaited<ReturnType<typeof getNote>>, undefined>;
+  noteId?: string;
 }
 
 // constants
 import { REHYPE_PLUGINS } from "@/features/notes-assistant/constants/plugins";
 
-export default function NoteDetails({ note }: NoteDetailsProps) {
-  const { id: noteId } = useParams<{ id: string }>();
-  const [currNote, setCurrNote] = useState(note);
+export default function NoteDetails({ note, noteId }: NoteDetailsProps) {
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["note", "details", noteId],
+    queryFn: async ({ signal }): Promise<Awaited<ReturnType<typeof getNote>>> => {
+      const res = await fetch(`/api/notes/${noteId}`, { credentials: "include", signal });
+      if (!res.ok) throw new Error(res.statusText);
+      return await res.json();
+    },
+    enabled: !!noteId,
+  });
 
-  useEffect(() => {
-    // If the note is already passed from the server or the note id is not available, do nothing
-    if (note || !noteId) return;
-    const controller = new AbortController();
+  if (isError) console.error(error);
+  if (isLoading || isError) return null;
+  if (!note && !data) return null;
 
-    (async () => {
-      try {
-        const res = await fetch(`/api/notes/${noteId}`, { credentials: "include", signal: controller.signal });
-        if (res.ok) setCurrNote(await res.json());
-      } catch (error) {
-        if (error instanceof Error && error.name !== "AbortError") console.error(error);
-      }
-    })();
-
-    return () => controller.abort();
-  }, [note, noteId]);
-
-  if (!currNote) return null;
-  const { title, content, createdAt, updatedAt } = currNote;
+  // If the note is already being provided by the server, use it instead
+  const { title, content, createdAt, updatedAt } = note ?? data!;
 
   return (
     <Card className="max-w-2xl rounded-[255px_15px_225px_15px_/_15px_225px_15px_255px]">
