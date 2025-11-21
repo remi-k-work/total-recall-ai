@@ -18,7 +18,7 @@ export default function NotesPreview({ notes }: NotesPreviewProps) {
   return (
     <article className={notes.length === 1 ? "columns-1" : "columns-md gap-4"}>
       {notes.map((note) => (
-        <Link key={note.id} href={`/notes/${note.id}`} className="block break-inside-avoid pb-4">
+        <Link key={note.id} href={`/notes/${note.id}`} prefetch={false} className="block break-inside-avoid pb-4">
           <NotePreview note={note} />
         </Link>
       ))}
