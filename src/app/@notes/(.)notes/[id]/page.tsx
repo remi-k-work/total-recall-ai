@@ -18,7 +18,7 @@ import { DocumentIcon } from "@heroicons/react/24/outline";
 
 // Page remains the fast, static shell
 export default async function Page({ params, searchParams }: PageProps<"/notes/[id]">) {
-  // await connection();
+  await connection();
 
   const { id: noteId } = await params;
   return (
