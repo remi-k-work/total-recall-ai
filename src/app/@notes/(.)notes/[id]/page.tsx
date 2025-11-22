@@ -29,6 +29,7 @@ async function PageContent({ params, searchParams }: PageProps<"/notes/[id]">) {
   //   params: { id: noteId },
   // } = await validatePageInputs(NoteDetailsPageSchema, { params, searchParams });
 
+  const { id } = await params;
   const noteId = "8f149149-f54c-4255-9824-a7e68073ed46";
 
   return (
