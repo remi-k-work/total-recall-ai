@@ -1,8 +1,5 @@
 import "./globals.css";
 
-// react
-import { Suspense } from "react";
-
 // services, features, and other libraries
 import { cn } from "@/lib/utils";
 import { Analytics } from "@vercel/analytics/next";
@@ -44,10 +41,8 @@ export default function Layout({ children, notes }: LayoutProps<"/">) {
           <DemoModeProvider>
             <ConfirmModalProvider>
               <TanStackQueryProvider>
-                <Suspense>
-                  {children}
-                  {notes}
-                </Suspense>
+                {children}
+                {notes}
                 <Toaster richColors />
                 <Analytics debug={false} />
               </TanStackQueryProvider>
