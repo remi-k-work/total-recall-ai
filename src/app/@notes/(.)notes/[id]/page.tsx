@@ -25,9 +25,11 @@ export default function Page({ params, searchParams }: PageProps<"/notes/[id]">)
 // This new async component contains the dynamic logic
 async function PageContent({ params, searchParams }: PageProps<"/notes/[id]">) {
   // Safely validate next.js route inputs (`params` and `searchParams`) against a zod schema; return typed data or trigger a 404 on failure
-  const {
-    params: { id: noteId },
-  } = await validatePageInputs(NoteDetailsPageSchema, { params, searchParams });
+  // const {
+  //   params: { id: noteId },
+  // } = await validatePageInputs(NoteDetailsPageSchema, { params, searchParams });
+
+  const noteId = "8f149149-f54c-4255-9824-a7e68073ed46";
 
   return (
     <NoteModal icon={<DocumentIcon className="size-11 flex-none" />} browseBar={<BrowseBar kind="note-details" />} noteId={noteId}>
