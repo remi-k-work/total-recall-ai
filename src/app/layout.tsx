@@ -1,5 +1,8 @@
 import "./globals.css";
 
+// react
+import { Suspense } from "react";
+
 // services, features, and other libraries
 import { cn } from "@/lib/utils";
 import { Analytics } from "@vercel/analytics/next";
@@ -28,7 +31,7 @@ export const metadata: Metadata = {
   other: { google: "notranslate" },
 };
 
-export default function Layout({ children }: LayoutProps<"/">) {
+export default function Layout({ children, notes }: LayoutProps<"/">) {
   return (
     <html lang="en" translate="no" suppressHydrationWarning>
       <body
@@ -41,7 +44,10 @@ export default function Layout({ children }: LayoutProps<"/">) {
           <DemoModeProvider>
             <ConfirmModalProvider>
               <TanStackQueryProvider>
-                {children}
+                <Suspense>
+                  {children}
+                  {notes}
+                </Suspense>
                 <Toaster richColors />
                 <Analytics debug={false} />
               </TanStackQueryProvider>
