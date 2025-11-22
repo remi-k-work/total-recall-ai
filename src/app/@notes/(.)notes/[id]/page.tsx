@@ -1,6 +1,9 @@
 // react
 import { Suspense } from "react";
 
+// next
+import { connection } from "next/server";
+
 // services, features, and other libraries
 import { validatePageInputs } from "@/lib/helpers";
 import { NoteDetailsPageSchema } from "@/features/notes/schemas/noteDetailsPage";
@@ -14,7 +17,9 @@ import NoteDetails from "@/features/notes/components/NoteDetails";
 import { DocumentIcon } from "@heroicons/react/24/outline";
 
 // Page remains the fast, static shell
-export default function Page({ params, searchParams }: PageProps<"/notes/[id]">) {
+export default async function Page({ params, searchParams }: PageProps<"/notes/[id]">) {
+  await connection();
+
   return (
     <Suspense fallback={<PageSkeleton />}>
       <PageContent params={params} searchParams={searchParams} />
