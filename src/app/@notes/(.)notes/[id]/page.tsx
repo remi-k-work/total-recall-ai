@@ -1,5 +1,3 @@
-"use cache";
-
 // react
 import { Suspense } from "react";
 
@@ -17,9 +15,10 @@ import NoteDetails from "@/features/notes/components/NoteDetails";
 
 // assets
 import { DocumentIcon } from "@heroicons/react/24/outline";
+import DynamicContent from "./DynamicContent";
 
 // Page remains the fast, static shell
-export default async function Page({ params, searchParams }: PageProps<"/notes/[id]">) {
+export default function Page({ params, searchParams }: PageProps<"/notes/[id]">) {
   return (
     <Suspense fallback={<p>Loading your note...</p>}>
       <DynamicContent params={params} searchParams={searchParams} />
@@ -27,19 +26,19 @@ export default async function Page({ params, searchParams }: PageProps<"/notes/[
   );
 }
 
-async function DynamicContent({ params }: PageProps<"/notes/[id]">) {
-  // "use cache";
-  // cacheLife("hours");
+// async function DynamicContent({ params }: PageProps<"/notes/[id]">) {
+//   // "use cache";
+//   // cacheLife("hours");
 
-  const { id: noteId } = await params;
+//   const { id: noteId } = await params;
 
-  return (
-    <>
-      <p>Hello {noteId}</p>
-      <p>{noteId}</p>
-    </>
-  );
-}
+//   return (
+//     <>
+//       <p>Hello {noteId}</p>
+//       <p>{noteId}</p>
+//     </>
+//   );
+// }
 
 // This new async component contains the dynamic logic
 async function PageContent({ params, searchParams }: PageProps<"/notes/[id]">) {
