@@ -18,7 +18,15 @@ import { DocumentIcon } from "@heroicons/react/24/outline";
 
 // Page remains the fast, static shell
 export default async function Page({ params, searchParams }: PageProps<"/notes/[id]">) {
-  await connection();
+  // await connection();
+
+  const { id: noteId } = await params;
+  return (
+    <>
+      <p>Hello {noteId}</p>
+      <p>{noteId}</p>
+    </>
+  );
 
   return (
     <Suspense fallback={<PageSkeleton />}>
@@ -29,7 +37,8 @@ export default async function Page({ params, searchParams }: PageProps<"/notes/[
 
 // This new async component contains the dynamic logic
 async function PageContent({ params, searchParams }: PageProps<"/notes/[id]">) {
-  await connection();
+  // await connection();
+
   // Safely validate next.js route inputs (`params` and `searchParams`) against a zod schema; return typed data or trigger a 404 on failure
   // const {
   //   params: { id: noteId },
