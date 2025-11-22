@@ -29,6 +29,7 @@ export default async function Page({ params, searchParams }: PageProps<"/notes/[
 
 // This new async component contains the dynamic logic
 async function PageContent({ params, searchParams }: PageProps<"/notes/[id]">) {
+  await connection();
   // Safely validate next.js route inputs (`params` and `searchParams`) against a zod schema; return typed data or trigger a 404 on failure
   // const {
   //   params: { id: noteId },
@@ -38,9 +39,13 @@ async function PageContent({ params, searchParams }: PageProps<"/notes/[id]">) {
   const noteId = "8f149149-f54c-4255-9824-a7e68073ed46";
 
   return (
-    <NoteModal icon={<DocumentIcon className="size-11 flex-none" />} browseBar={<BrowseBar kind="note-details" />} noteId={noteId}>
-      <NoteDetails noteId={noteId} />
-    </NoteModal>
+    <>
+      <p>Hello {id}</p>
+      <p>{noteId}</p>
+    </>
+    // <NoteModal icon={<DocumentIcon className="size-11 flex-none" />} browseBar={<BrowseBar kind="note-details" />} noteId={noteId}>
+    //   <NoteDetails noteId={noteId} />
+    // </NoteModal>
   );
 }
 
