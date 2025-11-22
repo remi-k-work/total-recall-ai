@@ -17,22 +17,25 @@ import NoteDetails from "@/features/notes/components/NoteDetails";
 import { DocumentIcon } from "@heroicons/react/24/outline";
 
 // Page remains the fast, static shell
-export default async function Page({ params, searchParams }: PageProps<"/notes/[id]">) {
+export default function Page({ params, searchParams }: PageProps<"/notes/[id]">) {
+  return (
+    <Suspense fallback={<p>Loading your note...</p>}>
+      <DynamicContent params={params} searchParams={searchParams} />
+    </Suspense>
+  );
+}
+
+async function DynamicContent({ params }: PageProps<"/notes/[id]">) {
   "use cache";
   cacheLife("hours");
 
   const { id: noteId } = await params;
+
   return (
     <>
       <p>Hello {noteId}</p>
       <p>{noteId}</p>
     </>
-  );
-
-  return (
-    <Suspense fallback={<PageSkeleton />}>
-      <PageContent params={params} searchParams={searchParams} />
-    </Suspense>
   );
 }
 
