@@ -21,9 +21,7 @@ interface NoteDetailsProps {
 // constants
 import { REHYPE_PLUGINS } from "@/features/notes-assistant/constants/plugins";
 
-export default function NoteDetails({ note, inNoteModal = false }: NoteDetailsProps) {
-  const { title, content, createdAt, updatedAt } = note;
-
+export default function NoteDetails({ note: { title, content, createdAt, updatedAt }, inNoteModal = false }: NoteDetailsProps) {
   return (
     <Card className="max-w-2xl rounded-[255px_15px_225px_15px_/_15px_225px_15px_255px]">
       {!inNoteModal && (

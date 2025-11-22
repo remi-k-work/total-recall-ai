@@ -3,10 +3,7 @@
 "use client";
 
 // react
-import { useActionState, useCallback, useEffect, useRef, useState } from "react";
-
-// next
-import { useParams } from "next/navigation";
+import { useActionState, useCallback, useEffect, useRef } from "react";
 
 // server actions and mutations
 import editNote from "@/features/notes/actions/editNoteForm";
@@ -31,45 +28,22 @@ import type { getNote } from "@/features/notes/db";
 import type { MDXEditorMethods } from "@mdxeditor/editor";
 
 interface EditNoteFormProps {
-  note?: Exclude<Awaited<ReturnType<typeof getNote>>, undefined>;
+  note: Exclude<Awaited<ReturnType<typeof getNote>>, undefined>;
+  inNoteModal?: boolean;
 }
 
 // constants
 import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/notes/constants/editNoteForm";
 
-export default function EditNoteForm({ note }: EditNoteFormProps) {
-  const { id: noteId } = useParams<{ id: string }>();
-  const [currNote, setCurrNote] = useState(note);
-
+export default function EditNoteForm({ note: { id: noteId, title, content }, inNoteModal = false }: EditNoteFormProps) {
   // Create a ref to the editor component
   const markdownFieldRef = useRef<MDXEditorMethods>(null);
 
-  useEffect(() => {
-    // If the note is already passed from the server or the note id is not available, do nothing
-    if (note || !noteId) return;
-    const controller = new AbortController();
-
-    (async () => {
-      try {
-        const res = await fetch(`/api/notes/${noteId}`, { credentials: "include", signal: controller.signal });
-        if (res.ok) {
-          const fetchedNote = (await res.json()) as Awaited<ReturnType<typeof getNote>>;
-          setCurrNote(fetchedNote);
-          markdownFieldRef.current?.setMarkdown(fetchedNote?.content ?? "");
-        }
-      } catch (error) {
-        if (error instanceof Error && error.name !== "AbortError") console.error(error);
-      }
-    })();
-
-    return () => controller.abort();
-  }, [note, noteId]);
-
   // The main server action that processes the form
-  const [formState, formAction, isPending] = useActionState(editNote.bind(null, currNote?.id ?? noteId!), INITIAL_FORM_STATE);
+  const [formState, formAction, isPending] = useActionState(editNote.bind(null, noteId), INITIAL_FORM_STATE);
   const { AppField, AppForm, FormSubmit, handleSubmit, reset, store } = useAppForm({
     ...FORM_OPTIONS,
-    defaultValues: { ...FORM_OPTIONS.defaultValues, title: currNote?.title ?? "", content: currNote?.content ?? "", markdown: currNote?.content ?? "" },
+    defaultValues: { ...FORM_OPTIONS.defaultValues, title, content, markdown: content },
     transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
   });
 
@@ -118,8 +92,7 @@ export default function EditNoteForm({ note }: EditNoteFormProps) {
         }}
       >
         <Card className="max-w-4xl">
-          {/* The note has been passed from the server, which means we are in the full-page mode */}
-          {note ? (
+          {!inNoteModal ? (
             <CardHeader>
               <CardTitle>Edit Note</CardTitle>
               <CardDescription>To edit an existing note</CardDescription>
@@ -189,7 +162,7 @@ export default function EditNoteForm({ note }: EditNoteFormProps) {
               isPending={isPending}
               onClearedForm={() => {
                 hideFeedbackMessage();
-                markdownFieldRef.current?.setMarkdown(currNote?.content ?? "");
+                markdownFieldRef.current?.setMarkdown(content);
               }}
             />
           </CardFooter>

@@ -1,9 +1,10 @@
-// react
-import { Suspense } from "react";
+"use client";
+
+// next
+import { useParams } from "next/navigation";
 
 // services, features, and other libraries
-import { validatePageInputs } from "@/lib/helpers";
-import { EditNotePageSchema } from "@/features/notes/schemas/editNotePage";
+import { useQuery } from "@tanstack/react-query";
 
 // components
 import NoteModal from "@/features/notes/components/note-modal";
@@ -13,29 +14,33 @@ import EditNoteForm from "@/features/notes/components/EditNoteForm";
 // assets
 import { DocumentTextIcon } from "@heroicons/react/24/outline";
 
-// Page remains the fast, static shell
-export default function Page({ params, searchParams }: PageProps<"/notes/[id]/edit">) {
-  return (
-    <Suspense fallback={<PageSkeleton />}>
-      <PageContent params={params} searchParams={searchParams} />
-    </Suspense>
-  );
-}
+// types
+import type { getNote } from "@/features/notes/db";
 
-// This new async component contains the dynamic logic
-async function PageContent({ params, searchParams }: PageProps<"/notes/[id]/edit">) {
-  // Safely validate next.js route inputs (`params` and `searchParams`) against a zod schema; return typed data or trigger a 404 on failure
+export default function Page() {
+  const { id: noteId } = useParams<{ id: string }>();
+
   const {
-    params: { id: noteId },
-  } = await validatePageInputs(EditNotePageSchema, { params, searchParams });
+    data: note,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["note", noteId],
+    queryFn: async ({ signal }): Promise<Awaited<ReturnType<typeof getNote>>> => {
+      const res = await fetch(`/api/notes/${noteId}`, { credentials: "include", signal });
+      if (!res.ok) throw new Error(res.statusText);
+      return await res.json();
+    },
+    enabled: !!noteId,
+  });
+
+  if (isError) console.error(error);
+  if (isLoading || isError || !note) return null;
 
   return (
-    <NoteModal icon={<DocumentTextIcon className="size-11 flex-none" />} browseBar={<BrowseBar kind="note-edit" />} noteId={noteId}>
-      <EditNoteForm />
+    <NoteModal icon={<DocumentTextIcon className="size-11 flex-none" />} browseBar={<BrowseBar kind="note-edit" />} noteTitle={note.title}>
+      <EditNoteForm note={note} inNoteModal />
     </NoteModal>
   );
-}
-
-function PageSkeleton() {
-  return null;
 }
