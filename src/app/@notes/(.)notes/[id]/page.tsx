@@ -1,5 +1,4 @@
 "use cache";
-cacheLife("hours");
 
 // react
 import { Suspense } from "react";
@@ -29,8 +28,8 @@ export default async function Page({ params, searchParams }: PageProps<"/notes/[
 }
 
 async function DynamicContent({ params }: PageProps<"/notes/[id]">) {
-  "use cache";
-  cacheLife("hours");
+  // "use cache";
+  // cacheLife("hours");
 
   const { id: noteId } = await params;
 
