@@ -2,7 +2,7 @@
 import { Suspense } from "react";
 
 // next
-import { connection } from "next/server";
+import { cacheLife } from "next/cache";
 
 // services, features, and other libraries
 import { validatePageInputs } from "@/lib/helpers";
@@ -18,7 +18,8 @@ import { DocumentIcon } from "@heroicons/react/24/outline";
 
 // Page remains the fast, static shell
 export default async function Page({ params, searchParams }: PageProps<"/notes/[id]">) {
-  await connection();
+  "use cache";
+  cacheLife("hours");
 
   const { id: noteId } = await params;
   return (
