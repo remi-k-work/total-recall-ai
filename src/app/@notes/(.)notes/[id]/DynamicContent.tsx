@@ -1,10 +1,10 @@
 "use client";
 
-// react
-import { use } from "react";
+// next
+import { useParams } from "next/navigation";
 
-export default function DynamicContent({ params }: PageProps<"/notes/[id]">) {
-  const { id: noteId } = use(params);
+export default function DynamicContent() {
+  const { id: noteId } = useParams<{ id: string }>();
 
   return (
     <>
