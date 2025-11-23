@@ -28,7 +28,7 @@ export default function Page() {
   } = useQuery({
     queryKey: ["note", noteId],
     queryFn: async ({ signal }): Promise<Awaited<ReturnType<typeof getNote>>> => {
-      const res = await fetch(`/api/notes/${noteId}`, { credentials: "include", signal });
+      const res = await fetch(`/api/notes/${noteId}`, { cache: "no-store", credentials: "same-origin", mode: "same-origin", signal });
       if (!res.ok) throw new Error(res.statusText);
       return await res.json();
     },
