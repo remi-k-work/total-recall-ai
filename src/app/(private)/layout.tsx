@@ -1,3 +1,6 @@
+// react
+import { Suspense } from "react";
+
 // components
 import Header from "@/components/header";
 
@@ -6,7 +9,7 @@ export default function Layout({ notes, children }: LayoutProps<"/">) {
     <>
       <Header />
       <main className="mx-4 [grid-area:main]">
-        {notes}
+        <Suspense>{notes}</Suspense>
         {children}
       </main>
     </>
