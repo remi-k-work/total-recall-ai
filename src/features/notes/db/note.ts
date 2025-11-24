@@ -33,6 +33,7 @@ export const getNotesWithPagination = async (
         id: NoteTable.id,
         title: NoteTable.title,
         contentPreview: sql<string>`substring(${NoteTable.content} from 1 for 512)`,
+        preferences: NoteTable.preferences,
         createdAt: NoteTable.createdAt,
         updatedAt: NoteTable.updatedAt,
       })
@@ -55,6 +56,7 @@ export const getMostRecentNotes = (userId: string, limit?: number) => {
       id: NoteTable.id,
       title: NoteTable.title,
       contentPreview: sql<string>`substring(${NoteTable.content} from 1 for 512)`,
+      preferences: NoteTable.preferences,
       createdAt: NoteTable.createdAt,
       updatedAt: NoteTable.updatedAt,
     })

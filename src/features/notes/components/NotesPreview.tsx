@@ -2,6 +2,7 @@
 import Link from "next/link";
 
 // components
+import { NotePreferencesStoreProvider } from "@/features/notes/stores/NotePreferencesProvider";
 import InfoLine from "@/components/form/InfoLine";
 import NotePreview from "@/features/notes/components/NotePreview";
 
@@ -17,11 +18,19 @@ export default function NotesPreview({ notes }: NotesPreviewProps) {
 
   return (
     <article className={notes.length === 1 ? "columns-1" : "columns-md gap-4"}>
-      {notes.map((note) => (
-        <Link key={note.id} href={`/notes/${note.id}`} className="block break-inside-avoid pb-4">
-          <NotePreview note={note} />
-        </Link>
-      ))}
+      {notes.map((note) => {
+        const { id: noteId, preferences } = note;
+
+        return (
+          // <Link key={noteId} href={`/notes/${noteId}`} className="block break-inside-avoid pb-4">
+          <div key={noteId} className="block break-inside-avoid pb-4">
+            <NotePreferencesStoreProvider noteId={noteId} initState={preferences ?? undefined}>
+              <NotePreview note={note} />
+            </NotePreferencesStoreProvider>
+          </div>
+          // </Link>
+        );
+      })}
     </article>
   );
 }

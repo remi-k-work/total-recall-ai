@@ -1,11 +1,14 @@
 // drizzle and db access
-import { index, pgTable, text, varchar } from "drizzle-orm/pg-core";
+import { index, jsonb, pgTable, text, varchar } from "drizzle-orm/pg-core";
 import { createdAt, id, updatedAt } from "@/drizzle/helpers";
 import { relations } from "drizzle-orm";
 
 // all table definitions (their schemas)
 import { UserTable } from "./auth";
 import { NoteChunkTable } from "./noteChunk";
+
+// types
+import type { NotePreferences } from "@/features/notes/stores/notePreferences";
 
 export const NoteTable = pgTable(
   "note",
@@ -16,6 +19,7 @@ export const NoteTable = pgTable(
       .references(() => UserTable.id, { onDelete: "cascade" }),
     title: varchar().notNull(),
     content: text().notNull(),
+    preferences: jsonb().$type<NotePreferences>(),
     createdAt,
     updatedAt,
   },
