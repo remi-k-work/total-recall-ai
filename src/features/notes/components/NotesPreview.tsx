@@ -1,5 +1,5 @@
-// next
-import Link from "next/link";
+// services, features, and other libraries
+import { cn } from "@/lib/utils";
 
 // components
 import { NotePreferencesStoreProvider } from "@/features/notes/stores/NotePreferencesProvider";
@@ -17,18 +17,14 @@ export default function NotesPreview({ notes }: NotesPreviewProps) {
   if (notes.length === 0) return <InfoLine message="No notes have been found!" className="justify-center px-6 py-9 text-xl" />;
 
   return (
-    <article className={notes.length === 1 ? "columns-1" : "columns-md gap-4"}>
+    <article className={cn("select-none", notes.length === 1 ? "columns-1" : "columns-md gap-4")}>
       {notes.map((note) => {
         const { id: noteId, preferences } = note;
 
         return (
-          // <Link key={noteId} href={`/notes/${noteId}`} className="block break-inside-avoid pb-4">
-          <div key={noteId} className="block break-inside-avoid pb-4">
-            <NotePreferencesStoreProvider noteId={noteId} initState={preferences ?? undefined}>
-              <NotePreview note={note} />
-            </NotePreferencesStoreProvider>
-          </div>
-          // </Link>
+          <NotePreferencesStoreProvider key={noteId} noteId={noteId} initState={preferences ?? undefined}>
+            <NotePreview note={note} />
+          </NotePreferencesStoreProvider>
         );
       })}
     </article>

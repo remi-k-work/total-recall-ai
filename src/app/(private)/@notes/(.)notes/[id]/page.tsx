@@ -7,6 +7,7 @@ import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 // components
+import { NotePreferencesStoreProvider } from "@/features/notes/stores/NotePreferencesProvider";
 import NoteModal from "@/features/notes/components/note-modal";
 import BrowseBar from "@/features/notes/components/browse-bar";
 import NoteDetails from "@/features/notes/components/NoteDetails";
@@ -40,7 +41,9 @@ export default function Page() {
 
   return (
     <NoteModal icon={<DocumentIcon className="size-11 flex-none" />} browseBar={<BrowseBar kind="note-details" />} noteTitle={note.title}>
-      <NoteDetails note={note} inNoteModal />
+      <NotePreferencesStoreProvider noteId={noteId} initState={note.preferences ?? undefined}>
+        <NoteDetails note={note} inNoteModal />
+      </NotePreferencesStoreProvider>
     </NoteModal>
   );
 }

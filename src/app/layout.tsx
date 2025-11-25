@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   other: { google: "notranslate" },
 };
 
-export default function Layout({ notes, children }: LayoutProps<"/">) {
+export default function Layout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" translate="no" suppressHydrationWarning>
       <body

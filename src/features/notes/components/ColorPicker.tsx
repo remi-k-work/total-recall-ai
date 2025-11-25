@@ -8,5 +8,9 @@ export default function ColorPicker() {
   const color = useNotePreferencesStore((state) => state.color);
   const changedColor = useNotePreferencesStore((state) => state.changedColor);
 
-  return <input type="color" value={color || "#ffffff"} onChange={(ev) => changedColor(ev.target.value)} />;
+  return (
+    <section className="bg-background rounded-lg p-3">
+      <input name="colorPicker" type="color" value={color} onChange={(ev) => changedColor(ev.target.value)} />
+    </section>
+  );
 }

@@ -13,6 +13,7 @@ import { NoteDetailsPageSchema } from "@/features/notes/schemas/noteDetailsPage"
 import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
 // components
+import { NotePreferencesStoreProvider } from "@/features/notes/stores/NotePreferencesProvider";
 import PageHeader from "@/components/PageHeader";
 import BrowseBar from "@/features/notes/components/browse-bar";
 import NoteDetails from "@/features/notes/components/NoteDetails";
@@ -59,7 +60,9 @@ async function PageContent({ params, searchParams }: PageProps<"/notes/[id]">) {
     <>
       <PageHeader title="Note Details" description="Below are all your note details" />
       <BrowseBar kind="note-details" />
-      <NoteDetails note={note} />
+      <NotePreferencesStoreProvider noteId={noteId} initState={note.preferences ?? undefined}>
+        <NoteDetails note={note} />
+      </NotePreferencesStoreProvider>
     </>
   );
 }
