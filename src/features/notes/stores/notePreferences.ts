@@ -5,8 +5,8 @@ import { default as notePreferencesStorage } from "./inMemoryStorage";
 
 // types
 export interface NotePreferences {
-  color: string;
-  position: { x: number; y: number };
+  color?: string;
+  position?: { x: number; y: number };
   isPinned: boolean;
 }
 
