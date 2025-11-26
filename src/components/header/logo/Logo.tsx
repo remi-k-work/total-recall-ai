@@ -10,6 +10,7 @@ import logoD from "@/assets/logo.png";
 import logoL from "@/assets/logo.webp";
 
 export default function Logo() {
+  // Determine whether the current theme is dark or light
   const { resolvedTheme } = useTheme();
   const isDarkMode = resolvedTheme === "dark";
 

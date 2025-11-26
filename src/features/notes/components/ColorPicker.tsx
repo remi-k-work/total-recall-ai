@@ -7,8 +7,10 @@ import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { useNotePreferencesStore } from "@/features/notes/stores/NotePreferencesProvider";
 import Color from "colorjs.io";
+import { useDebouncedCallback } from "use-debounce";
 
 export default function ColorPicker() {
+  // Determine whether the current theme is dark or light
   const { resolvedTheme } = useTheme();
 
   // Retrieve the necessary state and actions from the note preferences store
@@ -27,9 +29,21 @@ export default function ColorPicker() {
     });
   }, [resolvedTheme]);
 
+  // Use the debounced callback to initiate the relevant actions
+  const handleChangedColor = useDebouncedCallback((newNoteColor: string) => {
+    // User has changed the note color
+    console.log("handleChangedColor", newNoteColor);
+    changedColor(newNoteColor);
+  }, 1000);
+
   return (
     <section className="bg-background p-4">
-      <input name="colorPicker" type="color" value={curNoteColor ?? defNoteColor} onChange={(ev) => changedColor(ev.target.value)} />
+      <input
+        name="colorPicker"
+        type="color"
+        defaultValue={curNoteColor ?? defNoteColor}
+        onChange={({ target: { value: newNoteColor } }) => handleChangedColor(newNoteColor)}
+      />
     </section>
   );
 }

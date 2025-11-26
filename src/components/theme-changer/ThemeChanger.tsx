@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/custom/button";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 
 export default function ThemeChanger() {
+  // Determine whether the current theme is dark or light
   const { resolvedTheme, setTheme } = useTheme();
   const isDarkMode = resolvedTheme === "dark";
 

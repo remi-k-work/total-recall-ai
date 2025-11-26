@@ -43,6 +43,7 @@ interface MarkdownEditorProps extends MDXEditorProps {
 }
 
 export default function MarkdownEditor({ ref, className, ...props }: MarkdownEditorProps) {
+  // Determine whether the current theme is dark or light
   const { resolvedTheme } = useTheme();
   const isDarkMode = resolvedTheme === "dark";
 

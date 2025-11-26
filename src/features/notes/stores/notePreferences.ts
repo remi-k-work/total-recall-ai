@@ -1,7 +1,8 @@
 // services, features, and other libraries
 import { createJSONStorage, persist } from "zustand/middleware";
 import { createStore } from "zustand/vanilla";
-import { default as notePreferencesStorage } from "./inMemoryStorage";
+// import { default as notePreferencesStorage } from "./inMemoryStorage";
+import { createNotePreferencesStorage } from "./notePreferencesStorage";
 
 // types
 export interface NotePreferences {
@@ -52,7 +53,7 @@ export const createNotePreferencesStore = (noteId: string, initState?: NotePrefe
       {
         name: `notePreferences-${noteId}`,
         version: 1,
-        storage: createJSONStorage(() => notePreferencesStorage()),
+        storage: createJSONStorage(() => createNotePreferencesStorage(noteId)),
 
         // Only persist the actual data
         partialize: ({ color, position, isPinned }) => ({ color, position, isPinned }),
