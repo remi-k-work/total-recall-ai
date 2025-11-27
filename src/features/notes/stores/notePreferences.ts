@@ -1,21 +1,27 @@
 // services, features, and other libraries
 import { createJSONStorage, persist } from "zustand/middleware";
 import { createStore } from "zustand/vanilla";
-// import { default as notePreferencesStorage } from "./inMemoryStorage";
 import { createNotePreferencesStorage } from "./notePreferencesStorage";
 
 // types
+// The core data shape
 export interface NotePreferences {
   color?: string;
   position?: { x: number; y: number };
   isPinned: boolean;
 }
 
-export interface NotePreferencesState extends NotePreferences {
+// The db shape (matches what drizzle expects)
+export interface NotePreferencesStored {
+  state: NotePreferences;
+  version: number;
+}
+
+interface NotePreferencesState extends NotePreferences {
   _hasHydrated: boolean;
 }
 
-export interface NotePreferencesActions {
+interface NotePreferencesActions {
   _setHasHydrated: () => void;
 
   changedColor: (color: string) => void;
@@ -30,12 +36,12 @@ export type NotePreferencesStoreApi = ReturnType<typeof createNotePreferencesSto
 import { INIT_NOTE_PREFERENCES } from "@/features/notes/constants/notePreferences";
 
 export const createNotePreferencesStore = (noteId: string, initState?: NotePreferences) => {
-  const DEFAULT_STATE: NotePreferencesState = { _hasHydrated: false, ...INIT_NOTE_PREFERENCES };
-
   return createStore<NotePreferencesStore>()(
     persist(
       (set) => ({
-        ...DEFAULT_STATE,
+        _hasHydrated: false,
+
+        ...INIT_NOTE_PREFERENCES,
         ...initState,
 
         // The store has been hydrated
@@ -59,15 +65,15 @@ export const createNotePreferencesStore = (noteId: string, initState?: NotePrefe
         partialize: ({ color, position, isPinned }) => ({ color, position, isPinned }),
 
         // Safely merge the persisted state with the initial state
-        merge: (persistedState, currentState) => {
-          const typedState = (persistedState as Partial<NotePreferencesState>) || {};
+        merge: (persisted, current) => {
+          const incoming = (persisted as Partial<NotePreferencesState>) || {};
           return {
-            ...currentState,
+            ...current,
 
             // Check for race conditions, and use the current state if the persisted state is invalid
-            color: typedState.color ? typedState.color : currentState.color,
-            position: typedState.position ? typedState.position : currentState.position,
-            isPinned: typedState.isPinned ? typedState.isPinned : currentState.isPinned,
+            color: incoming.color ?? current.color,
+            position: incoming.position ?? current.position,
+            isPinned: incoming.isPinned ?? current.isPinned,
           };
         },
 

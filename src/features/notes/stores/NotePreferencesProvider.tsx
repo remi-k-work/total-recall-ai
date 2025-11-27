@@ -9,11 +9,11 @@ import { createNotePreferencesStore } from "./notePreferences";
 
 // types
 import type { ReactNode } from "react";
-import type { NotePreferences, NotePreferencesStore, NotePreferencesStoreApi } from "./notePreferences";
+import type { NotePreferencesStore, NotePreferencesStoreApi, NotePreferencesStored } from "./notePreferences";
 
 interface NotePreferencesProviderProps {
   noteId: string;
-  initState?: NotePreferences;
+  initState?: NotePreferencesStored;
   children: ReactNode;
 }
 
@@ -21,7 +21,7 @@ const NotePreferencesStoreContext = createContext<NotePreferencesStoreApi | unde
 
 export const NotePreferencesStoreProvider = ({ noteId, initState, children }: NotePreferencesProviderProps) => {
   const storeRef = useRef<NotePreferencesStoreApi>(undefined);
-  if (!storeRef.current) storeRef.current = createNotePreferencesStore(noteId, initState);
+  if (!storeRef.current) storeRef.current = createNotePreferencesStore(noteId, initState?.state);
 
   // Hydration and asynchronous storages - wait until the store has been hydrated before showing anything
   const _hasHydrated = useStore(storeRef.current, (state) => state._hasHydrated);
