@@ -28,7 +28,7 @@ export default function NotePreview({ note: { id: noteId, title, contentPreview,
   const color = useNotePreferencesStore((state) => state.color);
 
   return (
-    <Card className="mb-4 break-inside-avoid rounded-[255px_15px_225px_15px_/_15px_225px_15px_255px]" style={color ? { backgroundColor: color } : undefined}>
+    <Card className="mb-4 break-inside-avoid rounded-[255px_15px_225px_15px/15px_225px_15px_255px]" style={color ? { backgroundColor: color } : undefined}>
       <CardHeader>
         <CardTitle>
           <Link href={`/notes/${noteId}`} className="link text-3xl leading-none font-normal normal-case">

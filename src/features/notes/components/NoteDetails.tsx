@@ -26,7 +26,7 @@ export default function NoteDetails({ note: { title, content, createdAt, updated
   const color = useNotePreferencesStore((state) => state.color);
 
   return (
-    <Card className="max-w-2xl rounded-[255px_15px_225px_15px_/_15px_225px_15px_255px]" style={color ? { backgroundColor: color } : undefined}>
+    <Card className="max-w-2xl rounded-[255px_15px_225px_15px/15px_225px_15px_255px]" style={color ? { backgroundColor: color } : undefined}>
       {!inNoteModal && (
         <CardHeader>
           <CardTitle className="text-muted-foreground normal-case">{title}</CardTitle>

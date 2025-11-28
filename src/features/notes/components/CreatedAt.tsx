@@ -13,7 +13,7 @@ interface CreatedAtProps {
 
 export default function CreatedAt({ createdAt }: CreatedAtProps) {
   return (
-    <section className="bg-background rounded-[255px_15px_225px_15px_/_15px_225px_15px_255px] p-4">
+    <section className="bg-background rounded-[255px_15px_225px_15px/15px_225px_15px_255px] p-4">
       <div className="flex items-center justify-center gap-2 uppercase">
         <CalendarIcon className="size-9" />
         Created At

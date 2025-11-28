@@ -7,8 +7,8 @@ import { deleteNotePreferences, getNotePreferences, updateNotePreferences } from
 
 // services, features, and other libraries
 import { validateRouteInputs } from "@/lib/helpers";
-import { auth } from "@/services/better-auth/auth";
 import { NotePreferencesRouteSchema } from "@/features/notes/schemas/noteDetailsPage";
+import { auth } from "@/services/better-auth/auth";
 
 // types
 import type { NextRequest } from "next/server";
@@ -20,15 +20,11 @@ export async function GET(_req: NextRequest, ctx: RouteContext<"/api/notes/[id]/
   } = validateRouteInputs(NotePreferencesRouteSchema, { params: await ctx.params, searchParams: _req.nextUrl.searchParams });
 
   // Access the user session data from the server side
-  // const session = await auth.api.getSession({ headers: _req.headers });
-  // if (!session) {
-  //   console.log("session not found");
-  //   unauthorized();
-  // }
-  // const {
-  //   user: { id: userId },
-  // } = session;
-  const userId = "yLWyVGaBlCa7v27qfYk5DyyYiZqNXxqP";
+  const session = await auth.api.getSession({ headers: _req.headers });
+  if (!session) unauthorized();
+  const {
+    user: { id: userId },
+  } = session;
 
   // Get the preferences of a note for a user
   const preferences = await getNotePreferences(noteId, userId);
@@ -46,15 +42,11 @@ export async function POST(_req: NextRequest, ctx: RouteContext<"/api/notes/[id]
   } = validateRouteInputs(NotePreferencesRouteSchema, { params: await ctx.params, searchParams: _req.nextUrl.searchParams });
 
   // Access the user session data from the server side
-  // const session = await auth.api.getSession({ headers: _req.headers });
-  // if (!session) {
-  //   console.log("session not found");
-  //   unauthorized();
-  // }
-  // const {
-  //   user: { id: userId },
-  // } = session;
-  const userId = "yLWyVGaBlCa7v27qfYk5DyyYiZqNXxqP";
+  const session = await auth.api.getSession({ headers: _req.headers });
+  if (!session) unauthorized();
+  const {
+    user: { id: userId },
+  } = session;
 
   // Update the preferences of a note for a user
   await updateNotePreferences(noteId, userId, await _req.json());
@@ -69,15 +61,11 @@ export async function DELETE(_req: NextRequest, ctx: RouteContext<"/api/notes/[i
   } = validateRouteInputs(NotePreferencesRouteSchema, { params: await ctx.params, searchParams: _req.nextUrl.searchParams });
 
   // Access the user session data from the server side
-  // const session = await auth.api.getSession({ headers: _req.headers });
-  // if (!session) {
-  //   console.log("session not found");
-  //   unauthorized();
-  // }
-  // const {
-  //   user: { id: userId },
-  // } = session;
-  const userId = "yLWyVGaBlCa7v27qfYk5DyyYiZqNXxqP";
+  const session = await auth.api.getSession({ headers: _req.headers });
+  if (!session) unauthorized();
+  const {
+    user: { id: userId },
+  } = session;
 
   // Delete the preferences of a note for a user
   await deleteNotePreferences(noteId, userId);

@@ -32,7 +32,6 @@ export default function ColorPicker() {
   // Use the debounced callback to initiate the relevant actions
   const handleChangedColor = useDebouncedCallback((newNoteColor: string) => {
     // User has changed the note color
-    console.log("handleChangedColor", newNoteColor);
     changedColor(newNoteColor);
   }, 1000);
 
