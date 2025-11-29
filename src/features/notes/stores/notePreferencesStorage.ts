@@ -17,7 +17,7 @@ export const createNotePreferencesStorage = (noteId: string): StateStorage => {
 
   return {
     getItem: async (): Promise<string | null> => {
-      const res = await fetch(NOTES_API, { cache: "no-store", credentials: "same-origin", mode: "same-origin" });
+      const res = await fetch(NOTES_API, { cache: "no-store", credentials: "include" });
       if (!res.ok) throw new Error(res.statusText);
       return (await res.text()) ?? null;
     },
@@ -28,19 +28,13 @@ export const createNotePreferencesStorage = (noteId: string): StateStorage => {
         headers: { "Content-Type": "application/json" },
         body: value,
         cache: "no-store",
-        credentials: "same-origin",
-        mode: "same-origin",
+        credentials: "include",
       });
       if (!res.ok) throw new Error(res.statusText);
     },
 
     removeItem: async (): Promise<void> => {
-      const res = await fetch(NOTES_API, {
-        method: "DELETE",
-        cache: "no-store",
-        credentials: "same-origin",
-        mode: "same-origin",
-      });
+      const res = await fetch(NOTES_API, { method: "DELETE", cache: "no-store", credentials: "include" });
       if (!res.ok) throw new Error(res.statusText);
     },
   };

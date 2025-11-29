@@ -84,7 +84,8 @@ export const getNotePreferences = (id: string, userId: string) =>
 export const updateNotePreferences = (id: string, userId: string, preferences: NotePreferencesStored, tx: DbOrTx = db) =>
   tx
     .update(NoteTable)
-    .set({ preferences })
+    // Silently update note preferences and do not consider it a meaningful note update
+    .set({ preferences, updatedAt: NoteTable.updatedAt })
     .where(and(eq(NoteTable.id, id), eq(NoteTable.userId, userId)));
 
 // Delete the preferences of a note for a user (supports normal db or transaction)

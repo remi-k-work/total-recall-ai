@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // next
 import { notFound } from "next/navigation";
 import { createServerValidate } from "@tanstack/react-form-nextjs";
@@ -67,6 +69,32 @@ export function getInitialsFromName(name: string) {
 // Add a delay for a certain time in milliseconds
 export async function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+// Deep equality helper function to compare objects
+export function isDeepEqual(a: any, b: any) {
+  // Fast path: referential and primitive equality
+  if (a === b) return true;
+
+  // Handle null and non-objects
+  if (!a || !b || typeof a !== "object" || typeof b !== "object") return false;
+
+  // Plain objects (including class instances)
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+
+  // Quick length check
+  if (keysA.length !== keysB.length) return false;
+
+  // Avoid repeated `keysB.includes()` calls → create a Set for O(1) lookups
+  const keysBSet = new Set(keysB);
+
+  for (const key of keysA) {
+    if (!keysBSet.has(key)) return false;
+    if (!isDeepEqual(a[key], b[key])) return false;
+  }
+
+  return true;
 }
 
 // Generate a random integer between min and max (inclusive)

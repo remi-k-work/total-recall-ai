@@ -18,7 +18,7 @@ export default function UpdatedAt({ updatedAt }: UpdatedAtProps) {
         <CalendarIcon className="size-9" />
         Updated At
       </div>
-      <p className="text-muted-foreground text-center">{format(updatedAt, "MMMM d, yyyy")}</p>
+      <p className="text-muted-foreground text-center">{format(updatedAt, "MMMM d, yyyy, hh:mm a")}</p>
     </section>
   );
 }

@@ -8,7 +8,7 @@ import { getNote, getNoteTitle } from "@/features/notes/db";
 // services, features, and other libraries
 import { validateRouteInputs } from "@/lib/helpers";
 import { NoteDetailsRouteSchema } from "@/features/notes/schemas/noteDetailsPage";
-import { auth } from "@/services/better-auth/auth";
+import { getServerSession } from "@/features/auth/lib/helpers";
 
 // types
 import type { NextRequest } from "next/server";
@@ -21,7 +21,7 @@ export async function GET(_req: NextRequest, ctx: RouteContext<"/api/notes/[id]"
   } = validateRouteInputs(NoteDetailsRouteSchema, { params: await ctx.params, searchParams: _req.nextUrl.searchParams });
 
   // Access the user session data from the server side
-  const session = await auth.api.getSession({ headers: _req.headers });
+  const session = await getServerSession();
   if (!session) unauthorized();
   const {
     user: { id: userId },
