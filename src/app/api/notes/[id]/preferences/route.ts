@@ -1,6 +1,6 @@
 // next
 import { NextResponse } from "next/server";
-import { notFound, unauthorized } from "next/navigation";
+import { notFound } from "next/navigation";
 
 // drizzle and db access
 import { deleteNotePreferences, getNotePreferences, updateNotePreferences } from "@/features/notes/db";
@@ -8,7 +8,7 @@ import { deleteNotePreferences, getNotePreferences, updateNotePreferences } from
 // services, features, and other libraries
 import { isDeepEqual, validateRouteInputs } from "@/lib/helpers";
 import { NotePreferencesRouteSchema } from "@/features/notes/schemas/noteDetailsPage";
-import { getServerSession } from "@/features/auth/lib/helpers";
+import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
 // types
 import type { NextRequest } from "next/server";
@@ -19,12 +19,13 @@ export async function GET(_req: NextRequest, ctx: RouteContext<"/api/notes/[id]/
     params: { id: noteId },
   } = validateRouteInputs(NotePreferencesRouteSchema, { params: await ctx.params, searchParams: _req.nextUrl.searchParams });
 
+  // Make sure the current user is authenticated (the check runs on the server side)
+  await makeSureUserIsAuthenticated();
+
   // Access the user session data from the server side
-  const session = await getServerSession();
-  if (!session) unauthorized();
   const {
     user: { id: userId },
-  } = session;
+  } = (await getUserSessionData())!;
 
   // Get the preferences of a note for a user
   const preferences = await getNotePreferences(noteId, userId);
@@ -41,12 +42,13 @@ export async function POST(_req: NextRequest, ctx: RouteContext<"/api/notes/[id]
     params: { id: noteId },
   } = validateRouteInputs(NotePreferencesRouteSchema, { params: await ctx.params, searchParams: _req.nextUrl.searchParams });
 
+  // Make sure the current user is authenticated (the check runs on the server side)
+  await makeSureUserIsAuthenticated();
+
   // Access the user session data from the server side
-  const session = await getServerSession();
-  if (!session) unauthorized();
   const {
     user: { id: userId },
-  } = session;
+  } = (await getUserSessionData())!;
 
   // Zustand's persist middleware can be aggressive, so reject identical updates to prevent unnecessary writes
   const incomingPreferences = await _req.json();
@@ -65,12 +67,13 @@ export async function DELETE(_req: NextRequest, ctx: RouteContext<"/api/notes/[i
     params: { id: noteId },
   } = validateRouteInputs(NotePreferencesRouteSchema, { params: await ctx.params, searchParams: _req.nextUrl.searchParams });
 
+  // Make sure the current user is authenticated (the check runs on the server side)
+  await makeSureUserIsAuthenticated();
+
   // Access the user session data from the server side
-  const session = await getServerSession();
-  if (!session) unauthorized();
   const {
     user: { id: userId },
-  } = session;
+  } = (await getUserSessionData())!;
 
   // Delete the preferences of a note for a user
   await deleteNotePreferences(noteId, userId);

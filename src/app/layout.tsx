@@ -8,7 +8,6 @@ import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "next-themes";
 import DemoModeProvider from "@/contexts/DemoMode";
 import ConfirmModalProvider from "@/contexts/ConfirmModal";
-import TanStackQueryProvider from "@/contexts/TanStackQuery";
 import { Toaster } from "@/components/ui/custom/sonner";
 
 // assets
@@ -40,11 +39,9 @@ export default function Layout({ children }: LayoutProps<"/">) {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <DemoModeProvider>
             <ConfirmModalProvider>
-              <TanStackQueryProvider>
-                {children}
-                <Toaster richColors />
-                <Analytics debug={false} />
-              </TanStackQueryProvider>
+              {children}
+              <Toaster richColors />
+              <Analytics debug={false} />
             </ConfirmModalProvider>
           </DemoModeProvider>
         </ThemeProvider>
