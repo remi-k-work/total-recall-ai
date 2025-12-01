@@ -29,7 +29,7 @@ export default function Page() {
 // This new async component contains the dynamic logic
 async function PageContent() {
   // Make sure the current user is authenticated (the check runs on the server side)
-  // await makeSureUserIsAuthenticated();
+  await makeSureUserIsAuthenticated();
 
   return (
     <>

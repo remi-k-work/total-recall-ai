@@ -1,10 +1,16 @@
-"use client";
+// react
+import { Suspense } from "react";
 
 // next
-import { useParams } from "next/navigation";
+import { notFound } from "next/navigation";
+
+// drizzle and db access
+import { getNote } from "@/features/notes/db";
 
 // services, features, and other libraries
-import { useQuery } from "@tanstack/react-query";
+import { validatePageInputs } from "@/lib/helpers";
+import { NoteDetailsPageSchema } from "@/features/notes/schemas/noteDetailsPage";
+import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
 // components
 import { NotePreferencesStoreProvider } from "@/features/notes/stores/NotePreferencesProvider";
@@ -15,35 +21,45 @@ import NoteDetails from "@/features/notes/components/NoteDetails";
 // assets
 import { DocumentIcon } from "@heroicons/react/24/outline";
 
-// types
-import type { getNote } from "@/features/notes/db";
+// Page remains the fast, static shell
+export default function Page({ params, searchParams }: PageProps<"/notes/[id]">) {
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <PageContent params={params} searchParams={searchParams} />
+    </Suspense>
+  );
+}
 
-export default function Page() {
-  const { id: noteId } = useParams<{ id: string }>();
-
+// This new async component contains the dynamic logic
+async function PageContent({ params, searchParams }: PageProps<"/notes/[id]">) {
+  // Safely validate next.js route inputs (`params` and `searchParams`) against a zod schema; return typed data or trigger a 404 on failure
   const {
-    data: note,
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ["note", noteId],
-    queryFn: async ({ signal }): Promise<Awaited<ReturnType<typeof getNote>>> => {
-      const res = await fetch(`/api/notes/${noteId}`, { cache: "no-store", credentials: "include", signal });
-      if (!res.ok) throw new Error(res.statusText);
-      return await res.json();
-    },
-    enabled: !!noteId,
-  });
+    params: { id: noteId },
+  } = await validatePageInputs(NoteDetailsPageSchema, { params, searchParams });
 
-  if (isError) console.error(error);
-  if (isLoading || isError || !note) return null;
+  // Make sure the current user is authenticated (the check runs on the server side)
+  await makeSureUserIsAuthenticated();
+
+  // Access the user session data from the server side
+  const {
+    user: { id: userId },
+  } = (await getUserSessionData())!;
+
+  // Get a single note for a user
+  const note = await getNote(noteId, userId);
+
+  // If the note is not found, return a 404
+  if (!note) notFound();
 
   return (
     <NoteModal icon={<DocumentIcon className="size-11 flex-none" />} browseBar={<BrowseBar kind="note-details" />} noteTitle={note.title}>
       <NotePreferencesStoreProvider noteId={noteId} initState={note.preferences ?? undefined}>
-        <NoteDetails note={note} inNoteModal />
+        <NoteDetails note={note} />
       </NotePreferencesStoreProvider>
     </NoteModal>
   );
+}
+
+function PageSkeleton() {
+  return null;
 }
