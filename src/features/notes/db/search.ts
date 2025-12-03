@@ -25,6 +25,7 @@ export const searchNoteChunksForUser = async (userId: string, question: string, 
       and(
         // Only return chunks owned by the current user
         eq(NoteChunkTable.userId, userId),
+
         // Apply a hard floor — discard "obviously irrelevant" chunks
         gt(similarity, baseMinSimilarity),
       ),

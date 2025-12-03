@@ -6,6 +6,7 @@ import { relations } from "drizzle-orm";
 // all table definitions (their schemas)
 import { UserTable } from "./auth";
 import { NoteChunkTable } from "./noteChunk";
+import { NoteToNoteTagTable } from "./noteToNoteTag";
 
 // types
 import type { NotePreferencesStored } from "@/features/notes/stores/notePreferences";
@@ -17,7 +18,7 @@ export const NoteTable = pgTable(
     userId: text()
       .notNull()
       .references(() => UserTable.id, { onDelete: "cascade" }),
-    title: varchar().notNull(),
+    title: varchar({ length: 50 }).notNull(),
     content: text().notNull(),
     preferences: jsonb().$type<NotePreferencesStored>(),
     createdAt,
@@ -29,4 +30,5 @@ export const NoteTable = pgTable(
 export const noteRelations = relations(NoteTable, ({ one, many }) => ({
   user: one(UserTable, { fields: [NoteTable.userId], references: [UserTable.id] }),
   noteChunks: many(NoteChunkTable),
+  noteToNoteTag: many(NoteToNoteTagTable),
 }));
