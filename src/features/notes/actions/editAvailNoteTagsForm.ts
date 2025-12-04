@@ -36,8 +36,8 @@ export default async function editAvailNoteTags(_prevState: unknown, formData: F
     // if (role === "demo") return { ...initialFormState, actionStatus: "demoMode" };
 
     // Validate the form on the server side and extract needed data
-    const [{ name }] = await SERVER_VALIDATE(formData);
-    console.log(name);
+    const { availNoteTags } = await SERVER_VALIDATE(formData);
+    console.log(availNoteTags);
   } catch (error) {
     // Validation has failed
     if (error instanceof ServerValidateError) return { ...error.formState, actionStatus: "invalid" };

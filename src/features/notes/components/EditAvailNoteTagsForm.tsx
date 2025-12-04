@@ -3,7 +3,7 @@
 "use client";
 
 // react
-import { useActionState, useCallback, useEffect, useRef } from "react";
+import { useActionState, useEffect, useRef } from "react";
 
 // server actions and mutations
 import editAvailNoteTags from "@/features/notes/actions/editAvailNoteTagsForm";
@@ -15,12 +15,12 @@ import { EditAvailNoteTagsFormSchema } from "@/features/notes/schemas/editAvailN
 import useEditAvailNoteTagsFormFeedback from "@/features/notes/hooks/feedbacks/useEditAvailNoteTagsForm";
 
 // components
-import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
+import { Button } from "@/components/ui/custom/button";
 import InfoLine from "@/components/form/InfoLine";
-import AudioRecorder from "@/components/AudioRecorder";
 
 // assets
-import { DocumentTextIcon } from "@heroicons/react/24/outline";
+import { DocumentTextIcon, XCircleIcon } from "@heroicons/react/24/outline";
 
 // types
 import type { getAllNoteTags } from "@/features/notes/db";
@@ -38,7 +38,7 @@ export default function EditAvialNoteTagsForm({ noteTags, inNoteModal = false }:
   const [formState, formAction, isPending] = useActionState(editAvailNoteTags, INITIAL_FORM_STATE);
   const { AppField, AppForm, FormSubmit, handleSubmit, reset, store } = useAppForm({
     ...FORM_OPTIONS,
-    defaultValues: { ...FORM_OPTIONS.defaultValues, ...noteTags.map(({ name }) => ({ name })) },
+    defaultValues: { ...FORM_OPTIONS.defaultValues, availNoteTags: noteTags.map(({ name }) => ({ name })) },
     transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
   });
 
@@ -65,45 +65,50 @@ export default function EditAvialNoteTagsForm({ noteTags, inNoteModal = false }:
           hasPressedSubmitRef.current = true;
         }}
       >
-        <Card className="max-w-4xl">
+        <Card>
           {!inNoteModal && (
             <CardHeader>
-              <CardTitle>Edit Note</CardTitle>
-              <CardDescription>To edit an existing note</CardDescription>
+              <CardTitle>Edit Available Note Tags</CardTitle>
+              <CardDescription>To edit all available note tags</CardDescription>
             </CardHeader>
           )}
           <CardContent>
             <AppField
-              name="title"
-              validators={{ onChange: EditNoteFormSchema.shape.title }}
-              children={(field) => <field.TextField label="Title" size={40} maxLength={51} spellCheck autoComplete="off" placeholder="e.g. Quick Reminder" />}
-            />
-            <AppField
-              name="markdown"
+              name="availNoteTags"
+              mode="array"
               children={(field) => (
-                <field.MarkdownField
-                  ref={markdownFieldRef}
-                  label="Content"
-                  markdown=""
-                  spellCheck={false}
-                  placeholder="e.g. Buy cat food. Call mom. Pay electricity bill. Remember to bring umbrella tomorrow in case it rains."
-                  onChange={(markdown) => field.form.setFieldValue("content", markdown)}
-                />
-              )}
-            />
-            <AppField
-              name="content"
-              validators={{ onChange: EditNoteFormSchema.shape.content }}
-              children={(field) => (
-                <field.TextAreaField
-                  cols={50}
-                  rows={8}
-                  maxLength={2049}
-                  spellCheck={false}
-                  autoComplete="off"
-                  placeholder="e.g. Buy cat food. Call mom. Pay electricity bill. Remember to bring umbrella tomorrow in case it rains."
-                  hidden
-                />
+                <>
+                  {field.state.value.map((_, i) => (
+                    <AppField
+                      key={i}
+                      name={`availNoteTags[${i}].name`}
+                      validators={{ onChange: EditAvailNoteTagsFormSchema.shape.availNoteTags.unwrap().shape.name }}
+                      children={(subField) => (
+                        <div className="flex items-center gap-2">
+                          <div>
+                            <subField.TextField
+                              label={`Name for Note Tag #${String(i + 1).padStart(2, "0")}`}
+                              size={40}
+                              maxLength={51}
+                              spellCheck={false}
+                              autoComplete="off"
+                              placeholder="e.g. 💡Research, 📃Docs & Tutorials, 🧠Brainstorming"
+                            />
+                          </div>
+                          {field.state.value.length > 1 && (
+                            <Button type="button" variant="destructive" onClick={() => field.removeValue(i)}>
+                              <XCircleIcon className="size-9" />
+                            </Button>
+                          )}
+                        </div>
+                      )}
+                    />
+                  ))}
+                  <Button type="button" variant="secondary" onClick={() => field.pushValue({ name: "" })}>
+                    <XCircleIcon className="size-9" />
+                    Add Note Tag
+                  </Button>
+                </>
               )}
             />
           </CardContent>
@@ -111,12 +116,9 @@ export default function EditAvialNoteTagsForm({ noteTags, inNoteModal = false }:
             <InfoLine message={feedbackMessage} />
             <FormSubmit
               submitIcon={<DocumentTextIcon className="size-9" />}
-              submitText="Update Note"
+              submitText="Update Available Note Tags"
               isPending={isPending}
-              onClearedForm={() => {
-                hideFeedbackMessage();
-                markdownFieldRef.current?.setMarkdown(content);
-              }}
+              onClearedForm={hideFeedbackMessage}
             />
           </CardFooter>
         </Card>

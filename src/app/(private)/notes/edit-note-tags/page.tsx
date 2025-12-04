@@ -9,7 +9,7 @@ import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth
 
 // components
 import PageHeader from "@/components/PageHeader";
-import EditNoteForm from "@/features/notes/components/EditNoteForm";
+import EditAvialNoteTagsForm from "@/features/notes/components/EditAvailNoteTagsForm";
 
 // types
 import type { Metadata } from "next";
@@ -44,7 +44,7 @@ async function PageContent() {
   return (
     <>
       <PageHeader title="Edit Available Note Tags" description="Use the form below to edit all your available note tags" />
-      <EditNoteForm note={note} />
+      <EditAvialNoteTagsForm noteTags={noteTags} />
     </>
   );
 }

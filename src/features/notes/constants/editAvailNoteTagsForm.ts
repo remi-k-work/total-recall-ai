@@ -8,7 +8,7 @@ import { createServerValidateWithTransforms } from "@/lib/helpers";
 import type { EditAvailNoteTagsFormActionResult } from "@/features/notes/actions/editAvailNoteTagsForm";
 
 // constants
-const DEFAULT_VALUES: z.input<typeof EditAvailNoteTagsFormSchema> = [{ name: "" }];
+const DEFAULT_VALUES: z.input<typeof EditAvailNoteTagsFormSchema> = { availNoteTags: [{ name: "" }] };
 
 export const FORM_OPTIONS = formOptions({ defaultValues: DEFAULT_VALUES });
 export const INITIAL_FORM_STATE: EditAvailNoteTagsFormActionResult = { ...initialFormState, actionStatus: "idle" };
