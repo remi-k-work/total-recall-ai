@@ -33,7 +33,7 @@ interface EditAvailNoteTagsFormProps {
 // constants
 import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/notes/constants/editAvailNoteTagsForm";
 
-export default function EditAvialNoteTagsForm({ noteTags, inNoteModal = false }: EditAvailNoteTagsFormProps) {
+export default function EditAvailNoteTagsForm({ noteTags, inNoteModal = false }: EditAvailNoteTagsFormProps) {
   // The main server action that processes the form
   const [formState, formAction, isPending] = useActionState(editAvailNoteTags, INITIAL_FORM_STATE);
   const { AppField, AppForm, FormSubmit, handleSubmit, reset, store } = useAppForm({
