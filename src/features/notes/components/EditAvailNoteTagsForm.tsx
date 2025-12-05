@@ -17,10 +17,11 @@ import useEditAvailNoteTagsFormFeedback from "@/features/notes/hooks/feedbacks/u
 // components
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
 import { Button } from "@/components/ui/custom/button";
+import FieldErrors from "@/components/form/field-errors";
 import InfoLine from "@/components/form/InfoLine";
 
 // assets
-import { DocumentTextIcon, XCircleIcon } from "@heroicons/react/24/outline";
+import { PlusCircleIcon, TagIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 // types
 import type { getAllNoteTags } from "@/features/notes/db";
@@ -36,7 +37,7 @@ import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/notes/constants/edi
 export default function EditAvailNoteTagsForm({ noteTags, inNoteModal = false }: EditAvailNoteTagsFormProps) {
   // The main server action that processes the form
   const [formState, formAction, isPending] = useActionState(editAvailNoteTags, INITIAL_FORM_STATE);
-  const { AppField, AppForm, FormSubmit, handleSubmit, reset, store } = useAppForm({
+  const { AppField, AppForm, FormSubmit, handleSubmit, store } = useAppForm({
     ...FORM_OPTIONS,
     defaultValues: { ...FORM_OPTIONS.defaultValues, availNoteTags: noteTags.map(({ name }) => ({ name })) },
     transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
@@ -54,7 +55,7 @@ export default function EditAvailNoteTagsForm({ noteTags, inNoteModal = false }:
   }, []);
 
   // Provide feedback to the user regarding this form actions
-  const { feedbackMessage, hideFeedbackMessage } = useEditAvailNoteTagsFormFeedback(hasPressedSubmitRef, formState, reset, store);
+  const { feedbackMessage, hideFeedbackMessage } = useEditAvailNoteTagsFormFeedback(hasPressedSubmitRef, formState, store);
 
   return (
     <AppForm>
@@ -65,11 +66,11 @@ export default function EditAvailNoteTagsForm({ noteTags, inNoteModal = false }:
           hasPressedSubmitRef.current = true;
         }}
       >
-        <Card>
+        <Card className="max-w-2xl">
           {!inNoteModal && (
             <CardHeader>
-              <CardTitle>Edit Available Note Tags</CardTitle>
-              <CardDescription>To edit all available note tags</CardDescription>
+              <CardTitle>Edit My Note Tags</CardTitle>
+              <CardDescription>To edit all your available note tags</CardDescription>
             </CardHeader>
           )}
           <CardContent>
@@ -84,10 +85,10 @@ export default function EditAvailNoteTagsForm({ noteTags, inNoteModal = false }:
                       name={`availNoteTags[${i}].name`}
                       validators={{ onChange: EditAvailNoteTagsFormSchema.shape.availNoteTags.unwrap().shape.name }}
                       children={(subField) => (
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3">
                           <div>
                             <subField.TextField
-                              label={`Name for Note Tag #${String(i + 1).padStart(2, "0")}`}
+                              label={`My Note Tag #${String(i + 1).padStart(2, "0")}`}
                               size={40}
                               maxLength={51}
                               spellCheck={false}
@@ -95,18 +96,17 @@ export default function EditAvailNoteTagsForm({ noteTags, inNoteModal = false }:
                               placeholder="e.g. 💡Research, 📃Docs & Tutorials, 🧠Brainstorming"
                             />
                           </div>
-                          {field.state.value.length > 1 && (
-                            <Button type="button" variant="destructive" onClick={() => field.removeValue(i)}>
-                              <XCircleIcon className="size-9" />
-                            </Button>
-                          )}
+                          <Button type="button" variant="destructive" disabled={field.state.value.length === 1} onClick={() => field.removeValue(i)}>
+                            <TrashIcon className="size-10" />
+                          </Button>
                         </div>
                       )}
                     />
                   ))}
-                  <Button type="button" variant="secondary" onClick={() => field.pushValue({ name: "" })}>
-                    <XCircleIcon className="size-9" />
-                    Add Note Tag
+                  <FieldErrors />
+                  <Button type="button" variant="secondary" className="w-full" onClick={() => field.pushValue({ name: "" })}>
+                    <PlusCircleIcon className="size-9" />
+                    Add a New Note Tag
                   </Button>
                 </>
               )}
@@ -114,12 +114,7 @@ export default function EditAvailNoteTagsForm({ noteTags, inNoteModal = false }:
           </CardContent>
           <CardFooter>
             <InfoLine message={feedbackMessage} />
-            <FormSubmit
-              submitIcon={<DocumentTextIcon className="size-9" />}
-              submitText="Update Available Note Tags"
-              isPending={isPending}
-              onClearedForm={hideFeedbackMessage}
-            />
+            <FormSubmit submitIcon={<TagIcon className="size-9" />} submitText="Save My Changes" isPending={isPending} onClearedForm={hideFeedbackMessage} />
           </CardFooter>
         </Card>
       </form>

@@ -39,6 +39,7 @@ export default async function editAvailNoteTags(_prevState: unknown, formData: F
     const { availNoteTags } = await SERVER_VALIDATE(formData);
     console.log(availNoteTags);
   } catch (error) {
+    console.error(error);
     // Validation has failed
     if (error instanceof ServerValidateError) return { ...error.formState, actionStatus: "invalid" };
 

@@ -15,14 +15,13 @@ import type { EditAvailNoteTagsFormActionResult } from "@/features/notes/actions
 import type { AnyFormApi } from "@tanstack/react-form";
 
 // constants
-const FORM_NAME = "[EDIT AVAILABLE NOTE TAGS]";
-const SUCCEEDED_MESSAGE = "The available note tags have been updated.";
+const FORM_NAME = "[EDIT MY NOTE TAGS]";
+const SUCCEEDED_MESSAGE = "All your note tags have been saved.";
 
 // Provide feedback to the user regarding this form actions
 export default function useEditAvailNoteTagsFormFeedback(
   hasPressedSubmitRef: RefObject<boolean>,
   { actionStatus, errors }: EditAvailNoteTagsFormActionResult,
-  reset: () => void,
   formStore: AnyFormApi["store"],
 ) {
   // Generic hook for managing a permanent feedback message
@@ -40,14 +39,12 @@ export default function useEditAvailNoteTagsFormFeedback(
       // Display a success message
       showToast("succeeded");
 
-      // Reset the entire form after successful submission
-      reset();
-
       // Show the permanent feedback message as well
       showFeedbackMessage(SUCCEEDED_MESSAGE);
 
       // Redirect the user after successful note update
-      return setTimeout(() => redirect("/notes"), 3000);
+      // return setTimeout(() => redirect("/notes"), 3000);
+      return setTimeout(() => {}, 3000);
     } else {
       // Was a restricted operation attempted under the demo account? Inform the user
       guardForDemoMode();

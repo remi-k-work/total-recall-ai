@@ -46,10 +46,10 @@ export function createServerValidateWithTransforms<TSchema extends z.ZodTypeAny>
 
   return async (formData: FormData): Promise<z.output<TSchema>> => {
     // Validate the form on the server side (it will throw if validation fails)
-    await SERVER_VALIDATE(formData);
+    const rawValidatedData = await SERVER_VALIDATE(formData);
 
     // Validation has passed, return the parsed form data (ensures that zod transformations like "trim()" are applied)
-    return schema.parseAsync(Object.fromEntries(formData.entries()));
+    return schema.parseAsync(rawValidatedData);
   };
 }
 
