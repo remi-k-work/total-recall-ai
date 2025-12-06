@@ -5,6 +5,7 @@ export const EditAvailNoteTagsFormSchema = z
   .object({
     availNoteTags: z.array(
       z.object({
+        id: z.uuid(),
         name: z
           .string()
           .trim()

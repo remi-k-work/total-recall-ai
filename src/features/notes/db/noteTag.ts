@@ -11,6 +11,24 @@ import type { DbOrTx } from "@/drizzle/db";
 // Retrieve all note tags for a specific user ordered alphabetically (useful for the tag management list or autocomplete)
 export const getAllNoteTags = (userId: string) => db.query.NoteTagTable.findMany({ where: eq(NoteTagTable.userId, userId), orderBy: [asc(NoteTagTable.name)] });
 
+// Synchronize all incoming note tags with the existing ones for this user
+export const syncMyNoteTags = async (userId: string, incomingNoteTags: { id: string; name: string }[]) => {
+  // Run all db operations in a transaction
+  await db.transaction(async (tx) => {
+    // By managing the note tag IDs, we can ensure that incoming note tags, which previously existed and were renamed, will not be accidentally deleted
+    const incomingNoteTagIds = incomingNoteTags.map(({ id }) => id);
+    const existingNoteTagIds = (await db.query.NoteTagTable.findMany({ columns: { id: true }, where: eq(NoteTagTable.userId, userId) })).map(({ id }) => id);
+    const newNoteTagsComingIn = incomingNoteTags.filter(({ id: incomingNoteTagId }) => !existingNoteTagIds.includes(incomingNoteTagId));
+    const noteTagIdsToDelete = existingNoteTagIds.filter((existingNoteTagId) => !incomingNoteTagIds.includes(existingNoteTagId));
+
+    // First delete all note tags that are not in the incoming list anymore
+    for (const noteTagId of noteTagIdsToDelete) await tx.delete(NoteTagTable).where(and(eq(NoteTagTable.id, noteTagId), eq(NoteTagTable.userId, userId)));
+
+    // Then, if there are new note tags coming in, insert them all
+    if (newNoteTagsComingIn.length > 0) await tx.insert(NoteTagTable).values(newNoteTagsComingIn.map(({ id, name }) => ({ id, userId, name })));
+  });
+};
+
 // Search note tags for a user (useful for the "type to add..." dropdown)
 export const searchNoteTags = (userId: string, query: string, limit: number = 10) =>
   db

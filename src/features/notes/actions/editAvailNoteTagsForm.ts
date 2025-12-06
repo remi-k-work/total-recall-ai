@@ -24,6 +24,7 @@ export interface EditAvailNoteTagsFormActionResult extends ServerFormState<any, 
 // The main server action that processes the form
 export default async function editAvailNoteTags(_prevState: unknown, formData: FormData): Promise<EditAvailNoteTagsFormActionResult> {
   try {
+    console.log(formData);
     // Make sure the current user is authenticated (the check runs on the server side)
     await makeSureUserIsAuthenticated();
 

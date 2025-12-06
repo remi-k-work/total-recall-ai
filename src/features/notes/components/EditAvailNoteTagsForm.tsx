@@ -3,7 +3,7 @@
 "use client";
 
 // react
-import { useActionState, useEffect, useRef } from "react";
+import { Fragment, useActionState, useEffect, useRef } from "react";
 
 // server actions and mutations
 import editAvailNoteTags from "@/features/notes/actions/editAvailNoteTagsForm";
@@ -39,7 +39,7 @@ export default function EditAvailNoteTagsForm({ noteTags, inNoteModal = false }:
   const [formState, formAction, isPending] = useActionState(editAvailNoteTags, INITIAL_FORM_STATE);
   const { AppField, AppForm, FormSubmit, handleSubmit, store } = useAppForm({
     ...FORM_OPTIONS,
-    defaultValues: { ...FORM_OPTIONS.defaultValues, availNoteTags: noteTags.map(({ name }) => ({ name })) },
+    defaultValues: { ...FORM_OPTIONS.defaultValues, availNoteTags: noteTags.map(({ id, name }) => ({ id, name })) },
     transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
   });
 
@@ -79,32 +79,39 @@ export default function EditAvailNoteTagsForm({ noteTags, inNoteModal = false }:
               mode="array"
               children={(field) => (
                 <>
-                  {field.state.value.map((_, i) => (
-                    <AppField
-                      key={i}
-                      name={`availNoteTags[${i}].name`}
-                      validators={{ onChange: EditAvailNoteTagsFormSchema.shape.availNoteTags.unwrap().shape.name }}
-                      children={(subField) => (
-                        <div className="flex items-center gap-3">
-                          <div>
-                            <subField.TextField
-                              label={`My Note Tag #${String(i + 1).padStart(2, "0")}`}
-                              size={40}
-                              maxLength={51}
-                              spellCheck={false}
-                              autoComplete="off"
-                              placeholder="e.g. 💡Research, 📃Docs & Tutorials, 🧠Brainstorming"
-                            />
+                  {field.state.value.map(({ id: noteTagId }, noteTagIndex) => (
+                    <Fragment key={noteTagId}>
+                      <input type="hidden" name={`availNoteTags[${noteTagIndex}].id`} value={noteTagId} />
+                      <AppField
+                        name={`availNoteTags[${noteTagIndex}].name`}
+                        validators={{ onChange: EditAvailNoteTagsFormSchema.shape.availNoteTags.unwrap().shape.name }}
+                        children={(subField) => (
+                          <div className="flex items-center gap-3">
+                            <div>
+                              <subField.TextField
+                                label={`My Note Tag #${String(noteTagIndex + 1).padStart(2, "0")}`}
+                                size={40}
+                                maxLength={51}
+                                spellCheck={false}
+                                autoComplete="off"
+                                placeholder="e.g. 💡Research, 📃Docs & Tutorials, 🧠Brainstorming"
+                              />
+                            </div>
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              disabled={field.state.value.length === 1}
+                              onClick={() => field.removeValue(noteTagIndex)}
+                            >
+                              <TrashIcon className="size-10" />
+                            </Button>
                           </div>
-                          <Button type="button" variant="destructive" disabled={field.state.value.length === 1} onClick={() => field.removeValue(i)}>
-                            <TrashIcon className="size-10" />
-                          </Button>
-                        </div>
-                      )}
-                    />
+                        )}
+                      />
+                    </Fragment>
                   ))}
                   <FieldErrors />
-                  <Button type="button" variant="secondary" className="w-full" onClick={() => field.pushValue({ name: "" })}>
+                  <Button type="button" variant="secondary" className="w-full" onClick={() => field.pushValue({ id: crypto.randomUUID(), name: "" })}>
                     <PlusCircleIcon className="size-9" />
                     Add a New Note Tag
                   </Button>
