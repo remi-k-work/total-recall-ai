@@ -6,8 +6,7 @@
 import { revalidatePath } from "next/cache";
 
 // drizzle and db access
-import { db } from "@/drizzle/db";
-import { deleteNoteChunks, insertNoteChunks, updateNote } from "@/features/notes/db";
+import { syncMyNoteTags } from "@/features/notes/db";
 
 // services, features, and other libraries
 import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
@@ -24,7 +23,6 @@ export interface EditAvailNoteTagsFormActionResult extends ServerFormState<any, 
 // The main server action that processes the form
 export default async function editAvailNoteTags(_prevState: unknown, formData: FormData): Promise<EditAvailNoteTagsFormActionResult> {
   try {
-    console.log(formData);
     // Make sure the current user is authenticated (the check runs on the server side)
     await makeSureUserIsAuthenticated();
 
@@ -38,7 +36,9 @@ export default async function editAvailNoteTags(_prevState: unknown, formData: F
 
     // Validate the form on the server side and extract needed data
     const { availNoteTags } = await SERVER_VALIDATE(formData);
-    console.log(availNoteTags);
+
+    // Synchronize all incoming note tags with the existing ones for this user
+    await syncMyNoteTags(userId, availNoteTags);
   } catch (error) {
     console.error(error);
     // Validation has failed
