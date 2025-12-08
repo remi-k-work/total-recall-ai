@@ -3,7 +3,7 @@ import { db } from "@/drizzle/db";
 import { and, asc, count, desc, eq, ilike, or, SQL, sql } from "drizzle-orm";
 
 // all table definitions (their schemas)
-import { NoteTable } from "@/drizzle/schema";
+import { NoteTable, NoteTagTable, NoteToNoteTagTable } from "@/drizzle/schema";
 
 // types
 import type { DbOrTx } from "@/drizzle/db";
@@ -37,6 +37,9 @@ export const getNotesWithPagination = async (
         preferences: NoteTable.preferences,
         createdAt: NoteTable.createdAt,
         updatedAt: NoteTable.updatedAt,
+
+        // Correlated subquery to retrieve tags for each note
+        tags: getNoteTagsSql(),
       })
       .from(NoteTable)
       .where(whereClause)
@@ -111,3 +114,11 @@ export const updateNote = (id: string, userId: string, data: Partial<Omit<typeof
 
 // Delete a note for a user (supports normal db or transaction)
 export const deleteNote = (id: string, userId: string, tx: DbOrTx = db) => tx.delete(NoteTable).where(and(eq(NoteTable.id, id), eq(NoteTable.userId, userId)));
+
+// Correlated subquery to retrieve tags for each note
+const getNoteTagsSql = () => sql<{ id: string; name: string }[]>`(
+    SELECT COALESCE(jsonb_agg(jsonb_build_object('id', ${NoteTagTable.id}, 'name', ${NoteTagTable.name})), '[]'::jsonb)
+    FROM ${NoteToNoteTagTable}
+    JOIN ${NoteTagTable} ON ${NoteToNoteTagTable.noteTagId} = ${NoteTagTable.id}
+    WHERE ${NoteToNoteTagTable.noteId} = ${sql.raw("note.id")}
+  )`;

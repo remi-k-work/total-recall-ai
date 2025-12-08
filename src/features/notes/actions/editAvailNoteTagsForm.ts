@@ -40,7 +40,6 @@ export default async function editAvailNoteTags(_prevState: unknown, formData: F
     // Synchronize all incoming note tags with the existing ones for this user
     await syncMyNoteTags(userId, availNoteTags);
   } catch (error) {
-    console.error(error);
     // Validation has failed
     if (error instanceof ServerValidateError) return { ...error.formState, actionStatus: "invalid" };
 
