@@ -13,6 +13,7 @@ export const getAllNoteTags = (userId: string) => db.query.NoteTagTable.findMany
 
 // Synchronize all incoming note tags with the existing ones for this user
 export const syncMyNoteTags = async (userId: string, incomingNoteTags: { id: string; name: string }[]) => {
+  // Run all db operations in a transaction
   await db.transaction(async (tx) => {
     // Fetch all existing tags for this user
     const allExistingTags = await tx.query.NoteTagTable.findMany({ columns: { id: true, name: true }, where: eq(NoteTagTable.userId, userId) });
@@ -72,6 +73,18 @@ export const syncMyNoteTags = async (userId: string, incomingNoteTags: { id: str
 
     // Insert all new tags at once
     if (tagsToInsert.length > 0) await tx.insert(NoteTagTable).values(tagsToInsert.map(({ id, name }) => ({ id, userId, name })));
+  });
+};
+
+// Sync tags for a note (useful when the UI sends a full list of tags)
+export const syncNoteTags = async (noteId: string, noteTagIds: string[]) => {
+  // Run all db operations in a transaction
+  await db.transaction(async (tx) => {
+    // Delete all existing links for this note (this is efficient enough for notes that rarely have more than 10 note tags)
+    await tx.delete(NoteToNoteTagTable).where(eq(NoteToNoteTagTable.noteId, noteId));
+
+    // If there are note tags to add, insert them all
+    if (noteTagIds.length > 0) await tx.insert(NoteToNoteTagTable).values(noteTagIds.map((noteTagId) => ({ noteId, noteTagId })));
   });
 };
 
@@ -150,12 +163,3 @@ export const addNoteTagToNote = async (noteId: string, noteTagId: string, tx: Db
 // Remove a note tag from a note
 export const removeTagFromNote = async (noteId: string, noteTagId: string, tx: DbOrTx = db) =>
   tx.delete(NoteToNoteTagTable).where(and(eq(NoteToNoteTagTable.noteId, noteId), eq(NoteToNoteTagTable.noteTagId, noteTagId)));
-
-// Sync tags for a note (useful when the UI sends a full list of tags)
-export const syncNoteTags = async (noteId: string, noteTagIds: string[], tx: DbOrTx = db) => {
-  // Delete all existing links for this note (this is efficient enough for notes that rarely have more than 10 note tags)
-  await tx.delete(NoteToNoteTagTable).where(eq(NoteToNoteTagTable.noteId, noteId));
-
-  // If there are note tags to add, insert them all
-  if (noteTagIds.length > 0) await tx.insert(NoteToNoteTagTable).values(noteTagIds.map((noteTagId) => ({ noteId, noteTagId })));
-};
