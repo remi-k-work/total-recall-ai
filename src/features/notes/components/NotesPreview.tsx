@@ -7,14 +7,14 @@ import InfoLine from "@/components/form/InfoLine";
 import NotePreview from "@/features/notes/components/NotePreview";
 
 // types
-import type { getAllNoteTags, getNotesWithPagination } from "@/features/notes/db";
+import type { getAvailNoteTags, getNotesWithPagination } from "@/features/notes/db";
 
 interface NotesPreviewProps {
   notes: Awaited<ReturnType<typeof getNotesWithPagination>>["notes"];
-  noteTags: Awaited<ReturnType<typeof getAllNoteTags>>;
+  availNoteTags: Awaited<ReturnType<typeof getAvailNoteTags>>;
 }
 
-export default function NotesPreview({ notes, noteTags }: NotesPreviewProps) {
+export default function NotesPreview({ notes, availNoteTags }: NotesPreviewProps) {
   if (notes.length === 0) return <InfoLine message="No notes have been found!" className="justify-center px-6 py-9 text-xl" />;
 
   return (
@@ -24,7 +24,7 @@ export default function NotesPreview({ notes, noteTags }: NotesPreviewProps) {
 
         return (
           <NotePreferencesStoreProvider key={noteId} noteId={noteId} initState={preferences ?? undefined}>
-            <NotePreview note={note} noteTags={noteTags} />
+            <NotePreview note={note} availNoteTags={availNoteTags} />
           </NotePreferencesStoreProvider>
         );
       })}

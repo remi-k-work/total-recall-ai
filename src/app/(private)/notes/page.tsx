@@ -2,7 +2,7 @@
 import { Suspense } from "react";
 
 // drizzle and db access
-import { getAllNoteTags, getNotesWithPagination } from "@/features/notes/db";
+import { getAvailNoteTags, getNotesWithPagination } from "@/features/notes/db";
 
 // services, features, and other libraries
 import { validatePageInputs } from "@/lib/helpers";
@@ -46,11 +46,11 @@ async function PageContent({ params, searchParams }: PageProps<"/notes">) {
     user: { id: userId },
   } = (await getUserSessionData())!;
 
-  // Retrieve all notes for a user, including only the essential fields, and shorten the content for preview purposes
-  const { notes, totalItems, totalPages } = await getNotesWithPagination(userId, searchTerm, currentPage, 6, sortByField, sortByDirection);
-
-  // Retrieve all note tags for a specific user ordered alphabetically (useful for the tag management list or autocomplete)
-  const noteTags = await getAllNoteTags(userId);
+  // Retrieve all notes for a user and their available note tags
+  const [{ notes, totalItems, totalPages }, availNoteTags] = await Promise.all([
+    getNotesWithPagination(userId, searchTerm, currentPage, 6, sortByField, sortByDirection),
+    getAvailNoteTags(userId),
+  ]);
 
   return (
     <>
@@ -64,7 +64,7 @@ async function PageContent({ params, searchParams }: PageProps<"/notes">) {
         sortByDirection={sortByDirection}
         currentPage={currentPage}
       />
-      <NotesPreview notes={notes} noteTags={noteTags} />
+      <NotesPreview notes={notes} availNoteTags={availNoteTags} />
       <BrowseBar
         kind="notes-root"
         totalItems={totalItems}

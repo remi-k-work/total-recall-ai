@@ -2,7 +2,7 @@
 import { Suspense } from "react";
 
 // drizzle and db access
-import { getAllNoteTags } from "@/features/notes/db";
+import { getAvailNoteTags } from "@/features/notes/db";
 
 // services, features, and other libraries
 import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
@@ -39,12 +39,12 @@ async function PageContent() {
   } = (await getUserSessionData())!;
 
   // Retrieve all note tags for a specific user ordered alphabetically (useful for the tag management list or autocomplete)
-  const noteTags = await getAllNoteTags(userId);
+  const availNoteTags = await getAvailNoteTags(userId);
 
   return (
     <>
       <PageHeader title="Edit My Note Tags" description="Use the form below to edit all your available note tags" />
-      <EditAvailNoteTagsForm noteTags={noteTags} />
+      <EditAvailNoteTagsForm availNoteTags={availNoteTags} />
     </>
   );
 }

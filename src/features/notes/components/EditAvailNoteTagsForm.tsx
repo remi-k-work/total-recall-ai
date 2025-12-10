@@ -24,22 +24,22 @@ import InfoLine from "@/components/form/InfoLine";
 import { PlusCircleIcon, TagIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 // types
-import type { getAllNoteTags } from "@/features/notes/db";
+import type { getAvailNoteTags } from "@/features/notes/db";
 
 interface EditAvailNoteTagsFormProps {
-  noteTags: Awaited<ReturnType<typeof getAllNoteTags>>;
+  availNoteTags: Awaited<ReturnType<typeof getAvailNoteTags>>;
   inNoteModal?: boolean;
 }
 
 // constants
 import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/notes/constants/editAvailNoteTagsForm";
 
-export default function EditAvailNoteTagsForm({ noteTags, inNoteModal = false }: EditAvailNoteTagsFormProps) {
+export default function EditAvailNoteTagsForm({ availNoteTags, inNoteModal = false }: EditAvailNoteTagsFormProps) {
   // The main server action that processes the form
   const [formState, formAction, isPending] = useActionState(editAvailNoteTags, INITIAL_FORM_STATE);
   const { AppField, AppForm, FormSubmit, handleSubmit, store } = useAppForm({
     ...FORM_OPTIONS,
-    defaultValues: { ...FORM_OPTIONS.defaultValues, availNoteTags: noteTags.map(({ id, name }) => ({ id, name })) },
+    defaultValues: { ...FORM_OPTIONS.defaultValues, availNoteTags },
     transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
   });
 

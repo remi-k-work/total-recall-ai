@@ -15,17 +15,17 @@ import CreatedAt from "./CreatedAt";
 import UpdatedAt from "./UpdatedAt";
 
 // types
-import type { getAllNoteTags, getNotesWithPagination } from "@/features/notes/db";
+import type { getAvailNoteTags, getNotesWithPagination } from "@/features/notes/db";
 
 interface NotePreviewProps {
   note: Awaited<ReturnType<typeof getNotesWithPagination>>["notes"][number];
-  noteTags: Awaited<ReturnType<typeof getAllNoteTags>>;
+  availNoteTags: Awaited<ReturnType<typeof getAvailNoteTags>>;
 }
 
 // constants
 import { REHYPE_PLUGINS } from "@/features/notes-assistant/constants/plugins";
 
-export default function NotePreview({ note: { id: noteId, title, contentPreview, createdAt, updatedAt, tags }, noteTags }: NotePreviewProps) {
+export default function NotePreview({ note: { id: noteId, title, contentPreview, createdAt, updatedAt, tags }, availNoteTags }: NotePreviewProps) {
   // Retrieve the necessary state and actions from the note preferences store
   const color = useNotePreferencesStore((state) => state.color);
 
@@ -43,7 +43,7 @@ export default function NotePreview({ note: { id: noteId, title, contentPreview,
       </CardContent>
       <CardFooter className="flex flex-wrap items-center justify-around gap-6 border-t pt-6">
         <ColorPicker />
-        <NoteTagsPopover noteId={noteId} currTags={tags} noteTags={noteTags} />
+        <NoteTagsPopover noteId={noteId} currNoteTagIds={tags.map(({ id }) => id)} availNoteTags={availNoteTags} />
         <CreatedAt createdAt={createdAt} />
         <UpdatedAt updatedAt={updatedAt} />
       </CardFooter>

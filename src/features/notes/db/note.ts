@@ -63,6 +63,9 @@ export const getMostRecentNotes = (userId: string, limit?: number) => {
       preferences: NoteTable.preferences,
       createdAt: NoteTable.createdAt,
       updatedAt: NoteTable.updatedAt,
+
+      // Correlated subquery to retrieve tags for each note
+      tags: getNoteTagsSql(),
     })
     .from(NoteTable)
     .where(eq(NoteTable.userId, userId))

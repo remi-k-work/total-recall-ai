@@ -1,7 +1,7 @@
 "use server";
 
 // drizzle and db access
-import { deleteNote as deleteUserNote } from "@/features/notes/db";
+import { deleteNote as dbDeleteNote } from "@/features/notes/db";
 
 // services, features, and other libraries
 import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
@@ -26,7 +26,7 @@ export default async function deleteNote(noteId: string): Promise<DeleteNoteActi
     if (role === "demo") return { actionStatus: "demoMode" };
 
     // Delete a note for a user
-    await deleteUserNote(noteId, userId);
+    await dbDeleteNote(noteId, userId);
   } catch {
     // Some other error occurred
     return { actionStatus: "failed" };

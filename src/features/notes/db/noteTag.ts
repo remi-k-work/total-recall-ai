@@ -9,7 +9,8 @@ import { NoteTagTable, NoteToNoteTagTable } from "@/drizzle/schema";
 import type { DbOrTx } from "@/drizzle/db";
 
 // Retrieve all note tags for a specific user ordered alphabetically (useful for the tag management list or autocomplete)
-export const getAllNoteTags = (userId: string) => db.query.NoteTagTable.findMany({ where: eq(NoteTagTable.userId, userId), orderBy: [asc(NoteTagTable.name)] });
+export const getAvailNoteTags = (userId: string) =>
+  db.query.NoteTagTable.findMany({ columns: { id: true, name: true }, where: eq(NoteTagTable.userId, userId), orderBy: [asc(NoteTagTable.name)] });
 
 // Synchronize all incoming note tags with the existing ones for this user
 export const syncMyNoteTags = async (userId: string, incomingNoteTags: { id: string; name: string }[]) => {

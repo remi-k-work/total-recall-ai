@@ -2,7 +2,7 @@
 import { Suspense } from "react";
 
 // drizzle and db access
-import { getMostRecentNotes } from "@/features/notes/db";
+import { getAvailNoteTags, getMostRecentNotes } from "@/features/notes/db";
 
 // services, features, and other libraries
 import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
@@ -43,8 +43,8 @@ async function PageContent() {
     session,
   } = (await getUserSessionData())!;
 
-  // Retrieve the most recently updated notes for a user, with an optional limit
-  const notes = await getMostRecentNotes(userId, 3);
+  // Retrieve the most recently updated notes for a user, with an optional limit, as well as their available note tags
+  const [notes, availNoteTags] = await Promise.all([getMostRecentNotes(userId, 3), getAvailNoteTags(userId)]);
 
   return (
     <>
@@ -54,7 +54,7 @@ async function PageContent() {
         <VerifyEmail user={user} />
       </article>
       <SectionHeader title="Your most recent notes" />
-      <NotesPreview notes={notes} />
+      <NotesPreview notes={notes} availNoteTags={availNoteTags} />
     </>
   );
 }
