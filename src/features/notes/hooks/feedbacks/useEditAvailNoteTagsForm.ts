@@ -15,8 +15,8 @@ import type { EditAvailNoteTagsFormActionResult } from "@/features/notes/actions
 import type { AnyFormApi } from "@tanstack/react-form";
 
 // constants
-const FORM_NAME = "[EDIT MY NOTE TAGS]";
-const SUCCEEDED_MESSAGE = "All your note tags have been saved.";
+const FORM_NAME = "[NOTE TAGS]";
+const SUCCEEDED_MESSAGE = "All your note tags have been updated.";
 
 // Provide feedback to the user regarding this form actions
 export default function useEditAvailNoteTagsFormFeedback(

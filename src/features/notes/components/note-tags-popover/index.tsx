@@ -1,7 +1,7 @@
 "use client";
 
 // react
-import { startTransition, useMemo, useOptimistic } from "react";
+import { startTransition, useMemo, useOptimistic, useState } from "react";
 
 // server actions and mutations
 import syncNoteTags from "@/features/notes/actions/syncNoteTags";
@@ -27,23 +27,24 @@ interface NoteTagsPopoverProps {
 }
 
 export default function NoteTagsPopover({ noteId, currNoteTagIds, availNoteTags }: NoteTagsPopoverProps) {
-  // Optimistic state, used to track selected tags - we initialize it with the current tags (which will update with each revalidatePath call)
-  const [optimisticTagIds, setOptimisticTagIds] = useOptimistic(currNoteTagIds);
+  // Optimistic state, used to track selected tags - we initialize it with the current note tags
+  const [currToggledTagIds, setCurrToggledTagIds] = useState(currNoteTagIds);
+  const [optiToggledTagIds, setOptiToggledTagIds] = useOptimistic(currToggledTagIds);
 
   // Note tags that are currently selected - we use useMemo here because filtering arrays on every render is expensive
   const selectedNoteTags = useMemo(() => {
     // Performance optimization (O(N) -> O(1) lookup)
-    const selectedSet = new Set(optimisticTagIds);
+    const selectedSet = new Set(optiToggledTagIds);
 
     // Retain only the tags that are currently selected from the complete list of available note tags for this user
     return availNoteTags.filter(({ id }) => selectedSet.has(id));
-  }, [optimisticTagIds, availNoteTags]);
+  }, [optiToggledTagIds, availNoteTags]);
 
   // Use the debounced callback to initiate the relevant actions
   const handleToggledNoteTags = useDebouncedCallback(async (noteTagIds: string[]) => {
     // This action syncs the tags for a note (useful when the UI sends a full list of tags)
-    await syncNoteTags(noteId, noteTagIds);
-  }, 1000);
+    if ((await syncNoteTags(noteId, noteTagIds)).actionStatus === "failed") setCurrToggledTagIds(currNoteTagIds);
+  }, 3000);
 
   return (
     <Popover>
@@ -61,20 +62,21 @@ export default function NoteTagsPopover({ noteId, currNoteTagIds, availNoteTags 
         <ToggleGroup
           type="multiple"
           spacing={2}
-          value={optimisticTagIds}
+          value={optiToggledTagIds}
           onValueChange={(value) => {
             startTransition(() => {
               // Immediate UI update of the toggled tags
-              setOptimisticTagIds(value);
+              setOptiToggledTagIds(value);
             });
 
             // Debounced server update of the toggled tags
+            setCurrToggledTagIds(value);
             handleToggledNoteTags(value);
           }}
           className="w-full flex-wrap justify-center"
         >
           {availNoteTags.map(({ id, name }) => (
-            <ToggleGroupItem key={id} value={id} aria-label={`Toggle Tag: ${name}`} title={`Toggle Tag: ${name}`}>
+            <ToggleGroupItem key={id} value={id} aria-label={`Toggle: ${name}`} title={`Toggle: ${name}`}>
               {name}
             </ToggleGroupItem>
           ))}

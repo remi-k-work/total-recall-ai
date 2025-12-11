@@ -69,7 +69,7 @@ export default function EditAvailNoteTagsForm({ availNoteTags, inNoteModal = fal
         <Card className="max-w-2xl">
           {!inNoteModal && (
             <CardHeader>
-              <CardTitle>Edit My Note Tags</CardTitle>
+              <CardTitle>Note Tags</CardTitle>
               <CardDescription>To edit all your available note tags</CardDescription>
             </CardHeader>
           )}
@@ -89,7 +89,7 @@ export default function EditAvailNoteTagsForm({ availNoteTags, inNoteModal = fal
                           <div className="flex items-center gap-3">
                             <div>
                               <subField.TextField
-                                label={`My Note Tag #${String(noteTagIndex + 1).padStart(2, "0")}`}
+                                label={`Name of Note Tag #${String(noteTagIndex + 1).padStart(2, "0")}`}
                                 size={40}
                                 maxLength={51}
                                 spellCheck={false}
@@ -113,7 +113,7 @@ export default function EditAvailNoteTagsForm({ availNoteTags, inNoteModal = fal
                   <FieldErrors />
                   <Button type="button" variant="secondary" className="w-full" onClick={() => field.pushValue({ id: crypto.randomUUID(), name: "" })}>
                     <PlusCircleIcon className="size-9" />
-                    Add a New Note Tag
+                    New Note Tag
                   </Button>
                 </>
               )}
@@ -121,7 +121,7 @@ export default function EditAvailNoteTagsForm({ availNoteTags, inNoteModal = fal
           </CardContent>
           <CardFooter>
             <InfoLine message={feedbackMessage} />
-            <FormSubmit submitIcon={<TagIcon className="size-9" />} submitText="Save My Changes" isPending={isPending} onClearedForm={hideFeedbackMessage} />
+            <FormSubmit submitIcon={<TagIcon className="size-9" />} submitText="Update Note Tags" isPending={isPending} onClearedForm={hideFeedbackMessage} />
           </CardFooter>
         </Card>
       </form>

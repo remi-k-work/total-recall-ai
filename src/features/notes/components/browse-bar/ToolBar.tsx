@@ -9,14 +9,14 @@ import { Button } from "@/components/ui/custom/button";
 import DeleteNote from "./DeleteNote";
 
 // assets
-import { DocumentDuplicateIcon, DocumentPlusIcon, DocumentTextIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { DocumentDuplicateIcon, DocumentPlusIcon, DocumentTextIcon, TagIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 export default function ToolBar() {
   // Access the browse bar context and retrieve all necessary information
   const browseBarContext = useBrowseBarContext();
 
   return (
-    <section className="flex items-center gap-2">
+    <section className="flex flex-wrap items-center justify-around gap-4 *:basis-24">
       {browseBarContext.kind === "notes-root" ? (
         <Button variant="ghost" className="flex-col text-center whitespace-pre-line" asChild>
           <Link href="/notes/new">
@@ -67,6 +67,13 @@ export default function ToolBar() {
           {"All Notes".replaceAll(" ", "\n")}
         </Button>
       )}
+
+      <Button variant="ghost" className="flex-col text-center whitespace-pre-line" asChild>
+        <Link href="/note-tags">
+          <TagIcon className="size-11" />
+          {"Note Tags".replaceAll(" ", "\n")}
+        </Link>
+      </Button>
     </section>
   );
 }

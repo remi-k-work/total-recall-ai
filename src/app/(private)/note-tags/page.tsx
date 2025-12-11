@@ -16,7 +16,7 @@ import type { Metadata } from "next";
 
 // constants
 export const metadata: Metadata = {
-  title: "Total Recall AI ► Edit My Note Tags",
+  title: "Total Recall AI ► Note Tags",
 };
 
 // Page remains the fast, static shell
@@ -43,7 +43,7 @@ async function PageContent() {
 
   return (
     <>
-      <PageHeader title="Edit My Note Tags" description="Use the form below to edit all your available note tags" />
+      <PageHeader title="Note Tags" description="Use the form below to edit all your available note tags" />
       <EditAvailNoteTagsForm availNoteTags={availNoteTags} />
     </>
   );
@@ -52,7 +52,7 @@ async function PageContent() {
 function PageSkeleton() {
   return (
     <>
-      <PageHeader title="Edit My Note Tags" description="Use the form below to edit all your available note tags" />
+      <PageHeader title="Note Tags" description="Use the form below to edit all your available note tags" />
     </>
   );
 }

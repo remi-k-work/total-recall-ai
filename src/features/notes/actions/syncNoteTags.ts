@@ -21,13 +21,9 @@ export default async function syncNoteTags(noteId: string, noteTagIds: string[])
     await makeSureUserIsAuthenticated();
 
     // Sync tags for a note (useful when the UI sends a full list of tags)
-    // throw new Error("not implemented");
     await dbSyncNoteTags(noteId, noteTagIds);
-
-    console.log("syncing note tags", noteId, noteTagIds);
   } catch {
     // Some other error occurred
-    revalidatePath("/notes");
     return { actionStatus: "failed" };
   }
 
