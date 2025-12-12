@@ -1,11 +1,9 @@
 // react
-import { useEffect, useState } from "react";
-
-// next
-import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 
 // services, features, and other libraries
 import { useBrowseBarContext } from "./context";
+import { useDebouncedCallback } from "use-debounce";
 
 // components
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -17,41 +15,64 @@ import { TagIcon } from "@heroicons/react/24/outline";
 
 export default function FilterByTags() {
   // Access the browse bar context and retrieve all necessary information
-  const { totalPages, sortByFields, sortByField, createHref } = useBrowseBarContext("notes-root");
+  const { availNoteTags, filterByTagIndxs, navigate } = useBrowseBarContext("notes-root");
 
-  // Currently selected sort by field
-  const [currSortByField, setCurrSortByField] = useState(sortByField);
+  // Currently toggled filter by tags (we only store their indexes relative to the complete list of available note tags for this user)
+  const [currFilterByTagIndxs, setCurrFilterByTagIndxs] = useState(filterByTagIndxs);
 
-  // Keep the currently selected sort by field in sync with search params
+  // Keep the currently toggled filter by tags in sync with search params
   useEffect(() => {
-    setCurrSortByField(sortByField);
-  }, [sortByField]);
+    setCurrFilterByTagIndxs(filterByTagIndxs);
+  }, [filterByTagIndxs]);
+
+  // Note tags that are currently selected - we use useMemo here because filtering arrays on every render is expensive
+  const selectedNoteTags = useMemo(() => {
+    // Performance optimization (O(N) -> O(1) lookup)
+    const selectedSet = new Set(currFilterByTagIndxs);
+
+    // Retain only the tags that are currently selected from the complete list of available note tags for this user
+    return availNoteTags.filter((_, index) => selectedSet.has(index));
+  }, [currFilterByTagIndxs, availNoteTags]);
+
+  // Use the debounced callback to initiate the relevant actions
+  const handleToggledNoteTags = useDebouncedCallback((filterByTagIndxs: string[]) => {
+    // Refresh the page with the new filter by tags
+    navigate({ fbt: filterByTagIndxs });
+  }, 3000);
 
   return (
-    <ToggleGroup type="single" className="items-start" value={currSortByField} onValueChange={setCurrSortByField}>
-      {sortByFields.map(({ key, label, iconKey }) => (
-        <ToggleGroupItem
-          key={key}
-          value={key}
-          aria-label={`Sort By: ${label}`}
-          title={`Sort By: ${label}`}
-          disabled={totalPages <= 1}
-          className="gap-0"
-          asChild
+    <Popover>
+      <PopoverTrigger className="flex w-96 flex-wrap items-center justify-center gap-2">
+        {selectedNoteTags.length === 0 ? (
+          <Badge variant="outline" className="w-full p-3 uppercase">
+            <TagIcon className="size-9" />
+            Filter By Tags...
+          </Badge>
+        ) : (
+          selectedNoteTags.map(({ id, name }) => <Badge key={id}>{name}</Badge>)
+        )}
+      </PopoverTrigger>
+      <PopoverContent side="top" className="w-96">
+        <ToggleGroup
+          type="multiple"
+          spacing={2}
+          value={currFilterByTagIndxs.map(String)}
+          onValueChange={(value) => {
+            // Immediate UI update of the toggled tags
+            setCurrFilterByTagIndxs(value.map(Number));
+
+            // The page refresh is debounced when the tags are toggled
+            handleToggledNoteTags(value);
+          }}
+          className="w-full flex-wrap justify-center"
         >
-          {totalPages <= 1 ? (
-            <div className="flex-col text-center whitespace-pre-line select-none">
-              {ICON_MAP[iconKey]}
-              {label.replaceAll(" ", "\n")}
-            </div>
-          ) : (
-            <Link href={createHref({ sbf: key })} className="flex-col text-center whitespace-pre-line">
-              {ICON_MAP[iconKey]}
-              {label.replaceAll(" ", "\n")}
-            </Link>
-          )}
-        </ToggleGroupItem>
-      ))}
-    </ToggleGroup>
+          {availNoteTags.map(({ id, name }, index) => (
+            <ToggleGroupItem key={id} value={String(index)} aria-label={`Toggle: ${name}`} title={`Toggle: ${name}`}>
+              {name}
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
+      </PopoverContent>
+    </Popover>
   );
 }

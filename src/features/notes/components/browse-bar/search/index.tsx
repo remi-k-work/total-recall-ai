@@ -27,11 +27,11 @@ export default function Search() {
   }
 
   // Otherwise, render the search form for the "note details" kind
-  const { searchRoute } = browseBarContext;
+  const { searchRoute, searchTerm } = browseBarContext;
 
   return (
     <Form action={searchRoute} className="flex items-center gap-2">
-      <Input type="search" name="str" size={15} maxLength={25} aria-label="Search Notes" placeholder="Search Notes" />
+      <Input type="search" name="str" size={15} maxLength={25} aria-label="Search Notes" placeholder="Search Notes" defaultValue={searchTerm} />
       <SearchButton />
     </Form>
   );

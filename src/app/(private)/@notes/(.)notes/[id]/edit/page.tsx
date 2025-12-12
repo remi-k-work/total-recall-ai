@@ -34,6 +34,7 @@ async function PageContent({ params, searchParams }: PageProps<"/notes/[id]/edit
   // Safely validate next.js route inputs (`params` and `searchParams`) against a zod schema; return typed data or trigger a 404 on failure
   const {
     params: { id: noteId },
+    searchParams: { str: searchTerm },
   } = await validatePageInputs(EditNotePageSchema, { params, searchParams });
 
   // Make sure the current user is authenticated (the check runs on the server side)
@@ -51,7 +52,11 @@ async function PageContent({ params, searchParams }: PageProps<"/notes/[id]/edit
   if (!note) notFound();
 
   return (
-    <NoteModal icon={<DocumentTextIcon className="size-11 flex-none" />} browseBar={<BrowseBar kind="note-edit" />} noteTitle={note.title}>
+    <NoteModal
+      icon={<DocumentTextIcon className="size-11 flex-none" />}
+      browseBar={<BrowseBar kind="note-edit" searchTerm={searchTerm} />}
+      noteTitle={note.title}
+    >
       <EditNoteForm note={note} inNoteModal />
     </NoteModal>
   );

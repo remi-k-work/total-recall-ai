@@ -3,6 +3,7 @@
 // components
 import BrowseBarProvider from "./context";
 import Search from "./search";
+import FilterByTags from "./FilterByTags";
 import SortByField from "./SortByField";
 import SortByDirection from "./SortByDirection";
 import Paginate from "./Paginate";
@@ -15,15 +16,20 @@ export default function BrowseBar({ ...props }: BrowseBarProviderPropsWithoutChi
   return (
     <BrowseBarProvider {...props}>
       <header className="via-secondary flex flex-wrap items-center justify-around gap-4 bg-linear-to-b from-transparent to-transparent px-3 py-6">
-        <Search />
-        {props.kind === "notes-root" && (
+        {props.kind === "notes-root" ? (
           <>
+            <div className="grid gap-2">
+              <Search />
+              <FilterByTags />
+            </div>
             <SortByField />
             <div className="grid gap-2">
               <SortByDirection />
               <Paginate />
             </div>
           </>
+        ) : (
+          <Search />
         )}
         <ToolBar />
       </header>

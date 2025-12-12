@@ -27,7 +27,7 @@ interface NoteTagsPopoverProps {
 }
 
 export default function NoteTagsPopover({ noteId, currNoteTagIds, availNoteTags }: NoteTagsPopoverProps) {
-  // Optimistic state, used to track selected tags - we initialize it with the current note tags
+  // Optimistic state, used to track the currently toggled tags - we initialize it with the current note tags
   const [currToggledTagIds, setCurrToggledTagIds] = useState(currNoteTagIds);
   const [optiToggledTagIds, setOptiToggledTagIds] = useOptimistic(currToggledTagIds);
 
@@ -50,7 +50,7 @@ export default function NoteTagsPopover({ noteId, currNoteTagIds, availNoteTags 
     <Popover>
       <PopoverTrigger className="flex w-96 flex-wrap items-center justify-center gap-2">
         {selectedNoteTags.length === 0 ? (
-          <Badge variant="outline" className="uppercase">
+          <Badge variant="outline" className="w-full p-3 uppercase">
             <TagIcon className="size-9" />
             Add Tags...
           </Badge>

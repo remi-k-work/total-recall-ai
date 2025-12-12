@@ -35,7 +35,7 @@ export default function Page({ params, searchParams }: PageProps<"/notes">) {
 async function PageContent({ params, searchParams }: PageProps<"/notes">) {
   // Safely validate next.js route inputs (`params` and `searchParams`) against a zod schema; return typed data or trigger a 404 on failure
   const {
-    searchParams: { str: searchTerm, crp: currentPage, sbf: sortByField, sbd: sortByDirection },
+    searchParams: { str: searchTerm, crp: currentPage, fbt: filterByTagIndxs, sbf: sortByField, sbd: sortByDirection },
   } = await validatePageInputs(NotesPageSchema, { params, searchParams });
 
   // Make sure the current user is authenticated (the check runs on the server side)
@@ -60,6 +60,8 @@ async function PageContent({ params, searchParams }: PageProps<"/notes">) {
         totalItems={totalItems}
         totalPages={totalPages}
         searchTerm={searchTerm}
+        availNoteTags={availNoteTags}
+        filterByTagIndxs={filterByTagIndxs}
         sortByField={sortByField}
         sortByDirection={sortByDirection}
         currentPage={currentPage}
@@ -70,6 +72,8 @@ async function PageContent({ params, searchParams }: PageProps<"/notes">) {
         totalItems={totalItems}
         totalPages={totalPages}
         searchTerm={searchTerm}
+        availNoteTags={availNoteTags}
+        filterByTagIndxs={filterByTagIndxs}
         sortByField={sortByField}
         sortByDirection={sortByDirection}
         currentPage={currentPage}

@@ -11,15 +11,19 @@ import DeleteNote from "./DeleteNote";
 // assets
 import { DocumentDuplicateIcon, DocumentPlusIcon, DocumentTextIcon, TagIcon, TrashIcon } from "@heroicons/react/24/outline";
 
+// types
+import type { Route } from "next";
+
 export default function ToolBar() {
   // Access the browse bar context and retrieve all necessary information
   const browseBarContext = useBrowseBarContext();
+  const { createHref } = browseBarContext;
 
   return (
     <section className="flex flex-wrap items-center justify-around gap-4 *:basis-24">
       {browseBarContext.kind === "notes-root" ? (
         <Button variant="ghost" className="flex-col text-center whitespace-pre-line" asChild>
-          <Link href="/notes/new">
+          <Link href={createHref(undefined, "/notes/new")}>
             <DocumentPlusIcon className="size-11" />
             {"New Note".replaceAll(" ", "\n")}
           </Link>
@@ -34,7 +38,7 @@ export default function ToolBar() {
       {browseBarContext.kind === "note-details" ? (
         <>
           <Button variant="ghost" className="flex-col text-center whitespace-pre-line" asChild>
-            <Link href={`/notes/${browseBarContext.noteId}/edit`}>
+            <Link href={createHref(undefined, `/notes/${browseBarContext.noteId}/edit` as Route)}>
               <DocumentTextIcon className="size-11" />
               {"Edit Note".replaceAll(" ", "\n")}
             </Link>
@@ -56,7 +60,7 @@ export default function ToolBar() {
 
       {browseBarContext.kind !== "notes-root" ? (
         <Button variant="ghost" className="flex-col text-center whitespace-pre-line" asChild>
-          <Link href="/notes">
+          <Link href={createHref(undefined, "/notes")}>
             <DocumentDuplicateIcon className="size-11" />
             {"All Notes".replaceAll(" ", "\n")}
           </Link>
