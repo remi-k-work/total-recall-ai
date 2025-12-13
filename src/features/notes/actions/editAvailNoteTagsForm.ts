@@ -32,7 +32,7 @@ export default async function editAvailNoteTags(_prevState: unknown, formData: F
     } = (await getUserSessionData())!;
 
     // Return early if the current user is in demo mode
-    // if (role === "demo") return { ...initialFormState, actionStatus: "demoMode" };
+    if (role === "demo") return { ...initialFormState, actionStatus: "demoMode" };
 
     // Validate the form on the server side and extract needed data
     const { availNoteTags } = await SERVER_VALIDATE(formData);

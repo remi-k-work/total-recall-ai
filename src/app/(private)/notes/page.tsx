@@ -2,7 +2,7 @@
 import { Suspense } from "react";
 
 // drizzle and db access
-import { getAvailNoteTags, getNotesWithPagination } from "@/features/notes/db";
+import { getAvailNoteTags, getNotesWithPagination, noteTagIndexesToIds } from "@/features/notes/db";
 
 // services, features, and other libraries
 import { validatePageInputs } from "@/lib/helpers";
@@ -47,10 +47,16 @@ async function PageContent({ params, searchParams }: PageProps<"/notes">) {
   } = (await getUserSessionData())!;
 
   // Retrieve all notes for a user and their available note tags
-  const [{ notes, totalItems, totalPages }, availNoteTags] = await Promise.all([
-    getNotesWithPagination(userId, searchTerm, currentPage, 6, sortByField, sortByDirection),
-    getAvailNoteTags(userId),
-  ]);
+  const availNoteTags = await getAvailNoteTags(userId);
+  const { notes, totalItems, totalPages } = await getNotesWithPagination(
+    userId,
+    searchTerm,
+    currentPage,
+    6,
+    sortByField,
+    sortByDirection,
+    noteTagIndexesToIds(filterByTagIndxs, availNoteTags),
+  );
 
   return (
     <>

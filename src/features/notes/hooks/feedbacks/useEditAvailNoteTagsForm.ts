@@ -42,9 +42,8 @@ export default function useEditAvailNoteTagsFormFeedback(
       // Show the permanent feedback message as well
       showFeedbackMessage(SUCCEEDED_MESSAGE);
 
-      // Redirect the user after successful note update
-      // return setTimeout(() => redirect("/notes"), 3000);
-      return setTimeout(() => {}, 3000);
+      // Redirect the user after successful note tags update
+      return setTimeout(() => redirect("/notes"), 3000);
     } else {
       // Was a restricted operation attempted under the demo account? Inform the user
       guardForDemoMode();

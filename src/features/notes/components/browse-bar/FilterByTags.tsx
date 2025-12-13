@@ -15,7 +15,7 @@ import { TagIcon } from "@heroicons/react/24/outline";
 
 export default function FilterByTags() {
   // Access the browse bar context and retrieve all necessary information
-  const { totalItems, availNoteTags, filterByTagIndxs, navigate } = useBrowseBarContext("notes-root");
+  const { availNoteTags, filterByTagIndxs, navigate } = useBrowseBarContext("notes-root");
 
   // Currently toggled filter by tags (we only store their indexes relative to the complete list of available note tags for this user)
   const [currFilterByTagIndxs, setCurrFilterByTagIndxs] = useState(filterByTagIndxs);
@@ -37,7 +37,7 @@ export default function FilterByTags() {
   // Use the debounced callback to initiate the relevant actions
   const handleToggledNoteTags = useDebouncedCallback((filterByTagIndxs: string[]) => {
     // Refresh the page with the new filter by tags
-    navigate({ fbt: filterByTagIndxs });
+    navigate({ fbt: filterByTagIndxs, crp: 1 });
   }, 3000);
 
   return (
@@ -56,7 +56,6 @@ export default function FilterByTags() {
         <ToggleGroup
           type="multiple"
           spacing={2}
-          disabled={totalItems <= 1}
           value={currFilterByTagIndxs.map(String)}
           onValueChange={(value) => {
             // Immediate UI update of the toggled tags
