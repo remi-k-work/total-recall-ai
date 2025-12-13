@@ -10,7 +10,7 @@ import { Switch } from "@/components/ui/custom/switch";
 
 export default function SortByDirection() {
   // Access the browse bar context and retrieve all necessary information
-  const { totalPages, sortByDirection, navigate } = useBrowseBarContext("notes-root");
+  const { totalItems, sortByDirection, navigate } = useBrowseBarContext("notes-root");
 
   // Currently selected sort by direction
   const [currSortByDirection, setCurrSortByDirection] = useState(sortByDirection);
@@ -27,7 +27,7 @@ export default function SortByDirection() {
         name="sortDirection"
         aria-label="Sort Direction"
         title="Sort Direction"
-        disabled={totalPages <= 1}
+        disabled={totalItems <= 1}
         checked={currSortByDirection === "asc"}
         onCheckedChange={(isAscending) => {
           setCurrSortByDirection(isAscending ? "asc" : "desc");

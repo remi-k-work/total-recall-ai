@@ -23,7 +23,7 @@ export default function ToolBar() {
     <section className="flex flex-wrap items-center justify-around gap-4 *:basis-24">
       {browseBarContext.kind === "notes-root" ? (
         <Button variant="ghost" className="flex-col text-center whitespace-pre-line" asChild>
-          <Link href={createHref(undefined, "/notes/new")}>
+          <Link href={createHref("/notes/new")}>
             <DocumentPlusIcon className="size-11" />
             {"New Note".replaceAll(" ", "\n")}
           </Link>
@@ -38,7 +38,7 @@ export default function ToolBar() {
       {browseBarContext.kind === "note-details" ? (
         <>
           <Button variant="ghost" className="flex-col text-center whitespace-pre-line" asChild>
-            <Link href={createHref(undefined, `/notes/${browseBarContext.noteId}/edit` as Route)}>
+            <Link href={createHref(`/notes/${browseBarContext.noteId}/edit` as Route)}>
               <DocumentTextIcon className="size-11" />
               {"Edit Note".replaceAll(" ", "\n")}
             </Link>
@@ -60,7 +60,7 @@ export default function ToolBar() {
 
       {browseBarContext.kind !== "notes-root" ? (
         <Button variant="ghost" className="flex-col text-center whitespace-pre-line" asChild>
-          <Link href={createHref(undefined, "/notes")}>
+          <Link href={createHref("/notes")}>
             <DocumentDuplicateIcon className="size-11" />
             {"All Notes".replaceAll(" ", "\n")}
           </Link>

@@ -28,7 +28,7 @@ const ICON_MAP = {
 
 export default function SortByField() {
   // Access the browse bar context and retrieve all necessary information
-  const { sortByFields, sortByField, createHref } = useBrowseBarContext("notes-root");
+  const { totalItems, sortByFields, sortByField, createHref } = useBrowseBarContext("notes-root");
 
   // Currently selected sort by field
   const [currSortByField, setCurrSortByField] = useState(sortByField);
@@ -39,13 +39,20 @@ export default function SortByField() {
   }, [sortByField]);
 
   return (
-    <ToggleGroup type="single" className="items-start" value={currSortByField} onValueChange={setCurrSortByField}>
+    <ToggleGroup type="single" disabled={totalItems <= 1} value={currSortByField} onValueChange={setCurrSortByField} className="items-start">
       {sortByFields.map(({ key, label, iconKey }) => (
         <ToggleGroupItem key={key} value={key} aria-label={`Sort By: ${label}`} title={`Sort By: ${label}`} className="gap-0" asChild>
-          <Link href={createHref({ sbf: key })} className="flex-col text-center whitespace-pre-line">
-            {ICON_MAP[iconKey]}
-            {label.replaceAll(" ", "\n")}
-          </Link>
+          {totalItems <= 1 ? (
+            <span className="flex-col text-center whitespace-pre-line">
+              {ICON_MAP[iconKey]}
+              {label.replaceAll(" ", "\n")}
+            </span>
+          ) : (
+            <Link href={createHref({ sbf: key })} className="flex-col text-center whitespace-pre-line">
+              {ICON_MAP[iconKey]}
+              {label.replaceAll(" ", "\n")}
+            </Link>
+          )}
         </ToggleGroupItem>
       ))}
     </ToggleGroup>

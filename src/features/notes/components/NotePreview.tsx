@@ -5,6 +5,7 @@ import Link from "next/link";
 
 // services, features, and other libraries
 import { useNotePreferencesStore } from "@/features/notes/stores/NotePreferencesProvider";
+import useUrlScribe from "@/hooks/useUrlScribe";
 
 // components
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
@@ -16,6 +17,7 @@ import UpdatedAt from "./UpdatedAt";
 
 // types
 import type { getAvailNoteTags, getNotesWithPagination } from "@/features/notes/db";
+import type { Route } from "next";
 
 interface NotePreviewProps {
   note: Awaited<ReturnType<typeof getNotesWithPagination>>["notes"][number];
@@ -29,11 +31,14 @@ export default function NotePreview({ note: { id: noteId, title, contentPreview,
   // Retrieve the necessary state and actions from the note preferences store
   const color = useNotePreferencesStore((state) => state.color);
 
+  // A hook to easily create new route strings with updated search parameters (it preserves existing search params)
+  const { createHref } = useUrlScribe();
+
   return (
     <Card className="mb-4 break-inside-avoid rounded-[255px_15px_225px_15px/15px_225px_15px_255px]" style={color ? { backgroundColor: color } : undefined}>
       <CardHeader>
         <CardTitle>
-          <Link href={`/notes/${noteId}`} className="link text-3xl leading-none font-normal normal-case">
+          <Link href={createHref(`/notes/${noteId}` as Route)} className="link text-3xl leading-none font-normal normal-case">
             {title}
           </Link>
         </CardTitle>
