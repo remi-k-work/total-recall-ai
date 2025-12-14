@@ -1,8 +1,11 @@
+// constants
+import { MY_NOTE_TAGS_MAP } from "./myNoteTags";
+
 // Example notes (different topics, some with multiple paragraphs)
 export const EXAMPLE_NOTES = [
   {
     title: "Grocery List",
-    noteTagIds: ["7d4a3c2b-9f1e-4b5a-8c7d-6e5f4a3b0e05", "8f7e6d5c-4b3a-4c2d-9e1f-0a9b8c7d1411"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["📌To Remember"], MY_NOTE_TAGS_MAP["🛒Lists"]],
     content: `My grocery list for today is:
 - Apples
 - Bananas
@@ -21,7 +24,7 @@ On top of that, I need some pantry staples like olive oil, salt, pepper, and som
   },
   {
     title: "Favorite Color",
-    noteTagIds: ["4b7a2f2c-9f3a-4c52-b2f4-3a8c6a7b0b02", "2c1b0a9f-8e7d-4c5b-9a6f-5e4d3c2b1310"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["🔥Quick Thoughts"], MY_NOTE_TAGS_MAP["🏠Personal"]],
     content: `My favorite color is red.
 I’ve always felt that red gives me energy and motivation. It’s vibrant, bold, and makes me feel more confident in my daily tasks.
 Interestingly, when I was younger, my favorite color used to be blue. But over the years, red has grown on me. I think it resonates with my personality more as I’ve matured.
@@ -30,7 +33,7 @@ I think I like it because it feels bold and powerful. Psychologically, red can i
   },
   {
     title: "Jogging Routine",
-    noteTagIds: ["c9f1e6c7-5a5b-4f1b-9d9b-8e7a4d1e0a01", "1f9e8d7c-6b5a-4c3d-9e2f-1a0b9c8d0f06", "2c1b0a9f-8e7d-4c5b-9a6f-5e4d3c2b1310"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["⭐Important"], MY_NOTE_TAGS_MAP["📅Plans"], MY_NOTE_TAGS_MAP["🏠Personal"]],
     content: `I should be jogging more.
 Recently, I’ve been too busy with work and haven’t exercised enough. I can feel my stamina dropping. My doctor also reminded me that cardio exercise is important for heart health, so I need to be more consistent.
 My plan is to jog three times per week, even if just for 20 minutes. It doesn’t have to be a marathon — consistency is more important. I also want to track my distance and pace using a running app to monitor progress.
@@ -39,12 +42,12 @@ In the long term, I hope to build endurance and make jogging a habit. I might ev
   },
   {
     title: "Quick Reminder",
-    noteTagIds: ["4b7a2f2c-9f3a-4c52-b2f4-3a8c6a7b0b02", "7d4a3c2b-9f1e-4b5a-8c7d-6e5f4a3b0e05"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["🔥Quick Thoughts"], MY_NOTE_TAGS_MAP["📌To Remember"]],
     content: `Buy cat food. Call mom. Pay electricity bill. Remember to bring umbrella tomorrow in case it rains.`,
   },
   {
     title: "Study Guide on Photosynthesis",
-    noteTagIds: ["3b6c9d1e-8f2a-4b7c-9d5e-4a3f2b1c1007"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["📚Learning"]],
     content: `Photosynthesis is the fundamental biological process by which **green plants, algae, and some bacteria convert light energy, typically from the sun, into chemical energy**. This stored energy is in the form of **glucose**, a sugar, which the organisms use for fuel. This process is absolutely crucial for life on Earth, as it's the primary way that energy enters most food chains, and it's also responsible for producing the **oxygen** (O2) we breathe. The overall chemical equation for photosynthesis summarizes this transformation: 6CO2 + 6H2O + light energy -> C6H12O6 + 6O2. This equation shows that **carbon dioxide** (CO2) and **water** (H2O), in the presence of light, are converted into **glucose** (C6H12O6) and **oxygen** (O2). The process occurs primarily within specialized organelles called **chloroplasts** inside the cells of leaves. Within the chloroplasts, the green pigment **chlorophyll** plays a central role by absorbing the light energy that powers the reaction. Chlorophyll absorbs light most effectively in the blue and red parts of the electromagnetic spectrum, reflecting the green light, which is why most leaves appear green.
 Photosynthesis is not a single reaction; rather, it's a complex sequence of two main stages: the **Light-Dependent Reactions** (or Light Reactions) and the **Light-Independent Reactions** (or Calvin Cycle). These two stages are tightly coupled, each relying on the products of the other.
 The **Light-Dependent Reactions** occur in the **thylakoid membranes** within the chloroplasts. Thylakoids are flattened sacs stacked into structures called **grana**. These reactions **require light**. Light energy is captured by **photosystems** (complexes of proteins and pigments, including chlorophyll). This captured energy **excites electrons** in the chlorophyll molecules. These high-energy electrons are then passed along an **electron transport chain** (ETC).
@@ -54,7 +57,7 @@ The unstable six-carbon compound quickly splits into two molecules of a three-ca
   },
   {
     title: "Physics Study Guide - Kinematics",
-    noteTagIds: ["3b6c9d1e-8f2a-4b7c-9d5e-4a3f2b1c1007"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["📚Learning"]],
     content: `## Key Formulas for Kinematics
 
 Here are the core equations we need to memorize for the exam.
@@ -101,7 +104,7 @@ $$
   },
   {
     title: "Meeting Notes: Project Phoenix Sync",
-    noteTagIds: ["e2b9f6c1-6d1f-4f5e-9c22-1a9b3d4c0c03", "5e4d3c2b-1a9f-4b8c-9d7e-6f5a4b3c1209"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["🧠Ideas"], MY_NOTE_TAGS_MAP["💼Work Stuff"]],
     content: `## Weekly Sync - Oct 21
 
 **Attendees:** Me, Sarah, David
@@ -123,7 +126,7 @@ $$
   },
   {
     title: "Useful TypeScript Snippet",
-    noteTagIds: ["3b6c9d1e-8f2a-4b7c-9d5e-4a3f2b1c1007", "6a5b4c3d-2e1f-4a9b-8c7d-6e5f4a3b1512"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["📚Learning"], MY_NOTE_TAGS_MAP["✨Inspiration"]],
     content: `### Type-Safe \`Object.keys\`
 A helper function I keep using to get properly typed keys from an object in TypeScript, instead of just \`string[]\`.
 
@@ -146,7 +149,7 @@ This is way better than the default \`Object.keys(permissions)\` which just retu
   },
   {
     title: "Quick Recipe - Garlic Noodles",
-    noteTagIds: ["4b7a2f2c-9f3a-4c52-b2f4-3a8c6a7b0b02", "e2b9f6c1-6d1f-4f5e-9c22-1a9b3d4c0c03"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["🔥Quick Thoughts"], MY_NOTE_TAGS_MAP["🧠Ideas"]],
     content: `## 15-Minute Garlic Noodles
 My go-to quick dinner.
 
@@ -170,7 +173,7 @@ My go-to quick dinner.
   },
   {
     title: "Total Recall AI - Project To-Dos",
-    noteTagIds: ["c9f1e6c7-5a5b-4f1b-9d9b-8e7a4d1e0a01", "e2b9f6c1-6d1f-4f5e-9c22-1a9b3d4c0c03", "1f9e8d7c-6b5a-4c3d-9e2f-1a0b9c8d0f06"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["⭐Important"], MY_NOTE_TAGS_MAP["🧠Ideas"], MY_NOTE_TAGS_MAP["📅Plans"]],
     content: `## Next Features
 A list of features I need to implement for the app.
 
@@ -190,7 +193,7 @@ A list of features I need to implement for the app.
   },
   {
     title: "React Hook: useToggle",
-    noteTagIds: ["e2b9f6c1-6d1f-4f5e-9c22-1a9b3d4c0c03", "3b6c9d1e-8f2a-4b7c-9d5e-4a3f2b1c1007", "6a5b4c3d-2e1f-4a9b-8c7d-6e5f4a3b1512"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["🧠Ideas"], MY_NOTE_TAGS_MAP["📚Learning"], MY_NOTE_TAGS_MAP["✨Inspiration"]],
     content: `## Custom React Hook for Toggling State
 
 Here's a simple \`useToggle\` hook I wrote. It's useful for modals, dropdowns, etc.
@@ -233,7 +236,7 @@ I should remember to use \`useCallback\` to prevent unnecessary re-renders if th
   },
   {
     title: "Book Notes: Atomic Habits",
-    noteTagIds: ["9a8b7c6d-5e4f-4a3b-9c2d-1e0f2a3b1108"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["✍️Writing"]],
     content: `## Key Takeaways from "Atomic Habits" by James Clear
 
 ### The Four Laws of Behavior Change
@@ -257,7 +260,7 @@ This is a reminder to focus on the process, not just the outcome. My system for 
   },
   {
     title: "ML Concepts: Gradient Descent",
-    noteTagIds: ["3b6c9d1e-8f2a-4b7c-9d5e-4a3f2b1c1007"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["📚Learning"]],
     content: `## Understanding Gradient Descent
 
 This is the core optimization algorithm used in most machine learning models. The goal is to find the values for a model's parameters (weights, $$\\theta$$) that minimize a cost function (or loss function), $$J(\\theta)$$.
@@ -283,7 +286,7 @@ We repeat this update for all parameters $$\\theta_0, \\theta_1, ..., \\theta_n$
   },
   {
     title: "Family Birthdays & Gift Ideas",
-    noteTagIds: ["7d4a3c2b-9f1e-4b5a-8c7d-6e5f4a3b0e05", "2c1b0a9f-8e7d-4c5b-9a6f-5e4d3c2b1310", "8f7e6d5c-4b3a-4c2d-9e1f-0a9b8c7d1411"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["📌To Remember"], MY_NOTE_TAGS_MAP["🏠Personal"], MY_NOTE_TAGS_MAP["🛒Lists"]],
     content: `## Important Dates & Gifts
 
 I'm so bad at remembering this stuff. This note is my single source of truth.
@@ -352,7 +355,7 @@ This setup should allow Drizzle to correctly handle the \`vector\` type when I i
   },
   {
     title: "Japan Trip Itinerary - Tokyo",
-    noteTagIds: ["1f9e8d7c-6b5a-4c3d-9e2f-1a0b9c8d0f06", "2c1b0a9f-8e7d-4c5b-9a6f-5e4d3c2b1310"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["📅Plans"], MY_NOTE_TAGS_MAP["🏠Personal"]],
     content: `## Tokyo Plan - November 2024
 
 **Flight:** AC1 - Arrives at NRT (Narita) - Nov 10th @ 4:30 PM
@@ -389,7 +392,7 @@ This setup should allow Drizzle to correctly handle the \`vector\` type when I i
   },
   {
     title: "Character Bio: Kaelen",
-    noteTagIds: ["e2b9f6c1-6d1f-4f5e-9c22-1a9b3d4c0c03", "9a8b7c6d-5e4f-4a3b-9c2d-1e0f2a3b1108"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["🧠Ideas"], MY_NOTE_TAGS_MAP["✍️Writing"]],
     content: `## Character Concept for D&D Campaign
 
 **Name:** Kaelen "Shadow" Vorlag
@@ -473,7 +476,7 @@ except requests.exceptions.RequestException as e:
   },
   {
     title: "Coffee Brewing Methods",
-    noteTagIds: ["7d4a3c2b-9f1e-4b5a-8c7d-6e5f4a3b0e05"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["📌To Remember"]],
     content: `## Comparing My Favorite Brew Methods
 
 I'm always trying to perfect my morning coffee. Here's a quick comparison table to remind me of the key variables.
@@ -489,7 +492,7 @@ I'm always trying to perfect my morning coffee. Here's a quick comparison table 
   },
   {
     title: "App Ideas Brainstorm",
-    noteTagIds: ["4b7a2f2c-9f3a-4c52-b2f4-3a8c6a7b0b02", "e2b9f6c1-6d1f-4f5e-9c22-1a9b3d4c0c03"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["🔥Quick Thoughts"], MY_NOTE_TAGS_MAP["🧠Ideas"]],
     content: `## Random App Ideas - "Dumb" ideas allowed
 Just a place to dump ideas so I don't forget them.
 
@@ -503,7 +506,7 @@ Just a place to dump ideas so I don't forget them.
   },
   {
     title: "Math Concept: Euler's Identity",
-    noteTagIds: ["3b6c9d1e-8f2a-4b7c-9d5e-4a3f2b1c1007"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["📚Learning"]],
     content: `## Euler's Identity: The Most Beautiful Equation
 
 Often called the most beautiful equation in mathematics, it links five of the most fundamental constants.
@@ -548,7 +551,7 @@ It's amazing because it connects geometry ($$\\pi$$), algebra ($$i$$), and analy
   },
   {
     title: "Journal Entry - Oct 22",
-    noteTagIds: ["9a8b7c6d-5e4f-4a3b-9c2d-1e0f2a3b1108", "2c1b0a9f-8e7d-4c5b-9a6f-5e4d3c2b1310"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["✍️Writing"], MY_NOTE_TAGS_MAP["🏠Personal"]],
     content: `Today was a long day. The \`/api/v2/analytics\` endpoint for **Project Phoenix** is still giving us trouble. David thinks it's a database query issue, but I'm still convinced caching with Redis (like I suggested in the meeting) is the right long-term fix. I'll spike it out tomorrow.
 
 On a personal note, I re-read my note on "Atomic Habits." My jogging routine has been non-existent. I need to apply the "Make it Obvious" rule. My new system: **"After I brush my teeth in the morning, I will immediately put on my running clothes."** No excuses. Let's see if this works.`,
@@ -587,7 +590,7 @@ brew install --cask arc
   },
   {
     title: "Decision: New Apartment",
-    noteTagIds: ["c9f1e6c7-5a5b-4f1b-9d9b-8e7a4d1e0a01", "a6f3d4b2-7c9e-4a1b-8f3c-9e2b1c0d0d04"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["⭐Important"], MY_NOTE_TAGS_MAP["❓Questions"]],
     content: `## Should I move to the downtown apartment?
 
 Trying to make a logical decision. My current lease is up in 3 months.
@@ -622,7 +625,7 @@ Trying to make a logical decision. My current lease is up in 3 months.
   },
   {
     title: "Brainstorming: Total Recall AI - Future Features",
-    noteTagIds: ["e2b9f6c1-6d1f-4f5e-9c22-1a9b3d4c0c03", "5e4d3c2b-1a9f-4b8c-9d7e-6f5a4b3c1209"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["🧠Ideas"], MY_NOTE_TAGS_MAP["💼Work Stuff"]],
     content: `## V2 Feature Ideas (Blue Sky)
 
 - **Smart Folders / Dynamic Collections**:
@@ -647,7 +650,7 @@ Trying to make a logical decision. My current lease is up in 3 months.
   },
   {
     title: "Fitness Plan - Week 44",
-    noteTagIds: ["c9f1e6c7-5a5b-4f1b-9d9b-8e7a4d1e0a01", "1f9e8d7c-6b5a-4c3d-9e2f-1a0b9c8d0f06", "2c1b0a9f-8e7d-4c5b-9a6f-5e4d3c2b1310"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["⭐Important"], MY_NOTE_TAGS_MAP["📅Plans"], MY_NOTE_TAGS_MAP["🏠Personal"]],
     content: `## My Weekly Workout Split
 
 Trying to be consistent, as I wrote in my 'Jogging Routine' note. This is a more structured plan based on the 'Atomic Habits' principles (making it specific and schedulable).
@@ -723,7 +726,7 @@ This is great for hero sections.
   },
   {
     title: "Quotes to Remember",
-    noteTagIds: ["9a8b7c6d-5e4f-4a3b-9c2d-1e0f2a3b1108", "8f7e6d5c-4b3a-4c2d-9e1f-0a9b8c7d1411", "6a5b4c3d-2e1f-4a9b-8c7d-6e5f4a3b1512"],
+    noteTagIds: [MY_NOTE_TAGS_MAP["✍️Writing"], MY_NOTE_TAGS_MAP["🛒Lists"], MY_NOTE_TAGS_MAP["✨Inspiration"]],
     content: `A collection of quotes that I find motivating or insightful.
 
 > "We are what we repeatedly do. Excellence, then, is not an act, but a habit."

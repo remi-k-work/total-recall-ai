@@ -93,7 +93,8 @@ export const getMostRecentNotes = (userId: string, limit?: number) => {
 };
 
 // Get a single note for a user
-export const getNote = (id: string, userId: string) => db.query.NoteTable.findFirst({ where: and(eq(NoteTable.id, id), eq(NoteTable.userId, userId)) });
+export const getNote = (id: string, userId: string) =>
+  db.query.NoteTable.findFirst({ where: and(eq(NoteTable.id, id), eq(NoteTable.userId, userId)), with: { noteToNoteTag: { columns: { noteTagId: true } } } });
 
 // Get the title of a note for a user
 export const getNoteTitle = (id: string, userId: string) =>

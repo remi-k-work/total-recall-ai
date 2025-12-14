@@ -7,21 +7,27 @@ import { useNotePreferencesStore } from "@/features/notes/stores/NotePreferences
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
 import { Response } from "@/components/ai-elements/response";
 import ColorPicker from "./ColorPicker";
+import NoteTagsPopover from "./note-tags-popover";
 import CreatedAt from "./CreatedAt";
 import UpdatedAt from "./UpdatedAt";
 
 // types
-import type { getNote } from "@/features/notes/db";
+import type { getAvailNoteTags, getNote } from "@/features/notes/db";
 
 interface NoteDetailsProps {
   note: Exclude<Awaited<ReturnType<typeof getNote>>, undefined>;
+  availNoteTags: Awaited<ReturnType<typeof getAvailNoteTags>>;
   inNoteModal?: boolean;
 }
 
 // constants
 import { REHYPE_PLUGINS } from "@/features/notes-assistant/constants/plugins";
 
-export default function NoteDetails({ note: { title, content, createdAt, updatedAt }, inNoteModal = false }: NoteDetailsProps) {
+export default function NoteDetails({
+  note: { id: noteId, title, content, createdAt, updatedAt, noteToNoteTag },
+  availNoteTags,
+  inNoteModal = false,
+}: NoteDetailsProps) {
   // Retrieve the necessary state and actions from the note preferences store
   const color = useNotePreferencesStore((state) => state.color);
 
@@ -37,6 +43,7 @@ export default function NoteDetails({ note: { title, content, createdAt, updated
       </CardContent>
       <CardFooter className="flex flex-wrap items-center justify-around gap-6 border-t pt-6">
         <ColorPicker />
+        <NoteTagsPopover noteId={noteId} currNoteTagIds={noteToNoteTag.map(({ noteTagId }) => noteTagId)} availNoteTags={availNoteTags} />
         <CreatedAt createdAt={createdAt} />
         <UpdatedAt updatedAt={updatedAt} />
       </CardFooter>

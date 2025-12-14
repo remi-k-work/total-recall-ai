@@ -5,7 +5,7 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 
 // drizzle and db access
-import { getNote } from "@/features/notes/db";
+import { getAvailNoteTags, getNote } from "@/features/notes/db";
 
 // services, features, and other libraries
 import { validatePageInputs } from "@/lib/helpers";
@@ -51,8 +51,8 @@ async function PageContent({ params, searchParams }: PageProps<"/notes/[id]">) {
     user: { id: userId },
   } = (await getUserSessionData())!;
 
-  // Get a single note for a user
-  const note = await getNote(noteId, userId);
+  // Get a single note for a user as well as their available note tags
+  const [note, availNoteTags] = await Promise.all([getNote(noteId, userId), getAvailNoteTags(userId)]);
 
   // If the note is not found, return a 404
   if (!note) notFound();
@@ -62,7 +62,7 @@ async function PageContent({ params, searchParams }: PageProps<"/notes/[id]">) {
       <PageHeader title="Note Details" description="Below are all your note details" />
       <BrowseBar kind="note-details" searchTerm={searchTerm} />
       <NotePreferencesStoreProvider noteId={noteId} initState={note.preferences ?? undefined}>
-        <NoteDetails note={note} />
+        <NoteDetails note={note} availNoteTags={availNoteTags} />
       </NotePreferencesStoreProvider>
     </>
   );
