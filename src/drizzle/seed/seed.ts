@@ -4,7 +4,7 @@ import "dotenv/config";
 // drizzle and db access
 import { db } from "@/drizzle/db";
 import { eq } from "drizzle-orm";
-import { insertNote, insertNoteChunks } from "@/features/notes/db";
+import { insertNote, insertNoteChunks, syncMyNoteTags, syncNoteTags } from "@/features/notes/db";
 
 // all table definitions (their schemas)
 import { UserTable } from "@/drizzle/schema";
@@ -14,7 +14,7 @@ import { auth } from "@/services/better-auth/auth";
 import { generateNoteEmbeddings } from "@/features/notes/lib/embeddings2";
 
 // constants
-import { DEMO_USER_EMAIL, DEMO_USER_NAME, DEMO_USER_PASS, EXAMPLE_NOTES } from "./constants";
+import { DEMO_USER_EMAIL, DEMO_USER_NAME, DEMO_USER_PASS, EXAMPLE_NOTES, MY_NOTE_TAGS } from "./constants";
 
 async function main() {
   try {
@@ -38,11 +38,19 @@ async function main() {
 
     // const userId = "HePVdeWqffbAUg4VPYM1DMCjIeghprhj";
 
+    console.log("Seeding available note tags...");
+
+    // Synchronize all incoming note tags with the existing ones for this user
+    await syncMyNoteTags(userId, MY_NOTE_TAGS);
+
     console.log("Seeding notes and chunks...");
 
-    for (const { title, content } of EXAMPLE_NOTES) {
+    for (const { title, noteTagIds, content } of EXAMPLE_NOTES) {
       // Insert a new note for a user
       const [{ id: noteId }] = await insertNote(userId, { title, content });
+
+      // Sync tags for a note (useful when the UI sends a full list of tags)
+      await syncNoteTags(noteId, noteTagIds);
 
       // Generate embeddings for a note
       const noteEmbeddings = await generateNoteEmbeddings(content);

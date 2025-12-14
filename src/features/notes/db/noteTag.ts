@@ -18,7 +18,7 @@ export const noteTagIndexesToIds = (filterByTagIndxs: number[], availNoteTags: A
   filterByTagIndxs.map((i) => availNoteTags[i]?.id).filter((id): id is string => Boolean(id));
 
 // Synchronize all incoming note tags with the existing ones for this user
-export const syncMyNoteTags = async (userId: string, incomingNoteTags: { id: string; name: string }[]) => {
+export const syncMyNoteTags = async (userId: string, incomingNoteTags: readonly { id: string; name: string }[]) => {
   // Run all db operations in a transaction
   await db.transaction(async (tx) => {
     // Fetch all existing tags for this user
@@ -43,7 +43,7 @@ export const syncMyNoteTags = async (userId: string, incomingNoteTags: { id: str
     const existingNameToId = new Map(survivingTags.map(({ name, id }) => [name.trim().toLowerCase(), id]));
 
     // Hold tags to insert in a batch
-    const tagsToInsert: typeof incomingNoteTags = [];
+    const tagsToInsert: { id: string; name: string }[] = [];
 
     // Single pass to handle updates and collect inserts
     for (const { id: incomingId, name: rawName } of incomingNoteTags) {
@@ -83,7 +83,7 @@ export const syncMyNoteTags = async (userId: string, incomingNoteTags: { id: str
 };
 
 // Sync tags for a note (useful when the UI sends a full list of tags)
-export const syncNoteTags = async (noteId: string, noteTagIds: string[]) => {
+export const syncNoteTags = async (noteId: string, noteTagIds: readonly string[]) => {
   // Run all db operations in a transaction
   await db.transaction(async (tx) => {
     // Delete all existing links for this note (this is efficient enough for notes that rarely have more than 10 note tags)
