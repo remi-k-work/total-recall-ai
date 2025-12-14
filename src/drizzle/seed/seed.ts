@@ -14,8 +14,7 @@ import { auth } from "@/services/better-auth/auth";
 import { generateNoteEmbeddings } from "@/features/notes/lib/embeddings2";
 
 // constants
-import { DEMO_USER_EMAIL, DEMO_USER_NAME, DEMO_USER_PASS } from "./constants";
-import { EXAMPLE_NOTES } from "./constants/notes";
+import { DEMO_USER_EMAIL, DEMO_USER_NAME, DEMO_USER_PASS, EXAMPLE_NOTES } from "./constants";
 
 async function main() {
   try {
@@ -32,7 +31,8 @@ async function main() {
         email: DEMO_USER_EMAIL,
         password: DEMO_USER_PASS,
         name: DEMO_USER_NAME,
-        role: "demo",
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        role: "demo" as any,
       },
     });
 

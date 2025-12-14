@@ -8,7 +8,7 @@ import { searchNoteChunksForUser } from "@/features/notes/db";
 import { expandQueryWithHypotheticalAnswer } from "@/features/notes-assistant/lib/helpers";
 
 // constants
-import { EXAMPLE_QUESTIONS } from "./constants/questions";
+import { EXAMPLE_QUESTIONS } from "./constants";
 
 async function main() {
   try {

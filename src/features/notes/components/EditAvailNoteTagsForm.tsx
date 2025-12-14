@@ -94,7 +94,7 @@ export default function EditAvailNoteTagsForm({ availNoteTags, inNoteModal = fal
                                 maxLength={51}
                                 spellCheck={false}
                                 autoComplete="off"
-                                placeholder="e.g. 💡Research, 📃Docs & Tutorials, 🧠Brainstorming"
+                                placeholder="e.g. ⭐Important, 🔥Quick Thoughts, 🧠Ideas"
                               />
                             </div>
                             <Button
