@@ -5,8 +5,8 @@ import { Suspense } from "react";
 import { getAvailNoteTags, getNotesWithPagination, noteTagIndexesToIds } from "@/features/notes/db";
 
 // services, features, and other libraries
-import { validatePageInputs } from "@/lib/helpers";
-import { NotesPageSchema } from "@/features/notes/schemas/notesPage";
+import { validatePageInputs } from "@/lib/effectHelpers";
+import { NotesPageSchema2 } from "@/features/notes/schemas/notesPage";
 import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
 // components
@@ -36,7 +36,7 @@ async function PageContent({ params, searchParams }: PageProps<"/notes">) {
   // Safely validate next.js route inputs (`params` and `searchParams`) against a zod schema; return typed data or trigger a 404 on failure
   const {
     searchParams: { str: searchTerm, crp: currentPage, fbt: filterByTagIndxs, sbf: sortByField, sbd: sortByDirection },
-  } = await validatePageInputs(NotesPageSchema, { params, searchParams });
+  } = await validatePageInputs(NotesPageSchema2, { params, searchParams });
 
   // Make sure the current user is authenticated (the check runs on the server side)
   await makeSureUserIsAuthenticated();

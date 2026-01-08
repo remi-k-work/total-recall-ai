@@ -12,7 +12,7 @@ export interface NotesRoot {
   searchRoute: Route;
   searchTerm: string;
   availNoteTags: Awaited<ReturnType<typeof getAvailNoteTags>>;
-  filterByTagIndxs: number[];
+  filterByTagIndxs: readonly number[];
   sortByFields: SortField[];
   sortByField: string;
   sortByDirection: "asc" | "desc";

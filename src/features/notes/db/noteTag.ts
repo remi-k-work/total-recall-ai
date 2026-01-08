@@ -13,7 +13,7 @@ export const getAvailNoteTags = (userId: string) =>
   db.query.NoteTagTable.findMany({ columns: { id: true, name: true }, where: eq(NoteTagTable.userId, userId), orderBy: [asc(NoteTagTable.name)] });
 
 // Map URL-provided note tag indexes to their corresponding note tag IDs using the ordered list of all available note tags for this user
-export const noteTagIndexesToIds = (filterByTagIndxs: number[], availNoteTags: Awaited<ReturnType<typeof getAvailNoteTags>>) =>
+export const noteTagIndexesToIds = (filterByTagIndxs: readonly number[], availNoteTags: Awaited<ReturnType<typeof getAvailNoteTags>>) =>
   // Invalid or out-of-bounds indexes resolve to `undefined` and are filtered out to keep the query safe
   filterByTagIndxs.map((i) => availNoteTags[i]?.id).filter((id): id is string => Boolean(id));
 
