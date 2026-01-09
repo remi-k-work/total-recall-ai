@@ -4,7 +4,7 @@ import { embed, embedMany } from "ai";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 
 // Initialize our embedding model
-const model = google.textEmbedding("gemini-embedding-001");
+const model = google.embedding("gemini-embedding-001");
 
 // A single, structure-aware splitter for all notes
 const markdownSplitter = RecursiveCharacterTextSplitter.fromLanguage("markdown", { chunkSize: 1000, chunkOverlap: 200 });

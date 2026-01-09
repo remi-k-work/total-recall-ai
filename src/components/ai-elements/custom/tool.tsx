@@ -22,10 +22,21 @@ type ToolOutputProps = ComponentPropsWithoutRef<"div"> & { output: ToolUIPart["o
 const ICONS = {
   "input-streaming": <CircleIcon className="size-7" />,
   "input-available": <ClockIcon className="size-7 animate-pulse" />,
+  "approval-requested": <ClockIcon className="size-7 text-yellow-600" />,
+  "approval-responded": <CheckCircleIcon className="size-7 text-blue-600" />,
   "output-available": <CheckCircleIcon className="size-7 text-green-600" />,
   "output-error": <XCircleIcon className="size-7 text-red-600" />,
+  "output-denied": <XCircleIcon className="size-7 text-orange-600" />,
 } as const;
-const LABELS = { "input-streaming": "Pending", "input-available": "Running", "output-available": "Completed", "output-error": "Error" } as const;
+const LABELS = {
+  "input-streaming": "Pending",
+  "input-available": "Running",
+  "approval-requested": "Awaiting Approval",
+  "approval-responded": "Responded",
+  "output-available": "Completed",
+  "output-error": "Error",
+  "output-denied": "Denied",
+} as const;
 
 export const Tool = ({ className, ...props }: ToolProps) => <Collapsible className={cn("group mb-4 w-full rounded-md border", className)} {...props} />;
 

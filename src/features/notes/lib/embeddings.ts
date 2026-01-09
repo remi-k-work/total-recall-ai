@@ -4,7 +4,7 @@ import { embed, embedMany } from "ai";
 import { TokenTextSplitter } from "@langchain/textsplitters";
 
 // Initialize our embedding model
-const model = google.textEmbedding("gemini-embedding-001");
+const model = google.embedding("gemini-embedding-001");
 
 // Very short notes (to-dos, quick reminders) (<100 words, ~50–70 tokens, ~20% overlap)
 const noteSplitterS = new TokenTextSplitter({ chunkSize: 100, chunkOverlap: 20 });
