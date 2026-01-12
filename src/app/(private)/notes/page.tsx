@@ -5,11 +5,12 @@ import { Suspense } from "react";
 import { connection } from "next/server";
 
 // drizzle and db access
-import { getAvailNoteTags, getNotesWithPagination, noteTagIndexesToIds } from "@/features/notes/db";
+import { getAvailNoteTags, Note, noteTagIndexesToIds } from "@/features/notes/db";
 
 // services, features, and other libraries
+import { Effect } from "effect";
 import { RuntimeServer } from "@/lib/RuntimeServer";
-import { validatePageInputs } from "@/lib/effectHelpers";
+import { validatePageInputs } from "@/lib/helpersEffect";
 import { NotesPageSchema2 } from "@/features/notes/schemas/notesPage";
 import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
 
@@ -43,7 +44,7 @@ async function PageContent({ params, searchParams }: PageProps<"/notes">) {
   // Safely validate next.js route inputs (`params` and `searchParams`) against a schema; return typed data or trigger a 404 on failure
   const {
     searchParams: { str: searchTerm, crp: currentPage, fbt: filterByTagIndxs, sbf: sortByField, sbd: sortByDirection },
-  } = await RuntimeServer.runPromise(validatePageInputs(NotesPageSchema2, { params, searchParams }));
+  } = await validatePageInputs(NotesPageSchema2, { params, searchParams });
 
   // Make sure the current user is authenticated (the check runs on the server side)
   await makeSureUserIsAuthenticated();
@@ -55,15 +56,30 @@ async function PageContent({ params, searchParams }: PageProps<"/notes">) {
 
   // Retrieve all notes for a user and their available note tags
   const availNoteTags = await getAvailNoteTags(userId);
-  const { notes, totalItems, totalPages } = await getNotesWithPagination(
-    userId,
-    searchTerm,
-    currentPage,
-    6,
-    sortByField,
-    sortByDirection,
-    noteTagIndexesToIds(filterByTagIndxs, availNoteTags),
-  );
+  const effect = Effect.gen(function* () {
+    const note = yield* Note;
+
+    return yield* note.getNotesWithPagination(
+      userId,
+      searchTerm,
+      currentPage,
+      6,
+      sortByField,
+      sortByDirection,
+      noteTagIndexesToIds(filterByTagIndxs, availNoteTags),
+    );
+  });
+  const { notes, totalItems, totalPages } = await RuntimeServer.runPromise(effect);
+
+  // const { notes, totalItems, totalPages } = await getNotesWithPagination(
+  //   userId,
+  //   searchTerm,
+  //   currentPage,
+  //   6,
+  //   sortByField,
+  //   sortByDirection,
+  //   noteTagIndexesToIds(filterByTagIndxs, availNoteTags),
+  // );
 
   return (
     <>
