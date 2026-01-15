@@ -10,7 +10,7 @@ export const BasePageSchema = z.object({
 export const BasePageParamsSchema2 = Schema.Record({ key: Schema.String, value: Schema.String });
 export const BasePageSearchParamsSchema2 = Schema.Record({
   key: Schema.String,
-  value: Schema.Union(Schema.String, Schema.Array(Schema.String), Schema.Number, Schema.Undefined),
+  value: Schema.Union(Schema.String, Schema.Array(Schema.String), Schema.Array(Schema.Number), Schema.Number, Schema.Undefined),
 });
 
 export const BasePageSchema2 = Schema.Struct({

@@ -1,23 +1,21 @@
 // drizzle and db access
-import { DB } from "@/drizzle/dbEffect";
+import { DB } from "@/drizzle/dbEffect2";
 import { and, asc, count, desc, eq, ilike, inArray, or, SQL, sql } from "drizzle-orm";
 
 // services, features, and other libraries
 import { Effect } from "effect";
-import { dbEffect } from "@/drizzle/helpersEffect";
 
 // all table definitions (their schemas)
 import { NoteTable, NoteTagTable, NoteToNoteTagTable } from "@/drizzle/schema";
 
 // types
-import type { DbOrTx } from "@/drizzle/db";
 import type { NotePreferencesStored } from "@/features/notes/stores/notePreferences";
 
 export class Note extends Effect.Service<Note>()("Note", {
   dependencies: [DB.Default],
 
   effect: Effect.gen(function* () {
-    const db = yield* DB;
+    const { db, execute } = yield* DB;
 
     return {
       // Retrieve all notes for a user, including only the essential fields, and shorten the content for preview purposes
@@ -57,8 +55,8 @@ export class Note extends Effect.Service<Note>()("Note", {
           const sortOrder = sortByDirection === "asc" ? asc : desc;
 
           // Run queries in parallel for efficiency
-          const notesQuery = dbEffect(() =>
-            db
+          const notesQuery = execute((dbOrTx) =>
+            dbOrTx
               .select({
                 id: NoteTable.id,
                 title: NoteTable.title,
@@ -76,7 +74,7 @@ export class Note extends Effect.Service<Note>()("Note", {
               .limit(itemsPerPage)
               .offset((currentPage - 1) * itemsPerPage),
           );
-          const countQuery = dbEffect(() => db.select({ totalItems: count() }).from(NoteTable).where(whereClause));
+          const countQuery = execute((dbOrTx) => dbOrTx.select({ totalItems: count() }).from(NoteTable).where(whereClause));
           const [notes, [{ totalItems }]] = yield* Effect.all([notesQuery, countQuery], { concurrency: 2 });
 
           return { notes, totalItems, totalPages: Math.ceil(totalItems / itemsPerPage) };
@@ -84,8 +82,8 @@ export class Note extends Effect.Service<Note>()("Note", {
 
       // Retrieve the most recently updated notes for a user, with an optional limit
       getMostRecentNotes: (userId: string, limit?: number) =>
-        dbEffect(() => {
-          const query = db
+        execute((dbOrTx) => {
+          const query = dbOrTx
             .select({
               id: NoteTable.id,
               title: NoteTable.title,
@@ -107,8 +105,8 @@ export class Note extends Effect.Service<Note>()("Note", {
 
       // Get a single note for a user
       getNote: (id: string, userId: string) =>
-        dbEffect(() =>
-          db.query.NoteTable.findFirst({
+        execute((dbOrTx) =>
+          dbOrTx.query.NoteTable.findFirst({
             where: and(eq(NoteTable.id, id), eq(NoteTable.userId, userId)),
             with: { noteToNoteTag: { columns: { noteTagId: true } } },
           }),
@@ -116,52 +114,53 @@ export class Note extends Effect.Service<Note>()("Note", {
 
       // Get the title of a note for a user
       getNoteTitle: (id: string, userId: string) =>
-        dbEffect(() => db.query.NoteTable.findFirst({ columns: { title: true }, where: and(eq(NoteTable.id, id), eq(NoteTable.userId, userId)) })),
+        execute((dbOrTx) => dbOrTx.query.NoteTable.findFirst({ columns: { title: true }, where: and(eq(NoteTable.id, id), eq(NoteTable.userId, userId)) })),
 
       // Get the preferences of a note for a user
       getNotePreferences: (id: string, userId: string) =>
-        dbEffect(() => db.query.NoteTable.findFirst({ columns: { preferences: true }, where: and(eq(NoteTable.id, id), eq(NoteTable.userId, userId)) })),
+        execute((dbOrTx) =>
+          dbOrTx.query.NoteTable.findFirst({ columns: { preferences: true }, where: and(eq(NoteTable.id, id), eq(NoteTable.userId, userId)) }),
+        ),
 
-      // Update the preferences of a note for a user (supports normal db or transaction)
-      updateNotePreferences: (id: string, userId: string, preferences: NotePreferencesStored, tx: DbOrTx = db) =>
-        dbEffect(() =>
-          tx
+      // Update the preferences of a note for a user
+      updateNotePreferences: (id: string, userId: string, preferences: NotePreferencesStored) =>
+        execute((dbOrTx) =>
+          dbOrTx
             .update(NoteTable)
             // Silently update note preferences and do not consider it a meaningful note update
             .set({ preferences, updatedAt: NoteTable.updatedAt })
             .where(and(eq(NoteTable.id, id), eq(NoteTable.userId, userId))),
         ),
 
-      // Delete the preferences of a note for a user (supports normal db or transaction)
-      deleteNotePreferences: (id: string, userId: string, tx: DbOrTx = db) =>
-        dbEffect(() =>
-          tx
+      // Delete the preferences of a note for a user
+      deleteNotePreferences: (id: string, userId: string) =>
+        execute((dbOrTx) =>
+          dbOrTx
             .update(NoteTable)
             .set({ preferences: null })
             .where(and(eq(NoteTable.id, id), eq(NoteTable.userId, userId))),
         ),
 
-      // Insert a new note for a user (supports normal db or transaction)
-      insertNote: (userId: string, data: Omit<typeof NoteTable.$inferInsert, "userId">, tx: DbOrTx = db) =>
-        dbEffect(() =>
-          tx
+      // Insert a new note for a user
+      insertNote: (userId: string, data: Omit<typeof NoteTable.$inferInsert, "userId">) =>
+        execute((dbOrTx) =>
+          dbOrTx
             .insert(NoteTable)
             .values({ userId, ...data })
             .returning({ id: NoteTable.id }),
         ),
 
-      // Update a note for a user (supports normal db or transaction)
-      updateNote: (id: string, userId: string, data: Partial<Omit<typeof NoteTable.$inferInsert, "id" | "userId">>, tx: DbOrTx = db) =>
-        dbEffect(() =>
-          tx
+      // Update a note for a user
+      updateNote: (id: string, userId: string, data: Partial<Omit<typeof NoteTable.$inferInsert, "id" | "userId">>) =>
+        execute((dbOrTx) =>
+          dbOrTx
             .update(NoteTable)
             .set(data)
             .where(and(eq(NoteTable.id, id), eq(NoteTable.userId, userId))),
         ),
 
-      // Delete a note for a user (supports normal db or transaction)
-      deleteNote: (id: string, userId: string, tx: DbOrTx = db) =>
-        dbEffect(() => tx.delete(NoteTable).where(and(eq(NoteTable.id, id), eq(NoteTable.userId, userId)))),
+      // Delete a note for a user
+      deleteNote: (id: string, userId: string) => execute((dbOrTx) => dbOrTx.delete(NoteTable).where(and(eq(NoteTable.id, id), eq(NoteTable.userId, userId)))),
     };
   }),
 }) {}
