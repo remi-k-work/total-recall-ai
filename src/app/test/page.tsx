@@ -10,7 +10,7 @@ import { connection } from "next/server";
 // import transcribeNote from "@/features/notes/actions/transcribeNote3";
 
 // drizzle and db access
-import { DB } from "@/drizzle/dbEffect2";
+import { DB } from "@/drizzle/dbEffect";
 import { insertNote, insertNoteChunks, Note } from "@/features/notes/db";
 
 // services, features, and other libraries

@@ -2,91 +2,76 @@
 import { db } from "@/drizzle/db";
 
 // services, features, and other libraries
-import { Context, Data, Effect, Exit, Layer, Runtime } from "effect";
+import { Cause, Context, Data, Effect, Exit, Layer, Option, Runtime } from "effect";
 
 // types
 import type { DbOrTx } from "@/drizzle/db";
 
 // Define a domain error for the database
-export class DatabaseError extends Data.TaggedError("DatabaseError")<{ message: string; cause?: unknown }> {}
+class DatabaseError extends Data.TaggedError("DatabaseError")<{ readonly message: string; readonly cause?: unknown }> {}
 
 // Internal error to signal Drizzle to rollback
 class RollbackSentinel {
-  constructor(public cause: unknown) {}
+  constructor(public cause: Cause.Cause<unknown>) {}
 }
 
-// The tag representing the current database context (db or tx)
-export class DbOrTxContext extends Context.Tag("DbOrTxContext")<DbOrTxContext, DbOrTx>() {}
+// The tag representing the transaction context
+class TransactionContext extends Context.Tag("TransactionContext")<TransactionContext, DbOrTx>() {}
 
 // The database service that acts as our bridge
 export class DB extends Effect.Service<DB>()("DB", {
-  dependencies: [Layer.succeed(DbOrTxContext, db)],
+  dependencies: [Layer.succeed(TransactionContext, db)],
 
   effect: Effect.gen(function* () {
-    // Get the current database context (db or tx)
-    const dbOrTxContext = yield* DbOrTxContext;
-
-    // We only need the runtime to execute promises inside Drizzle's callback
-    const runtime = yield* Effect.runtime<DbOrTxContext>();
+    // We only need the runtime to execute promises inside drizzle's callback
+    const runtime = yield* Effect.runtime<TransactionContext>();
     const runPromiseExit = Runtime.runPromiseExit(runtime);
 
-    return {
-      // Expose the current database context
-      db: dbOrTxContext,
+    // Executes a drizzle query and automatically detects if we are in a transaction context
+    const execute = <A>(promise: (dbOrTx: DbOrTx) => Promise<A>) =>
+      Effect.serviceOption(TransactionContext).pipe(
+        Effect.map(Option.getOrElse(() => db)),
+        Effect.flatMap((dbOrTx) => dbEffect(dbOrTx, promise)),
+      );
 
-      // Executes a drizzle query within the current effect context
-      execute: <A>(promise: (dbOrTx: DbOrTx) => Promise<A>) =>
-        Effect.flatMap(DbOrTxContext, (dbOrTx) =>
-          Effect.tryPromise({
-            try: () => promise(dbOrTx),
-            catch: (error) => new DatabaseError({ message: String(error), cause: error }),
-          }),
-        ),
+    // Run the provided effect within a transaction context
+    const transaction = <A, E, R extends TransactionContext>(effect: Effect.Effect<A, E, R>) =>
+      Effect.async<A, E | DatabaseError, R>((resume) => {
+        db.transaction(async (tx) => {
+          const exit = await runPromiseExit(Effect.provideService(effect, TransactionContext, tx));
 
-      // execute: <A>(promise: (dbOrTx: DbOrTx) => Promise<A>) =>
-      //   Effect.tryPromise({
-      //     try: () => promise(dbOrTxContext),
-      //     catch: (error) => new DatabaseError({ message: String(error), cause: error }),
-      //   }),
+          Exit.match(exit, {
+            // On success, resume with the value
+            onSuccess: (value) => resume(Effect.succeed(value)),
+            onFailure: (cause) => {
+              // On failure, determine if it is a recoverable error or defect
+              if (Cause.isFailure(cause)) {
+                // Recoverable error, resume with failure
+                resume(Effect.fail(Cause.originalError(cause) as E));
+              } else {
+                // Defect (non-recoverable), resume with a die
+                resume(Effect.die(cause));
+              }
+              // Throw to rollback the transaction
+              throw new RollbackSentinel(cause);
+            },
+          });
+        }).catch((error) => {
+          // If it is our sentinel, the effect has already been resumed – just ignore
+          if (error instanceof RollbackSentinel) return;
 
-      // 2. TRANSACTION WRAPPER: Handles error unwrapping and nested contexts
-      transaction: <A, E, R extends DbOrTxContext>(self: Effect.Effect<A, E, R>) =>
-        Effect.flatMap(DbOrTxContext, (currentDb) =>
-          Effect.async<A, E | DatabaseError, R>((resume) => {
-            currentDb
-              .transaction(async (tx) => {
-                // Run the effect with the NEW transaction context
-                const result = await runPromiseExit(Effect.provideService(self, DbOrTxContext, tx));
+          // Otherwise, wrap real DB/connection errors as a DatabaseError
+          resume(Effect.fail(new DatabaseError({ message: String(error), cause: error })));
+        });
+      });
 
-                if (Exit.isSuccess(result)) {
-                  resume(Effect.succeed(result.value));
-                } else {
-                  // If the effect failed, we must THROW to tell Drizzle to rollback.
-                  // We wrap the failure in a specific Sentinel so we can catch it outside.
-                  resume(result); // Pass the failure to the Effect flow
-                  throw new RollbackSentinel(result);
-                }
-              })
-              .catch((error) => {
-                // Ignore our own sentinel (the rollback was successful)
-                if (error instanceof RollbackSentinel) return;
-
-                // Handle actual DB/Connection errors (e.g. "Commit failed")
-                resume(Effect.fail(new DatabaseError({ message: String(error), cause: error })));
-              });
-          }),
-        ),
-
-      // This transaction wrapper changes the current database context to a transaction on the fly
-      // transaction: <A, E, R extends DbOrTxContext>(self: Effect.Effect<A, E, R>) =>
-      //   Effect.tryPromise({
-      //     try: () =>
-      //       dbOrTxContext.transaction(async (tx) => {
-      //         const effectWithTx = Effect.provideService(self, DbOrTxContext, tx);
-      //         return await runPromise(effectWithTx);
-      //       }),
-      //     catch: (error) => new DatabaseError({ message: String(error), cause: error }),
-      //   }),
-    };
+    return { db, execute, transaction } as const;
   }),
 }) {}
+
+// Executes the provided promise that expects a db/tx and supplies that db/tx to it
+const dbEffect = <A>(dbOrTx: DbOrTx, promise: (dbOrTx: DbOrTx) => Promise<A>) =>
+  Effect.tryPromise({
+    try: () => promise(dbOrTx),
+    catch: (error) => new DatabaseError({ message: String(error), cause: error }),
+  });

@@ -3,12 +3,13 @@ import { Suspense } from "react";
 
 // next
 import { connection } from "next/server";
+import { notFound } from "next/navigation";
 
 // drizzle and db access
-import { getAvailNoteTags, Note, noteTagIndexesToIds } from "@/features/notes/db";
+import { Note, NoteTag } from "@/features/notes/db";
 
 // services, features, and other libraries
-import { Effect } from "effect";
+import { Effect, Either } from "effect";
 import { RuntimeServer } from "@/lib/RuntimeServer";
 import { validatePageInputs } from "@/lib/helpersEffect";
 import { NotesPageSchema2 } from "@/features/notes/schemas/notesPage";
@@ -42,9 +43,9 @@ async function PageContent({ params, searchParams }: PageProps<"/notes">) {
   await connection();
 
   // Safely validate next.js route inputs (`params` and `searchParams`) against a schema; return typed data or trigger a 404 on failure
-  const {
-    searchParams: { str: searchTerm, crp: currentPage, fbt: filterByTagIndxs, sbf: sortByField, sbd: sortByDirection },
-  } = await validatePageInputs(NotesPageSchema2, { params, searchParams });
+  // const {
+  //   searchParams: { str: searchTerm, crp: currentPage, fbt: filterByTagIndxs, sbf: sortByField, sbd: sortByDirection },
+  // } = await validatePageInputs(NotesPageSchema2, { params, searchParams });
 
   // Make sure the current user is authenticated (the check runs on the server side)
   await makeSureUserIsAuthenticated();
@@ -54,61 +55,68 @@ async function PageContent({ params, searchParams }: PageProps<"/notes">) {
     user: { id: userId },
   } = (await getUserSessionData())!;
 
-  // Retrieve all notes for a user and their available note tags
-  const availNoteTags = await getAvailNoteTags(userId);
   const effect = Effect.gen(function* () {
-    const note = yield* Note;
+    // Safely validate next.js route inputs (`params` and `searchParams`) against a schema; return typed data or trigger a 404 on failure
+    const {
+      searchParams: { str: searchTerm, crp: currentPage, fbt: filterByTagIndxs, sbf: sortByField, sbd: sortByDirection },
+    } = yield* validatePageInputs(NotesPageSchema2, { params, searchParams });
 
-    return yield* note.getNotesWithPagination(
+    const note = yield* Note;
+    const noteTag = yield* NoteTag;
+
+    // Retrieve all notes for a user and their available note tags
+    const availNoteTags = yield* noteTag.getAvailNoteTags(userId);
+
+    const { notes, totalItems, totalPages } = yield* note.getNotesWithPagination(
       userId,
       searchTerm,
       currentPage,
       6,
       sortByField,
       sortByDirection,
-      noteTagIndexesToIds(filterByTagIndxs, availNoteTags),
+      yield* noteTag.noteTagIndexesToIds(filterByTagIndxs, availNoteTags),
     );
+
+    return { searchTerm, currentPage, filterByTagIndxs, sortByField, sortByDirection, notes, totalItems, totalPages, availNoteTags };
   });
-  const { notes, totalItems, totalPages } = await RuntimeServer.runPromise(effect);
 
-  // const { notes, totalItems, totalPages } = await getNotesWithPagination(
-  //   userId,
-  //   searchTerm,
-  //   currentPage,
-  //   6,
-  //   sortByField,
-  //   sortByDirection,
-  //   noteTagIndexesToIds(filterByTagIndxs, availNoteTags),
-  // );
+  const either = effect.pipe(Effect.either);
 
-  return (
-    <>
-      <PageHeader title="Notes" description="Welcome back! Below are all your notes" />
-      <BrowseBar
-        kind="notes-root"
-        totalItems={totalItems}
-        totalPages={totalPages}
-        searchTerm={searchTerm}
-        availNoteTags={availNoteTags}
-        filterByTagIndxs={filterByTagIndxs}
-        sortByField={sortByField}
-        sortByDirection={sortByDirection}
-        currentPage={currentPage}
-      />
-      <NotesPreview notes={notes} availNoteTags={availNoteTags} />
-      <BrowseBar
-        kind="notes-root"
-        totalItems={totalItems}
-        totalPages={totalPages}
-        searchTerm={searchTerm}
-        availNoteTags={availNoteTags}
-        filterByTagIndxs={filterByTagIndxs}
-        sortByField={sortByField}
-        sortByDirection={sortByDirection}
-        currentPage={currentPage}
-      />
-    </>
-  );
+  const either2 = await RuntimeServer.runPromise(either);
+  if (Either.isLeft(either2)) {
+    const error = either2.left;
+    if (error._tag === "InvalidPageInputsError") notFound();
+  } else {
+    const { searchTerm, currentPage, filterByTagIndxs, sortByField, sortByDirection, notes, totalItems, totalPages, availNoteTags } = either2.right;
+    return (
+      <>
+        <PageHeader title="Notes" description="Welcome back! Below are all your notes" />
+        <BrowseBar
+          kind="notes-root"
+          totalItems={totalItems}
+          totalPages={totalPages}
+          searchTerm={searchTerm}
+          availNoteTags={availNoteTags}
+          filterByTagIndxs={filterByTagIndxs}
+          sortByField={sortByField}
+          sortByDirection={sortByDirection}
+          currentPage={currentPage}
+        />
+        <NotesPreview notes={notes} availNoteTags={availNoteTags} />
+        <BrowseBar
+          kind="notes-root"
+          totalItems={totalItems}
+          totalPages={totalPages}
+          searchTerm={searchTerm}
+          availNoteTags={availNoteTags}
+          filterByTagIndxs={filterByTagIndxs}
+          sortByField={sortByField}
+          sortByDirection={sortByDirection}
+          currentPage={currentPage}
+        />
+      </>
+    );
+  }
 }
 
 function PageSkeleton() {

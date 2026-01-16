@@ -48,3 +48,7 @@ export const NotesPageSchema2 = Schema.Struct({
     default: () => ({ str: "", crp: 1, fbt: [], sbf: "updated_at" as const, sbd: "desc" as const }),
   }),
 });
+
+type NotesPageSchema2T = typeof NotesPageSchema2.Type;
+export type SBF = NotesPageSchema2T["searchParams"]["sbf"];
+export type SBD = NotesPageSchema2T["searchParams"]["sbd"];
