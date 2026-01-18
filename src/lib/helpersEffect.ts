@@ -1,5 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+// next
+import { connection } from "next/server";
+import { notFound, unauthorized } from "next/navigation";
+
 // services, features, and other libraries
-import { Data, Effect, Schema } from "effect";
+import { Data, Effect, Either, Schema } from "effect";
+import { RuntimeServer } from "@/lib/RuntimeServer";
 
 // types
 interface PageInputPromises {
@@ -18,3 +25,26 @@ export const validatePageInputs = <A, I>(schema: Schema.Schema<A, I>, { params, 
       Effect.mapError((cause) => new InvalidPageInputsError({ message: "Invalid page inputs", cause })),
     );
   });
+
+// Execute the main effect for the page, map known errors to the subsequent navigation helpers, and return the payload
+export const runPageMainOrNavigate = async <A, E extends { _tag: string }>(pageMain: Effect.Effect<A, E, any>) => {
+  // Explicitly defer to request time (Effect uses Date.now() internally)
+  await connection();
+
+  // We wrap in Effect.either to catch failures gracefully
+  const pageMainResult = await RuntimeServer.runPromise(pageMain.pipe(Effect.either));
+
+  // Standardized error handling
+  if (Either.isLeft(pageMainResult)) {
+    const error = pageMainResult.left;
+
+    if (error._tag === "InvalidPageInputsError") notFound();
+    if (error._tag === "UnauthorizedAccessError") unauthorized();
+
+    // Allow the next.js error boundary to catch any unexpected errors
+    throw error;
+  } else {
+    // Return success result
+    return pageMainResult.right;
+  }
+};
