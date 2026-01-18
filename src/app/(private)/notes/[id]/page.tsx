@@ -1,16 +1,14 @@
 // react
 import { Suspense } from "react";
 
-// next
-import { notFound } from "next/navigation";
-
 // drizzle and db access
-import { getAvailNoteTags, getNote } from "@/features/notes/db";
+import { Note, NoteTag } from "@/features/notes/db";
 
 // services, features, and other libraries
-import { validatePageInputs } from "@/lib/helpers";
+import { Effect } from "effect";
+import { ItemNotFoundError, runPageMainOrNavigate, validatePageInputs } from "@/lib/helpersEffect";
 import { NoteDetailsPageSchema } from "@/features/notes/schemas/noteDetailsPage";
-import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
+import { getUserSessionData } from "@/features/auth/lib/helpersEffect";
 
 // components
 import { NotePreferencesStoreProvider } from "@/features/notes/stores/NotePreferencesProvider";
@@ -26,6 +24,31 @@ export const metadata: Metadata = {
   title: "Total Recall AI ► Note Details",
 };
 
+const main = ({ params, searchParams }: PageProps<"/notes/[id]">) =>
+  Effect.gen(function* () {
+    // Safely validate next.js route inputs (`params` and `searchParams`) against a schema; return typed data or trigger a 404 on failure
+    const {
+      params: { id: noteId },
+      searchParams: { str: searchTerm },
+    } = yield* validatePageInputs(NoteDetailsPageSchema, { params, searchParams });
+
+    // Access the user session data from the server side or fail with an unauthorized access error
+    const {
+      user: { id: userId },
+    } = yield* getUserSessionData;
+
+    const noteSer = yield* Note;
+    const noteTag = yield* NoteTag;
+
+    // Get a single note for a user as well as their available note tags
+    const [note, availNoteTags] = yield* Effect.all([noteSer.getNote(noteId, userId), noteTag.getAvailNoteTags(userId)], { concurrency: 2 });
+
+    // If the note is not found, fail with item not found error
+    if (!note) return yield* new ItemNotFoundError({ message: "Note not found" });
+
+    return { noteId, searchTerm, note, availNoteTags };
+  });
+
 // Page remains the fast, static shell
 export default function Page({ params, searchParams }: PageProps<"/notes/[id]">) {
   return (
@@ -37,25 +60,8 @@ export default function Page({ params, searchParams }: PageProps<"/notes/[id]">)
 
 // This new async component contains the dynamic logic
 async function PageContent({ params, searchParams }: PageProps<"/notes/[id]">) {
-  // Safely validate next.js route inputs (`params` and `searchParams`) against a zod schema; return typed data or trigger a 404 on failure
-  const {
-    params: { id: noteId },
-    searchParams: { str: searchTerm },
-  } = await validatePageInputs(NoteDetailsPageSchema, { params, searchParams });
-
-  // Make sure the current user is authenticated (the check runs on the server side)
-  await makeSureUserIsAuthenticated();
-
-  // Access the user session data from the server side
-  const {
-    user: { id: userId },
-  } = (await getUserSessionData())!;
-
-  // Get a single note for a user as well as their available note tags
-  const [note, availNoteTags] = await Promise.all([getNote(noteId, userId), getAvailNoteTags(userId)]);
-
-  // If the note is not found, return a 404
-  if (!note) notFound();
+  // Execute the main effect for the page, map known errors to the subsequent navigation helpers, and return the payload
+  const { noteId, searchTerm, note, availNoteTags } = await runPageMainOrNavigate(main({ params, searchParams }));
 
   return (
     <>
