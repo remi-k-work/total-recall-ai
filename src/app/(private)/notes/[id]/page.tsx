@@ -61,13 +61,19 @@ export default function Page({ params, searchParams }: PageProps<"/notes/[id]">)
 // This new async component contains the dynamic logic
 async function PageContent({ params, searchParams }: PageProps<"/notes/[id]">) {
   // Execute the main effect for the page, map known errors to the subsequent navigation helpers, and return the payload
-  const { noteId, searchTerm, note, availNoteTags } = await runPageMainOrNavigate(main({ params, searchParams }));
+  const {
+    noteId,
+    searchTerm,
+    note,
+    note: { preferences },
+    availNoteTags,
+  } = await runPageMainOrNavigate(main({ params, searchParams }));
 
   return (
     <>
       <PageHeader title="Note Details" description="Below are all your note details" />
       <BrowseBar kind="note-details" searchTerm={searchTerm} />
-      <NotePreferencesStoreProvider noteId={noteId} initState={note.preferences ?? undefined}>
+      <NotePreferencesStoreProvider noteId={noteId} initState={preferences ?? undefined}>
         <NoteDetails note={note} availNoteTags={availNoteTags} />
       </NotePreferencesStoreProvider>
     </>
