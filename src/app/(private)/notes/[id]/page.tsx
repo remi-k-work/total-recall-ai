@@ -2,7 +2,7 @@
 import { Suspense } from "react";
 
 // drizzle and db access
-import { Note, NoteTag } from "@/features/notes/db";
+import { NoteDB, NoteTagDB } from "@/features/notes/db";
 
 // services, features, and other libraries
 import { Effect } from "effect";
@@ -37,11 +37,11 @@ const main = ({ params, searchParams }: PageProps<"/notes/[id]">) =>
       user: { id: userId },
     } = yield* getUserSessionData;
 
-    const noteSer = yield* Note;
-    const noteTag = yield* NoteTag;
+    const noteDB = yield* NoteDB;
+    const noteTagDB = yield* NoteTagDB;
 
     // Get a single note for a user as well as their available note tags
-    const [note, availNoteTags] = yield* Effect.all([noteSer.getNote(noteId, userId), noteTag.getAvailNoteTags(userId)], { concurrency: 2 });
+    const [note, availNoteTags] = yield* Effect.all([noteDB.getNote(noteId, userId), noteTagDB.getAvailNoteTags(userId)], { concurrency: 2 });
 
     // If the note is not found, fail with item not found error
     if (!note) return yield* new ItemNotFoundError({ message: "Note not found" });

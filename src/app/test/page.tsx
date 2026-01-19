@@ -11,7 +11,7 @@ import { connection } from "next/server";
 
 // drizzle and db access
 import { DB } from "@/drizzle/dbEffect";
-import { insertNote, insertNoteChunks, Note } from "@/features/notes/db";
+import { insertNote, insertNoteChunks, NoteDB } from "@/features/notes/db";
 
 // services, features, and other libraries
 import { Effect } from "effect";
@@ -40,13 +40,13 @@ async function PageContent() {
 
   const effect = Effect.gen(function* () {
     const db = yield* DB;
-    const note = yield* Note;
+    const noteDB = yield* NoteDB;
 
     // Run all db operations in a transaction
     return yield* db.transaction(
       Effect.gen(function* () {
         // Insert a new note for a user
-        yield* note.insertNote("0mTO29SmxqMTpuH0Gaf6uI8TQv3zxCUb", { title: "Test Note", content: "This is a test note." });
+        yield* noteDB.insertNote("0mTO29SmxqMTpuH0Gaf6uI8TQv3zxCUb", { title: "Test Note", content: "This is a test note." });
 
         // 3. FORCE ROLLBACK: This returns a failing Effect
         // The transaction helper catches this failure and tells Drizzle to rollback

@@ -1,10 +1,18 @@
 // services, features, and other libraries
-import { z } from "zod";
+import { Schema } from "effect";
 
 // schemas
-import { BasePageSchema } from "@/schemas/basePage";
+import { BasePageParamsSchema, BasePageSearchParamsSchema } from "@/schemas/basePageEffect";
 
-export const EditNotePageSchema = BasePageSchema.extend({
-  params: z.object({ id: z.uuid() }),
-  searchParams: z.object({ str: z.string().trim().max(25).default("") }),
+const EditNotePageParams = Schema.Struct({
+  id: Schema.UUID,
+}).pipe(Schema.extend(BasePageParamsSchema));
+
+const EditNotePageSearchParams = Schema.Struct({
+  str: Schema.optionalWith(Schema.Trim.pipe(Schema.maxLength(25)), { default: () => "" }),
+}).pipe(Schema.extend(BasePageSearchParamsSchema));
+
+export const EditNotePageSchema = Schema.Struct({
+  params: EditNotePageParams,
+  searchParams: Schema.optionalWith(EditNotePageSearchParams, { default: () => ({ str: "" }) }),
 });

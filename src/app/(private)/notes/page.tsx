@@ -2,7 +2,7 @@
 import { Suspense } from "react";
 
 // drizzle and db access
-import { Note, NoteTag } from "@/features/notes/db";
+import { NoteDB, NoteTagDB } from "@/features/notes/db";
 
 // services, features, and other libraries
 import { Effect } from "effect";
@@ -35,17 +35,17 @@ const main = ({ params, searchParams }: PageProps<"/notes">) =>
       user: { id: userId },
     } = yield* getUserSessionData;
 
-    const note = yield* Note;
-    const noteTag = yield* NoteTag;
+    const noteDB = yield* NoteDB;
+    const noteTagDB = yield* NoteTagDB;
 
     // Retrieve all note tags for a specific user ordered alphabetically (useful for the tag management list or autocomplete)
-    const availNoteTags = yield* noteTag.getAvailNoteTags(userId);
+    const availNoteTags = yield* noteTagDB.getAvailNoteTags(userId);
 
     // Map URL-provided note tag indexes to their corresponding note tag IDs using the ordered list of all available note tags for this user
-    const filterByTagIds = yield* noteTag.noteTagIndexesToIds(filterByTagIndxs, availNoteTags);
+    const filterByTagIds = yield* noteTagDB.noteTagIndexesToIds(filterByTagIndxs, availNoteTags);
 
     // Retrieve all notes for a user, including only the essential fields, and shorten the content for preview purposes
-    const { notes, totalItems, totalPages } = yield* note.getNotesWithPagination(
+    const { notes, totalItems, totalPages } = yield* noteDB.getNotesWithPagination(
       userId,
       searchTerm,
       currentPage,

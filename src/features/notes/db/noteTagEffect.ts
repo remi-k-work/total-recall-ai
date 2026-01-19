@@ -8,7 +8,7 @@ import { Effect } from "effect";
 // all table definitions (their schemas)
 import { NoteTagTable, NoteToNoteTagTable } from "@/drizzle/schema";
 
-export class NoteTag extends Effect.Service<NoteTag>()("NoteTag", {
+export class NoteTagDB extends Effect.Service<NoteTagDB>()("NoteTagDB", {
   dependencies: [DB.Default],
 
   effect: Effect.gen(function* () {

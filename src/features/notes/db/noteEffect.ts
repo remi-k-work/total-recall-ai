@@ -12,7 +12,7 @@ import { NoteTable, NoteTagTable, NoteToNoteTagTable } from "@/drizzle/schema";
 import type { SBD, SBF } from "@/features/notes/schemas/notesPage";
 import type { NotePreferencesStored } from "@/features/notes/stores/notePreferences";
 
-export class Note extends Effect.Service<Note>()("Note", {
+export class NoteDB extends Effect.Service<NoteDB>()("NoteDB", {
   dependencies: [DB.Default],
 
   effect: Effect.gen(function* () {
