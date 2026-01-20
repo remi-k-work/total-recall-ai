@@ -3,7 +3,7 @@
 // components
 import BrowseBarProvider from "./context";
 import Search from "./search";
-import FilterByTags from "./FilterByTags";
+import FilterByTags from "./FilterByTags2";
 import SortByField from "./SortByField";
 import SortByDirection from "./SortByDirection";
 import Paginate from "./Paginate";

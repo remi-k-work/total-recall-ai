@@ -10,7 +10,7 @@ import useUrlScribe from "@/hooks/useUrlScribe";
 // components
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
 import { Response } from "@/components/ai-elements/response";
-import ColorPicker from "./ColorPicker";
+import ColorPicker from "./ColorPicker2";
 import NoteTagsPopover from "./note-tags-popover";
 import CreatedAt from "./CreatedAt";
 import UpdatedAt from "./UpdatedAt";
