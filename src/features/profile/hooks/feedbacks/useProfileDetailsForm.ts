@@ -61,7 +61,7 @@ export default function useProfileDetailsFormFeedback(
   useEffect(() => {
     if (hasPressedSubmitRef.current === false) return;
     onFeedbackNeeded();
-  }, [hasPressedSubmitRef.current, actionStatus, errors]);
+  }, [hasPressedSubmitRef, actionStatus, errors]);
 
   return { feedbackMessage, hideFeedbackMessage };
 }

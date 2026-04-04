@@ -64,7 +64,7 @@ export default function EditNoteForm({ note: { id: noteId, title, content }, inN
     formState,
     () => {
       reset();
-      markdownFieldRef.current?.setMarkdown("");
+      markdownFieldRef.current?.setMarkdown(content);
     },
     store,
   );

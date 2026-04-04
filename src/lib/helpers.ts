@@ -2,10 +2,10 @@
 
 // next
 import { notFound } from "next/navigation";
-import { createServerValidate } from "@tanstack/react-form-nextjs";
 
 // services, features, and other libraries
 import { z } from "zod";
+import { createServerValidate } from "@tanstack/react-form-nextjs";
 
 // types
 interface PageInputPromises {

@@ -57,7 +57,7 @@ export default function useResetPassFormFeedback(
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [hasPressedSubmitRef.current, actionStatus, errors]);
+  }, [hasPressedSubmitRef, actionStatus, errors]);
 
   return { feedbackMessage, hideFeedbackMessage };
 }

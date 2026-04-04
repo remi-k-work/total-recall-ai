@@ -39,7 +39,7 @@ export default function ConfirmModal({ hasPressedConfirmRef, onConfirmed, onClos
     return () => {
       hasPressedConfirmRef.current = false;
     };
-  }, []);
+  }, [hasPressedConfirmRef]);
 
   return (
     <dialog

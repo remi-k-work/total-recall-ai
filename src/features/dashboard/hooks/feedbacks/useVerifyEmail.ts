@@ -45,7 +45,7 @@ export default function useVerifyEmailFeedback(hasPressedSubmitRef: RefObject<bo
   useEffect(() => {
     if (hasPressedSubmitRef.current === false) return;
     onFeedbackNeeded();
-  }, [hasPressedSubmitRef.current, actionStatus]);
+  }, [hasPressedSubmitRef, actionStatus]);
 
   return { feedbackMessage, hideFeedbackMessage };
 }

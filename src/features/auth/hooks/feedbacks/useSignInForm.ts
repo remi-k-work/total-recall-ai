@@ -59,7 +59,7 @@ export default function useSignInFormFeedback(
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [hasPressedSubmitRef.current, actionStatus, errors]);
+  }, [hasPressedSubmitRef, actionStatus, errors]);
 
   return { feedbackMessage, hideFeedbackMessage };
 }

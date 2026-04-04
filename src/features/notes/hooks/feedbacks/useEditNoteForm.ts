@@ -64,7 +64,7 @@ export default function useEditNoteFormFeedback(
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [hasPressedSubmitRef.current, actionStatus, errors]);
+  }, [hasPressedSubmitRef, actionStatus, errors]);
 
   return { feedbackMessage, hideFeedbackMessage };
 }

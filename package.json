@@ -13,7 +13,8 @@
     "db:studio": "drizzle-kit studio",
     "db:seed": "tsx ./src/drizzle/seed/seed.ts",
     "db:test": "tsx ./src/drizzle/seed/test.ts",
-    "email": "copy .env node_modules\\react-email && email dev --dir src/emails --port 3002"
+    "email": "copy .env node_modules\\react-email && email dev --dir src/emails --port 3002",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.6",
@@ -58,6 +59,7 @@
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-syntax-highlighter": "^16.1.0",
+    "resend": "^6.10.0",
     "shiki": "^3.21.0",
     "sonner": "^2.0.7",
     "streamdown": "^1.6.11",
