@@ -24,7 +24,7 @@ export const NoteTable = pgTable(
     createdAt,
     updatedAt,
   },
-  (table) => [index("user_id_title_idx").on(table.userId, table.title)],
+  (table) => [index("note_user_id_title_idx").on(table.userId, table.title)],
 );
 
 export const noteRelations = relations(NoteTable, ({ one, many }) => ({

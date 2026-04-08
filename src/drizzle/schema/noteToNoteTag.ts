@@ -21,7 +21,7 @@ export const NoteToNoteTagTable = pgTable(
     primaryKey({ columns: [table.noteId, table.noteTagId] }),
 
     // Allows fast lookup of all notes belonging to a specific tag (reverse lookup)
-    index("note_tag_id_idx").on(table.noteTagId),
+    index("note_to_note_tag_note_tag_id_idx").on(table.noteTagId),
   ],
 );
 

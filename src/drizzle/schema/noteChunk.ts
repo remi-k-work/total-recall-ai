@@ -20,7 +20,7 @@ export const NoteChunkTable = pgTable(
     chunk: text().notNull(),
     embedding: vector({ dimensions: 768 }),
   },
-  (table) => [index("user_id_idx").on(table.userId), index("embedding_idx").using("hnsw", table.embedding.op("vector_cosine_ops"))],
+  (table) => [index("note_chunk_user_id_idx").on(table.userId), index("note_chunk_embedding_idx").using("hnsw", table.embedding.op("vector_cosine_ops"))],
 );
 
 export const noteChunkRelations = relations(NoteChunkTable, ({ one }) => ({

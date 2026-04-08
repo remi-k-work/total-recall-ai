@@ -20,7 +20,7 @@ export const NoteTagTable = pgTable(
   },
   (table) => [
     // This index enhances the efficiency of searching for a specific tag by name for users and prevents the duplication of tag names
-    uniqueIndex("user_id_name_idx").on(table.userId, table.name),
+    uniqueIndex("note_tag_user_id_name_idx").on(table.userId, table.name),
   ],
 );
 
