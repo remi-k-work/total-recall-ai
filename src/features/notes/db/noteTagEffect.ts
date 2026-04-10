@@ -8,6 +8,9 @@ import { Effect } from "effect";
 // all table definitions (their schemas)
 import { NoteTagTable, NoteToNoteTagTable } from "@/drizzle/schema";
 
+// types
+export type AvailNoteTags = Effect.Effect.Success<ReturnType<typeof NoteTagDB.prototype.getAvailNoteTags>>;
+
 export class NoteTagDB extends Effect.Service<NoteTagDB>()("NoteTagDB", {
   dependencies: [DB.Default],
 

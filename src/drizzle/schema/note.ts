@@ -9,7 +9,7 @@ import { NoteChunkTable } from "./noteChunk";
 import { NoteToNoteTagTable } from "./noteToNoteTag";
 
 // types
-import type { NotePreferencesStored } from "@/features/notes/stores/notePreferences";
+import type { NotePrefs } from "@/atoms/notePrefs";
 
 export const NoteTable = pgTable(
   "note",
@@ -20,7 +20,7 @@ export const NoteTable = pgTable(
       .references(() => UserTable.id, { onDelete: "cascade" }),
     title: varchar({ length: 50 }).notNull(),
     content: text().notNull(),
-    preferences: jsonb().$type<NotePreferencesStored>(),
+    preferences: jsonb().$type<NotePrefs>(),
     createdAt,
     updatedAt,
   },

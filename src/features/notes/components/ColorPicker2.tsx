@@ -5,17 +5,23 @@ import { useEffect, useState } from "react";
 
 // services, features, and other libraries
 import { useTheme } from "next-themes";
-import { useNotePreferencesStore } from "@/features/notes/stores/NotePreferencesProvider";
+import { useNotePrefs } from "@/atoms";
 import Color from "colorjs.io";
 import { useEffectDebounce } from "@/hooks/useEffectDebounce";
 
-export default function ColorPicker() {
+// types
+import type { NoteWithPagination } from "@/features/notes/db";
+
+interface ColorPickerProps {
+  note: NoteWithPagination;
+}
+
+export default function ColorPicker({ note: { id: noteId, preferences } }: ColorPickerProps) {
   // Determine whether the current theme is dark or light
   const { resolvedTheme } = useTheme();
 
-  // Retrieve the necessary state and actions from the note preferences store
-  const curNoteColor = useNotePreferencesStore((state) => state.color);
-  const changedColor = useNotePreferencesStore((state) => state.changedColor);
+  // This hook exposes the state of the note preferences store and the actions that are allowed
+  const { color: curNoteColor, changedColor } = useNotePrefs(noteId, preferences);
 
   // The default note color should use the fallback value until CSS variables become available
   const [defNoteColor, setDefNoteColor] = useState("#000000");

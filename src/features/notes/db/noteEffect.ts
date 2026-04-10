@@ -10,7 +10,10 @@ import { NoteTable, NoteTagTable, NoteToNoteTagTable } from "@/drizzle/schema";
 
 // types
 import type { SBD, SBF } from "@/features/notes/schemas/notesPage";
-import type { NotePreferencesStored } from "@/features/notes/stores/notePreferences";
+import type { NotePrefs } from "@/atoms/notePrefs";
+
+export type NotesWithPagination = Effect.Effect.Success<ReturnType<typeof NoteDB.prototype.getNotesWithPagination>>["notes"];
+export type NoteWithPagination = Effect.Effect.Success<ReturnType<typeof NoteDB.prototype.getNotesWithPagination>>["notes"][number];
 
 export class NoteDB extends Effect.Service<NoteDB>()("NoteDB", {
   dependencies: [DB.Default],
@@ -121,7 +124,7 @@ export class NoteDB extends Effect.Service<NoteDB>()("NoteDB", {
       execute((dbOrTx) => dbOrTx.query.NoteTable.findFirst({ columns: { preferences: true }, where: and(eq(NoteTable.id, id), eq(NoteTable.userId, userId)) }));
 
     // Update the preferences of a note for a user
-    const updateNotePreferences = (id: string, userId: string, preferences: NotePreferencesStored) =>
+    const updateNotePreferences = (id: string, userId: string, preferences: NotePrefs) =>
       execute((dbOrTx) =>
         dbOrTx
           .update(NoteTable)
