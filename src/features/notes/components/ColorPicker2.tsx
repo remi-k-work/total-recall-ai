@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 
 // services, features, and other libraries
 import { useTheme } from "next-themes";
-import { useNotePrefs } from "@/atoms";
+import { selColorAtom, useNotePrefsActions } from "@/atoms";
+import { useAtomValue } from "@effect-atom/atom-react";
 import Color from "colorjs.io";
-import { useEffectDebounce } from "@/hooks/useEffectDebounce";
 
 // types
 import type { NoteWithPagination } from "@/features/notes/db";
@@ -16,12 +16,13 @@ interface ColorPickerProps {
   note: NoteWithPagination;
 }
 
-export default function ColorPicker({ note: { id: noteId, preferences } }: ColorPickerProps) {
+export default function ColorPicker({ note: { id: noteId } }: ColorPickerProps) {
   // Determine whether the current theme is dark or light
   const { resolvedTheme } = useTheme();
 
-  // This hook exposes the state of the note preferences store and the actions that are allowed
-  const { color: curNoteColor, changedColor } = useNotePrefs(noteId, preferences);
+  // Retrieve the necessary state and actions from the note preferences store
+  const curNoteColor = useAtomValue(selColorAtom(noteId));
+  const { changedColor } = useNotePrefsActions(noteId);
 
   // The default note color should use the fallback value until CSS variables become available
   const [defNoteColor, setDefNoteColor] = useState("#000000");
@@ -36,16 +37,13 @@ export default function ColorPicker({ note: { id: noteId, preferences } }: Color
     });
   }, [resolvedTheme]);
 
-  // Use the debounced callback to initiate the relevant actions (user has changed the note color)
-  const handleChangedColor = useEffectDebounce((newNoteColor: string) => changedColor(newNoteColor), "1 second");
-
   return (
     <section className="bg-background p-4">
       <input
         name="colorPicker"
         type="color"
         defaultValue={curNoteColor ?? defNoteColor}
-        onChange={({ target: { value: newNoteColor } }) => handleChangedColor(newNoteColor)}
+        onChange={({ target: { value: newNoteColor } }) => changedColor(newNoteColor)}
       />
     </section>
   );

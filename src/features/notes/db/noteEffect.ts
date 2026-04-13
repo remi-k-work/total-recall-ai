@@ -10,7 +10,7 @@ import { NoteTable, NoteTagTable, NoteToNoteTagTable } from "@/drizzle/schema";
 
 // types
 import type { SBD, SBF } from "@/features/notes/schemas/notesPage";
-import type { NotePrefs } from "@/atoms/notePrefs";
+import type { NotePrefs } from "@/atoms";
 
 export type NotesWithPagination = Effect.Effect.Success<ReturnType<typeof NoteDB.prototype.getNotesWithPagination>>["notes"];
 export type NoteWithPagination = Effect.Effect.Success<ReturnType<typeof NoteDB.prototype.getNotesWithPagination>>["notes"][number];

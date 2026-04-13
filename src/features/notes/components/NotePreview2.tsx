@@ -5,7 +5,8 @@ import Link from "next/link";
 
 // services, features, and other libraries
 import useUrlScribe from "@/hooks/useUrlScribe";
-import { useNotePrefs } from "@/atoms";
+import { selColorAtom, useNotePrefsManager } from "@/atoms";
+import { useAtomValue } from "@effect-atom/atom-react";
 
 // components
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
@@ -35,8 +36,11 @@ export default function NotePreview({
   // A hook to easily create new route strings with updated search parameters (it preserves existing search params)
   const { createHref } = useUrlScribe();
 
-  // This hook exposes the state of the note preferences store and the actions that are allowed
-  const { color } = useNotePrefs(noteId, preferences);
+  // The hook should be mounted once for each note (for example, in the root wrapper) to manage hydration and database synchronization
+  useNotePrefsManager(noteId, preferences);
+
+  // Retrieve the necessary state and actions from the note preferences store
+  const color = useAtomValue(selColorAtom(noteId));
 
   return (
     <Card className="mb-4 break-inside-avoid rounded-[255px_15px_225px_15px/15px_225px_15px_255px]" style={color ? { backgroundColor: color } : undefined}>

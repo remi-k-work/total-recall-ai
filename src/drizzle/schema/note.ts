@@ -9,7 +9,7 @@ import { NoteChunkTable } from "./noteChunk";
 import { NoteToNoteTagTable } from "./noteToNoteTag";
 
 // types
-import type { NotePrefs } from "@/atoms/notePrefs";
+import type { NotePrefs } from "@/atoms";
 
 export const NoteTable = pgTable(
   "note",
