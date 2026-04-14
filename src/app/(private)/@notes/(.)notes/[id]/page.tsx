@@ -11,7 +11,6 @@ import { NoteDetailsPageSchema } from "@/features/notes/schemas/noteDetailsPage"
 import { getUserSessionData } from "@/features/auth/lib/helpersEffect";
 
 // components
-import { NotePreferencesStoreProvider } from "@/features/notes/stores/NotePreferencesProvider";
 import NoteModal from "@/features/notes/components/note-modal";
 import BrowseBar from "@/features/notes/components/browse-bar";
 import NoteDetails from "@/features/notes/components/NoteDetails";
@@ -57,18 +56,15 @@ export default function Page({ params, searchParams }: PageProps<"/notes/[id]">)
 async function PageContent({ params, searchParams }: PageProps<"/notes/[id]">) {
   // Execute the main effect for the page, map known errors to the subsequent navigation helpers, and return the payload
   const {
-    noteId,
     searchTerm,
     note,
-    note: { title, preferences },
+    note: { title },
     availNoteTags,
   } = await runPageMainOrNavigate(main({ params, searchParams }));
 
   return (
     <NoteModal icon={<DocumentIcon className="size-11 flex-none" />} browseBar={<BrowseBar kind="note-details" searchTerm={searchTerm} />} noteTitle={title}>
-      <NotePreferencesStoreProvider noteId={noteId} initState={preferences ?? undefined}>
-        <NoteDetails note={note} availNoteTags={availNoteTags} inNoteModal />
-      </NotePreferencesStoreProvider>
+      <NoteDetails note={note} availNoteTags={availNoteTags} inNoteModal />
     </NoteModal>
   );
 }

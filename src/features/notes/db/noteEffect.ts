@@ -14,6 +14,7 @@ import type { NotePrefs } from "@/atoms";
 
 export type NotesWithPagination = Effect.Effect.Success<ReturnType<typeof NoteDB.prototype.getNotesWithPagination>>["notes"];
 export type NoteWithPagination = Effect.Effect.Success<ReturnType<typeof NoteDB.prototype.getNotesWithPagination>>["notes"][number];
+export type NoteDetails = Exclude<Effect.Effect.Success<ReturnType<typeof NoteDB.prototype.getNote>>, undefined>;
 
 export class NoteDB extends Effect.Service<NoteDB>()("NoteDB", {
   dependencies: [DB.Default],

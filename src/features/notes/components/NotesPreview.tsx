@@ -2,16 +2,15 @@
 import { cn } from "@/lib/utils";
 
 // components
-import { NotePreferencesStoreProvider } from "@/features/notes/stores/NotePreferencesProvider";
 import InfoLine from "@/components/form/InfoLine";
 import NotePreview from "@/features/notes/components/NotePreview";
 
 // types
-import type { getAvailNoteTags, getNotesWithPagination } from "@/features/notes/db";
+import type { AvailNoteTags, NotesWithPagination } from "@/features/notes/db";
 
 interface NotesPreviewProps {
-  notes: Awaited<ReturnType<typeof getNotesWithPagination>>["notes"];
-  availNoteTags: Awaited<ReturnType<typeof getAvailNoteTags>>;
+  notes: NotesWithPagination;
+  availNoteTags: AvailNoteTags;
 }
 
 export default function NotesPreview({ notes, availNoteTags }: NotesPreviewProps) {
@@ -20,13 +19,9 @@ export default function NotesPreview({ notes, availNoteTags }: NotesPreviewProps
   return (
     <article className={cn("select-none", notes.length === 1 ? "columns-1" : "columns-md gap-4")}>
       {notes.map((note) => {
-        const { id: noteId, preferences } = note;
+        const { id: noteId } = note;
 
-        return (
-          <NotePreferencesStoreProvider key={noteId} noteId={noteId} initState={preferences ?? undefined}>
-            <NotePreview note={note} availNoteTags={availNoteTags} />
-          </NotePreferencesStoreProvider>
-        );
+        return <NotePreview key={noteId} note={note} availNoteTags={availNoteTags} />;
       })}
     </article>
   );

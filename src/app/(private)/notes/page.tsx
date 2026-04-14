@@ -13,7 +13,7 @@ import { getUserSessionData } from "@/features/auth/lib/helpersEffect";
 // components
 import PageHeader from "@/components/PageHeader";
 import BrowseBar from "@/features/notes/components/browse-bar";
-import NotesPreview from "@/features/notes/components/NotesPreview2";
+import NotesPreview from "@/features/notes/components/NotesPreview";
 
 // types
 import type { Metadata } from "next";

@@ -7,7 +7,7 @@ import { NoteTable, NoteTagTable, NoteToNoteTagTable } from "@/drizzle/schema";
 
 // types
 import type { DbOrTx } from "@/drizzle/db";
-import type { NotePreferencesStored } from "@/features/notes/stores/notePreferences";
+import type { NotePrefs } from "@/atoms";
 
 // Retrieve all notes for a user, including only the essential fields, and shorten the content for preview purposes
 export const getNotesWithPagination = async (
@@ -105,7 +105,7 @@ export const getNotePreferences = (id: string, userId: string) =>
   db.query.NoteTable.findFirst({ columns: { preferences: true }, where: and(eq(NoteTable.id, id), eq(NoteTable.userId, userId)) });
 
 // Update the preferences of a note for a user (supports normal db or transaction)
-export const updateNotePreferences = (id: string, userId: string, preferences: NotePreferencesStored, tx: DbOrTx = db) =>
+export const updateNotePreferences = (id: string, userId: string, preferences: NotePrefs, tx: DbOrTx = db) =>
   tx
     .update(NoteTable)
     // Silently update note preferences and do not consider it a meaningful note update

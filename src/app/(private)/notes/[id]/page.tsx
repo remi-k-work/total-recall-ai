@@ -11,7 +11,6 @@ import { NoteDetailsPageSchema } from "@/features/notes/schemas/noteDetailsPage"
 import { getUserSessionData } from "@/features/auth/lib/helpersEffect";
 
 // components
-import { NotePreferencesStoreProvider } from "@/features/notes/stores/NotePreferencesProvider";
 import PageHeader from "@/components/PageHeader";
 import BrowseBar from "@/features/notes/components/browse-bar";
 import NoteDetails from "@/features/notes/components/NoteDetails";
@@ -61,21 +60,13 @@ export default function Page({ params, searchParams }: PageProps<"/notes/[id]">)
 // This new async component contains the dynamic logic
 async function PageContent({ params, searchParams }: PageProps<"/notes/[id]">) {
   // Execute the main effect for the page, map known errors to the subsequent navigation helpers, and return the payload
-  const {
-    noteId,
-    searchTerm,
-    note,
-    note: { preferences },
-    availNoteTags,
-  } = await runPageMainOrNavigate(main({ params, searchParams }));
+  const { searchTerm, note, availNoteTags } = await runPageMainOrNavigate(main({ params, searchParams }));
 
   return (
     <>
       <PageHeader title="Note Details" description="Below are all your note details" />
       <BrowseBar kind="note-details" searchTerm={searchTerm} />
-      <NotePreferencesStoreProvider noteId={noteId} initState={preferences ?? undefined}>
-        <NoteDetails note={note} availNoteTags={availNoteTags} />
-      </NotePreferencesStoreProvider>
+      <NoteDetails note={note} availNoteTags={availNoteTags} />
     </>
   );
 }

@@ -5,21 +5,29 @@ import { useEffect, useState } from "react";
 
 // services, features, and other libraries
 import { useTheme } from "next-themes";
-import { useNotePreferencesStore } from "@/features/notes/stores/NotePreferencesProvider";
+import { selColorAtom, useNotePrefsActions } from "@/atoms";
+import { useAtomValue } from "@effect-atom/atom-react";
 import Color from "colorjs.io";
-import { useDebouncedCallback } from "use-debounce";
 
-export default function ColorPicker() {
+// types
+import type { NoteDetails, NoteWithPagination } from "@/features/notes/db";
+
+interface ColorPickerProps {
+  note: NoteWithPagination | NoteDetails;
+}
+
+export default function ColorPicker({ note: { id: noteId } }: ColorPickerProps) {
   // Determine whether the current theme is dark or light
   const { resolvedTheme } = useTheme();
 
   // Retrieve the necessary state and actions from the note preferences store
-  const curNoteColor = useNotePreferencesStore((state) => state.color);
-  const changedColor = useNotePreferencesStore((state) => state.changedColor);
+  const curNoteColor = useAtomValue(selColorAtom(noteId));
+  const { changedColor } = useNotePrefsActions(noteId);
 
   // The default note color should use the fallback value until CSS variables become available
   const [defNoteColor, setDefNoteColor] = useState("#000000");
 
+  // Logic for initial CSS variable extraction
   useEffect(() => {
     requestAnimationFrame(() => {
       // Establish the default note color and normalize it (lab -> srgb)
@@ -29,19 +37,13 @@ export default function ColorPicker() {
     });
   }, [resolvedTheme]);
 
-  // Use the debounced callback to initiate the relevant actions
-  const handleChangedColor = useDebouncedCallback((newNoteColor: string) => {
-    // User has changed the note color
-    changedColor(newNoteColor);
-  }, 1000);
-
   return (
     <section className="bg-background p-4">
       <input
         name="colorPicker"
         type="color"
         defaultValue={curNoteColor ?? defNoteColor}
-        onChange={({ target: { value: newNoteColor } }) => handleChangedColor(newNoteColor)}
+        onChange={({ target: { value: newNoteColor } }) => changedColor(newNoteColor)}
       />
     </section>
   );
