@@ -2,6 +2,7 @@
 import { Effect } from "effect";
 import { Atom } from "@effect-atom/atom-react";
 import { RuntimeAtom } from "@/lib/RuntimeClient";
+import { RpcNotesClient } from "@/features/notes/rpc/client";
 
 // types
 export interface NotePrefs {
@@ -21,6 +22,9 @@ export const notePrefsAtom = Atom.family(() => Atom.make<NotePrefs>(INIT_NOTE_PR
 export const syncToDbAtom = Atom.family((noteId: string) =>
   RuntimeAtom.fn(
     Effect.fnUntraced(function* (newNotePrefs: NotePrefs) {
+      const { syncToDbNotePrefs } = yield* RpcNotesClient;
+      yield* syncToDbNotePrefs({ noteId, ...newNotePrefs });
+
       yield* Effect.log(`[DB SYNC] Saving note ${noteId}: ${JSON.stringify(newNotePrefs)}`);
     }),
   ),

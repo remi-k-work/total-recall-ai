@@ -2,13 +2,11 @@
 import { db } from "@/drizzle/db";
 
 // services, features, and other libraries
-import { Cause, Context, Data, Effect, Exit, Layer, Option, Runtime } from "effect";
+import { Cause, Context, Effect, Exit, Layer, Option, Runtime } from "effect";
+import { DatabaseError } from "@/lib/errors";
 
 // types
 import type { DbOrTx } from "@/drizzle/db";
-
-// Define a domain error for the database
-class DatabaseError extends Data.TaggedError("DatabaseError")<{ readonly message: string; readonly cause?: unknown }> {}
 
 // Internal error to signal Drizzle to rollback
 class RollbackSentinel {
