@@ -1,5 +1,5 @@
 // react
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 // services, features, and other libraries
 import { Data, Equal } from "effect";
@@ -20,6 +20,9 @@ export function useNotePrefsManager(noteId: string, preferences: NotePrefs | nul
   // Normalize incoming preferences against the initial default state
   const incomingNotePrefs = useMemo(() => ({ ...INIT_NOTE_PREFS, ...preferences }), [preferences]);
 
+  // Keep a ref of what we last synced to prevent bouncing/duplicate API calls
+  const lastSyncedRef = useRef<NotePrefs>(incomingNotePrefs);
+
   // Hydrate the master atom on mount, skipping if the incoming preferences are empty
   useEffect(() => {
     if (Equal.equals(Data.struct(incomingNotePrefs), Data.struct(INIT_NOTE_PREFS))) return;
@@ -31,7 +34,11 @@ export function useNotePrefsManager(noteId: string, preferences: NotePrefs | nul
     notePrefsAtom(noteId),
     (newNotePrefs) => {
       if (Equal.equals(Data.struct(newNotePrefs), Data.struct(incomingNotePrefs))) return;
+      if (Equal.equals(Data.struct(newNotePrefs), Data.struct(lastSyncedRef.current))) return;
+
+      // Sync and update cache
       syncToDb(newNotePrefs);
+      lastSyncedRef.current = newNotePrefs;
     },
     { immediate: false },
   );
