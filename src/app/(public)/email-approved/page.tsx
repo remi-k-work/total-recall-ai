@@ -20,12 +20,16 @@ export default function Page() {
   return (
     <article className="grid h-full place-items-center">
       <PageHeader title="Email Approved" description="Your email has been approved successfully" />
-      <Button variant="ghost" asChild>
-        <Link href={`/dashboard`}>
-          <LightBulbIcon className="size-9" />
-          Go to the Dashboard
-        </Link>
-      </Button>
+      <Button
+        variant="ghost"
+        nativeButton={false}
+        render={
+          <Link href="/dashboard">
+            <LightBulbIcon className="size-9" />
+            Go to the Dashboard
+          </Link>
+        }
+      ></Button>
     </article>
   );
 }

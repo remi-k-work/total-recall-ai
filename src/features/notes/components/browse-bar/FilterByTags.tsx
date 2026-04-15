@@ -6,7 +6,7 @@ import { useBrowseBarContext } from "./context";
 import { useDebouncedCallback } from "use-debounce";
 
 // components
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/custom/popover";
 import { Badge } from "@/components/ui/custom/badge";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/custom/toggle-group";
 
@@ -54,7 +54,7 @@ export default function FilterByTags() {
       </PopoverTrigger>
       <PopoverContent side="top" className="w-96">
         <ToggleGroup
-          type="multiple"
+          multiple
           spacing={2}
           value={currFilterByTagIndxs.map(String)}
           onValueChange={(value) => {

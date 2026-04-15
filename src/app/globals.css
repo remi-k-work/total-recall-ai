@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "shadcn/tailwind.css";
 @import "uploadthing/tw/v4";
 
 @source "../../node_modules/@uploadthing/react/dist";
@@ -49,16 +50,6 @@
 
   /* shadcn/ui (shared) */
   --radius: 0.5rem;
-  --shadow-2xs: 0px 4px 8px -2px hsl(0 0% 0% / 0.05);
-  --shadow-xs: 0px 4px 8px -2px hsl(0 0% 0% / 0.05);
-  --shadow-sm: 0px 4px 8px -2px hsl(0 0% 0% / 0.1), 0px 1px 2px -3px hsl(0 0% 0% / 0.1);
-  --shadow: 0px 4px 8px -2px hsl(0 0% 0% / 0.1), 0px 1px 2px -3px hsl(0 0% 0% / 0.1);
-  --shadow-md: 0px 4px 8px -2px hsl(0 0% 0% / 0.1), 0px 2px 4px -3px hsl(0 0% 0% / 0.1);
-  --shadow-lg: 0px 4px 8px -2px hsl(0 0% 0% / 0.1), 0px 4px 6px -3px hsl(0 0% 0% / 0.1);
-  --shadow-xl: 0px 4px 8px -2px hsl(0 0% 0% / 0.1), 0px 8px 10px -3px hsl(0 0% 0% / 0.1);
-  --shadow-2xl: 0px 4px 8px -2px hsl(0 0% 0% / 0.25);
-  --tracking-normal: 0em;
-  --spacing: 0.25rem;
 }
 
 .dark {
@@ -134,23 +125,17 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-
-  --shadow-2xs: var(--shadow-2xs);
-  --shadow-xs: var(--shadow-xs);
-  --shadow-sm: var(--shadow-sm);
-  --shadow: var(--shadow);
-  --shadow-md: var(--shadow-md);
-  --shadow-lg: var(--shadow-lg);
-  --shadow-xl: var(--shadow-xl);
-  --shadow-2xl: var(--shadow-2xl);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
 @utility link {
-  @apply decoration-primary hover:decoration-accent font-sans text-sm font-semibold tracking-widest uppercase underline decoration-2 underline-offset-4;
+  @apply font-sans text-sm font-semibold tracking-widest uppercase underline decoration-primary decoration-2 underline-offset-4 hover:decoration-accent;
 }
 
 @layer base {
@@ -159,16 +144,17 @@
   }
 
   html {
+    @apply font-mono;
     scrollbar-color: var(--primary-foreground) var(--background);
   }
 
   body {
-    @apply bg-background text-foreground min-h-dvh text-base font-light;
+    @apply min-h-dvh bg-background text-base font-light text-foreground;
   }
 
   a,
   button {
-    @apply focus-visible:outline-primary transition duration-1000 ease-in-out focus-visible:z-1 focus-visible:outline-2 focus-visible:outline-offset-5;
+    @apply transition duration-1000 ease-in-out focus-visible:z-1 focus-visible:outline-2 focus-visible:outline-offset-5 focus-visible:outline-primary;
   }
 
   h1,
@@ -193,7 +179,7 @@
   }
 
   .mdxeditor-root-contenteditable {
-    @apply border-input has-focus-visible:border-ring has-focus-visible:ring-ring/50 dark:bg-input/30 overflow-hidden rounded-md rounded-t-none border bg-transparent px-3 shadow-xs transition-[color,box-shadow] outline-none disabled:cursor-not-allowed disabled:opacity-50 has-focus-visible:ring-[3px];
+    @apply overflow-hidden rounded-md rounded-t-none border border-input bg-transparent px-3 shadow-xs transition-[color,box-shadow] outline-none disabled:cursor-not-allowed disabled:opacity-50 has-focus-visible:border-ring has-focus-visible:ring-[3px] has-focus-visible:ring-ring/50 dark:bg-input/30;
 
     & * {
       outline: none;
@@ -201,11 +187,11 @@
   }
 
   .mdxeditor-toolbar {
-    @apply bg-card border-card flex-wrap rounded-md !rounded-b-none shadow-sm;
+    @apply flex-wrap rounded-md rounded-b-none! border-card bg-card shadow-sm;
   }
 
   .mdxeditor-popup-container {
-    @apply !z-50;
+    @apply z-50!;
   }
 
   .dark-theme {

@@ -4,7 +4,7 @@
 import { useState } from "react";
 
 // components
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/custom/popover";
 import { Button } from "@/components/ui/custom/button";
 import { UserAvatar, UserAvatarSkeleton } from "@/components/avatar/user";
 import SignOut from "./SignOut";
@@ -26,15 +26,17 @@ export default function UserPopover({ user, user: { email, name }, session }: Us
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger asChild>
-        <Button type="button" variant="ghost" size="icon" title={name}>
-          <UserAvatar user={user} session={session} isSmall />
-        </Button>
-      </PopoverTrigger>
+      <PopoverTrigger
+        render={
+          <Button type="button" variant="ghost" size="icon" title={name}>
+            <UserAvatar user={user} session={session} isSmall />
+          </Button>
+        }
+      ></PopoverTrigger>
       <PopoverContent className="grid">
         <UserAvatar user={user} session={session} className="mx-auto" />
         <h4 className="mt-4 truncate text-center">{name}</h4>
-        <p className="text-muted-foreground truncate text-center">{email}</p>
+        <p className="truncate text-center text-muted-foreground">{email}</p>
         <div className="mt-4 grid gap-4">
           <Button
             type="button"

@@ -17,12 +17,16 @@ export default function Page() {
   return (
     <article className="grid h-full place-items-center">
       <PageHeader title="Unauthorized" description="You are not authorized to view this page" />
-      <Button variant="ghost" asChild>
-        <Link href={`/sign-in?redirect=${pathname}`}>
-          <ArrowRightEndOnRectangleIcon className="size-9" />
-          Sign In
-        </Link>
-      </Button>
+      <Button
+        variant="ghost"
+        nativeButton={false}
+        render={
+          <Link href={`/sign-in?redirect=${pathname}`}>
+            <ArrowRightEndOnRectangleIcon className="size-9" />
+            Sign In
+          </Link>
+        }
+      ></Button>
     </article>
   );
 }

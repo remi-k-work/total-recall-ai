@@ -17,7 +17,7 @@ interface SelectOption {
   label: string;
 }
 
-interface SelectFieldProps extends ComponentPropsWithoutRef<typeof Select> {
+interface SelectFieldProps extends ComponentPropsWithoutRef<typeof Select<string>> {
   label: string;
   options: SelectOption[];
   placeholder?: string;
@@ -38,7 +38,7 @@ export default function SelectField({ label, options, placeholder, ...props }: S
   return (
     <>
       <Label htmlFor={id}>{label}</Label>
-      <Select name={name} value={value} onValueChange={(value) => handleChange(value)} {...props}>
+      <Select<string> name={name} value={value} onValueChange={(value) => handleChange(value as string)} {...props}>
         <SelectTrigger id={id} onBlur={handleBlur}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
