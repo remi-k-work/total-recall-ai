@@ -10,7 +10,7 @@ import syncNoteTags from "@/features/notes/actions/syncNoteTags";
 import { useDebouncedCallback } from "use-debounce";
 
 // components
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/custom/popover";
 import { Badge } from "@/components/ui/custom/badge";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/custom/toggle-group";
 
