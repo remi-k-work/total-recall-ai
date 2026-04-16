@@ -55,7 +55,6 @@ export default function FilterByTags() {
       <PopoverContent side="top" className="w-96">
         <ToggleGroup
           multiple
-          spacing={2}
           value={currFilterByTagIndxs.map(String)}
           onValueChange={(value) => {
             // Immediate UI update of the toggled tags
