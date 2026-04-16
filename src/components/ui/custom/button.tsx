@@ -9,6 +9,7 @@ const buttonVariants = cva(
     "hover:shadow-2xl active:scale-95 active:shadow-none",
     "focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring/50",
     "disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none",
+    "aria-disabled:pointer-events-none aria-disabled:opacity-50 aria-disabled:shadow-none",
     "aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
     "[&_svg]:pointer-events-none [&_svg]:shrink-0"
   ),

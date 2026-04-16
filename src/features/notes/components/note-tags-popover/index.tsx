@@ -61,7 +61,6 @@ export default function NoteTagsPopover({ noteId, currNoteTagIds, availNoteTags 
       <PopoverContent side="top" className="w-96">
         <ToggleGroup
           multiple
-          spacing={2}
           value={optiToggledTagIds}
           onValueChange={(value) => {
             startTransition(() => {

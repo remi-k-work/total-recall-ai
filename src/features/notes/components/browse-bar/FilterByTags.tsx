@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 
 // services, features, and other libraries
 import { useBrowseBarContext } from "./context";
-import { useEffectDebounce } from "@/hooks/useEffectDebounce";
+import { useDebouncedCallback } from "use-debounce";
 
 // components
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/custom/popover";
@@ -34,8 +34,11 @@ export default function FilterByTags() {
     return availNoteTags.filter((_, index) => selectedSet.has(index));
   }, [currFilterByTagIndxs, availNoteTags]);
 
-  // Use the debounced callback to initiate the relevant actions (refresh the page with the new filter by tags)
-  const handleToggledNoteTags = useEffectDebounce((filterByTagIndxs: string[]) => navigate({ fbt: filterByTagIndxs, crp: 1 }), "3 seconds");
+  // Use the debounced callback to initiate the relevant actions
+  const handleToggledNoteTags = useDebouncedCallback((filterByTagIndxs: string[]) => {
+    // Refresh the page with the new filter by tags
+    navigate({ fbt: filterByTagIndxs, crp: 1 });
+  }, 3000);
 
   return (
     <Popover>
@@ -52,6 +55,7 @@ export default function FilterByTags() {
       <PopoverContent side="top" className="w-96">
         <ToggleGroup
           multiple
+          spacing={2}
           value={currFilterByTagIndxs.map(String)}
           onValueChange={(value) => {
             // Immediate UI update of the toggled tags
