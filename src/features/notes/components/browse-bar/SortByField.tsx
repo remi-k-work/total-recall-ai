@@ -31,29 +31,39 @@ export default function SortByField() {
   const { totalItems, sortByFields, sortByField, createHref } = useBrowseBarContext("notes-root");
 
   // Currently selected sort by field
-  const [currSortByField, setCurrSortByField] = useState(sortByField);
+  const [currSortByField, setCurrSortByField] = useState([sortByField]);
 
   // Keep the currently selected sort by field in sync with search params
   useEffect(() => {
-    setCurrSortByField(sortByField);
-  }, [sortByField]);
+    if (sortByField === currSortByField[0]) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setCurrSortByField([sortByField]);
+  }, [sortByField, currSortByField]);
 
   return (
-    <ToggleGroup type="single" disabled={totalItems <= 1} value={currSortByField} onValueChange={setCurrSortByField} className="items-start">
+    <ToggleGroup disabled={totalItems <= 1} value={currSortByField} onValueChange={setCurrSortByField} className="items-start">
       {sortByFields.map(({ key, label, iconKey }) => (
-        <ToggleGroupItem key={key} value={key} aria-label={`Sort By: ${label}`} title={`Sort By: ${label}`} className="gap-0" asChild>
-          {totalItems <= 1 ? (
-            <span className="flex-col text-center whitespace-pre-line">
-              {ICON_MAP[iconKey]}
-              {label.replaceAll(" ", "\n")}
-            </span>
-          ) : (
-            <Link href={createHref({ sbf: key })} className="flex-col text-center whitespace-pre-line">
-              {ICON_MAP[iconKey]}
-              {label.replaceAll(" ", "\n")}
-            </Link>
-          )}
-        </ToggleGroupItem>
+        <ToggleGroupItem
+          key={key}
+          value={key}
+          aria-label={`Sort By: ${label}`}
+          title={`Sort By: ${label}`}
+          nativeButton={false}
+          className="gap-0"
+          render={
+            totalItems <= 1 ? (
+              <span className="flex-col text-center whitespace-pre-line">
+                {ICON_MAP[iconKey]}
+                {label.replaceAll(" ", "\n")}
+              </span>
+            ) : (
+              <Link href={createHref({ sbf: key })} className="flex-col text-center whitespace-pre-line">
+                {ICON_MAP[iconKey]}
+                {label.replaceAll(" ", "\n")}
+              </Link>
+            )
+          }
+        />
       ))}
     </ToggleGroup>
   );

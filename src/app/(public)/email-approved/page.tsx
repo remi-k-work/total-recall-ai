@@ -29,7 +29,7 @@ export default function Page() {
             Go to the Dashboard
           </Link>
         }
-      ></Button>
+      />
     </article>
   );
 }

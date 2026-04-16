@@ -26,7 +26,7 @@ export default function Page() {
             Sign In
           </Link>
         }
-      ></Button>
+      />
     </article>
   );
 }

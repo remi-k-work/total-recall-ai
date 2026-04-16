@@ -22,12 +22,17 @@ export default function ToolBar() {
   return (
     <section className="flex flex-wrap items-center justify-around gap-4 *:basis-24">
       {browseBarContext.kind === "notes-root" ? (
-        <Button variant="ghost" className="flex-col text-center whitespace-pre-line" asChild>
-          <Link href={createHref("/notes/new")}>
-            <DocumentPlusIcon className="size-11" />
-            {"New Note".replaceAll(" ", "\n")}
-          </Link>
-        </Button>
+        <Button
+          variant="ghost"
+          nativeButton={false}
+          className="flex-col text-center whitespace-pre-line"
+          render={
+            <Link href={createHref("/notes/new")}>
+              <DocumentPlusIcon className="size-11" />
+              {"New Note".replaceAll(" ", "\n")}
+            </Link>
+          }
+        />
       ) : (
         <Button type="button" variant="ghost" className="flex-col whitespace-pre-line" disabled>
           <DocumentPlusIcon className="size-11" />
@@ -37,12 +42,17 @@ export default function ToolBar() {
 
       {browseBarContext.kind === "note-details" ? (
         <>
-          <Button variant="ghost" className="flex-col text-center whitespace-pre-line" asChild>
-            <Link href={createHref(`/notes/${browseBarContext.noteId}/edit` as Route)}>
-              <DocumentTextIcon className="size-11" />
-              {"Edit Note".replaceAll(" ", "\n")}
-            </Link>
-          </Button>
+          <Button
+            variant="ghost"
+            nativeButton={false}
+            className="flex-col text-center whitespace-pre-line"
+            render={
+              <Link href={createHref(`/notes/${browseBarContext.noteId}/edit` as Route)}>
+                <DocumentTextIcon className="size-11" />
+                {"Edit Note".replaceAll(" ", "\n")}
+              </Link>
+            }
+          />
           <DeleteNote />
         </>
       ) : (
@@ -59,12 +69,17 @@ export default function ToolBar() {
       )}
 
       {browseBarContext.kind !== "notes-root" ? (
-        <Button variant="ghost" className="flex-col text-center whitespace-pre-line" asChild>
-          <Link href={createHref("/notes")}>
-            <DocumentDuplicateIcon className="size-11" />
-            {"All Notes".replaceAll(" ", "\n")}
-          </Link>
-        </Button>
+        <Button
+          variant="ghost"
+          nativeButton={false}
+          className="flex-col text-center whitespace-pre-line"
+          render={
+            <Link href={createHref("/notes")}>
+              <DocumentDuplicateIcon className="size-11" />
+              {"All Notes".replaceAll(" ", "\n")}
+            </Link>
+          }
+        />
       ) : (
         <Button type="button" variant="ghost" className="flex-col whitespace-pre-line" disabled>
           <DocumentDuplicateIcon className="size-11" />
@@ -72,12 +87,17 @@ export default function ToolBar() {
         </Button>
       )}
 
-      <Button variant="ghost" className="flex-col text-center whitespace-pre-line" asChild>
-        <Link href="/note-tags">
-          <TagIcon className="size-11" />
-          {"Note Tags".replaceAll(" ", "\n")}
-        </Link>
-      </Button>
+      <Button
+        variant="ghost"
+        nativeButton={false}
+        className="flex-col text-center whitespace-pre-line"
+        render={
+          <Link href="/note-tags">
+            <TagIcon className="size-11" />
+            {"Note Tags".replaceAll(" ", "\n")}
+          </Link>
+        }
+      />
     </section>
   );
 }

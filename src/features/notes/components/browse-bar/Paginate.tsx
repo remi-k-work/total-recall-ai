@@ -28,7 +28,7 @@ export default function Paginate() {
             <ArrowLeftCircleIcon className="size-9" />
           </Link>
         }
-      ></Button>
+      />
       <DropdownMenu>
         <DropdownMenuTrigger
           render={
@@ -69,7 +69,7 @@ export default function Paginate() {
             <ArrowRightCircleIcon className="size-9" />
           </Link>
         }
-      ></Button>
+      />
     </section>
   );
 }

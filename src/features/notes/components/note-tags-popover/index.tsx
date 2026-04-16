@@ -60,7 +60,7 @@ export default function NoteTagsPopover({ noteId, currNoteTagIds, availNoteTags 
       </PopoverTrigger>
       <PopoverContent side="top" className="w-96">
         <ToggleGroup
-          type="multiple"
+          multiple
           spacing={2}
           value={optiToggledTagIds}
           onValueChange={(value) => {
