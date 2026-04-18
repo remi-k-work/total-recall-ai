@@ -14,4 +14,9 @@ export class RpcNotes extends RpcGroup.make(
       isPinned: Schema.Boolean,
     },
   }),
+
+  Rpc.make("syncToDbNoteTags", {
+    error: Schema.Union(DatabaseError, UnauthorizedAccessError),
+    payload: { noteId: Schema.UUID, tags: Schema.Array(Schema.UUID) },
+  })
 ) {}

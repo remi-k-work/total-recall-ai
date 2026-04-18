@@ -20,7 +20,7 @@ export class NoteTagDB extends Effect.Service<NoteTagDB>()("NoteTagDB", {
     // Retrieve all note tags for a specific user ordered alphabetically (useful for the tag management list or autocomplete)
     const getAvailNoteTags = (userId: string) =>
       execute((dbOrTx) =>
-        dbOrTx.query.NoteTagTable.findMany({ columns: { id: true, name: true }, where: eq(NoteTagTable.userId, userId), orderBy: [asc(NoteTagTable.name)] }),
+        dbOrTx.query.NoteTagTable.findMany({ columns: { id: true, name: true }, where: eq(NoteTagTable.userId, userId), orderBy: [asc(NoteTagTable.name)] })
       );
 
     // Map URL-provided note tag indexes to their corresponding note tag IDs using the ordered list of all available note tags for this user
@@ -35,7 +35,7 @@ export class NoteTagDB extends Effect.Service<NoteTagDB>()("NoteTagDB", {
         Effect.gen(function* () {
           // Fetch all existing tags for this user
           const allExistingTags = yield* execute((dbOrTx) =>
-            dbOrTx.query.NoteTagTable.findMany({ columns: { id: true, name: true }, where: eq(NoteTagTable.userId, userId) }),
+            dbOrTx.query.NoteTagTable.findMany({ columns: { id: true, name: true }, where: eq(NoteTagTable.userId, userId) })
           );
 
           // Prepare lookup for incoming IDs
@@ -78,7 +78,7 @@ export class NoteTagDB extends Effect.Service<NoteTagDB>()("NoteTagDB", {
                   dbOrTx
                     .update(NoteTagTable)
                     .set({ name: incomingName })
-                    .where(and(eq(NoteTagTable.id, incomingId), eq(NoteTagTable.userId, userId))),
+                    .where(and(eq(NoteTagTable.id, incomingId), eq(NoteTagTable.userId, userId)))
                 );
 
                 // Refresh in-memory name map
@@ -97,11 +97,11 @@ export class NoteTagDB extends Effect.Service<NoteTagDB>()("NoteTagDB", {
           // Insert all new tags at once
           if (tagsToInsert.length > 0)
             yield* execute((dbOrTx) => dbOrTx.insert(NoteTagTable).values(tagsToInsert.map(({ id, name }) => ({ id, userId, name }))));
-        }),
+        })
       );
 
     // Sync tags for a note (useful when the UI sends a full list of tags)
-    const syncNoteTags = (noteId: string, noteTagIds: readonly string[]) =>
+    const syncNoteTags = (noteId: string, tags: readonly string[]) =>
       // Run all db operations in a transaction
       transaction(
         Effect.gen(function* () {
@@ -109,9 +109,8 @@ export class NoteTagDB extends Effect.Service<NoteTagDB>()("NoteTagDB", {
           yield* execute((dbOrTx) => dbOrTx.delete(NoteToNoteTagTable).where(eq(NoteToNoteTagTable.noteId, noteId)));
 
           // If there are note tags to add, insert them all
-          if (noteTagIds.length > 0)
-            yield* execute((dbOrTx) => dbOrTx.insert(NoteToNoteTagTable).values(noteTagIds.map((noteTagId) => ({ noteId, noteTagId }))));
-        }),
+          if (tags.length > 0) yield* execute((dbOrTx) => dbOrTx.insert(NoteToNoteTagTable).values(tags.map((noteTagId) => ({ noteId, noteTagId }))));
+        })
       );
 
     return {

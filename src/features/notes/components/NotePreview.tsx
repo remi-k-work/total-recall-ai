@@ -12,7 +12,7 @@ import { useAtomValue } from "@effect-atom/atom-react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
 import { Response } from "@/components/ai-elements/response";
 import ColorPicker from "./ColorPicker";
-import NoteTagsPopover from "./note-tags-popover";
+import NoteTagsPopover from "./NoteTagsPopover";
 import CreatedAt from "./CreatedAt";
 import UpdatedAt from "./UpdatedAt";
 
@@ -28,11 +28,7 @@ interface NotePreviewProps {
 // constants
 import { REHYPE_PLUGINS } from "@/features/notes-assistant/constants/plugins";
 
-export default function NotePreview({
-  note,
-  note: { id: noteId, title, contentPreview, preferences, createdAt, updatedAt, tags },
-  availNoteTags,
-}: NotePreviewProps) {
+export default function NotePreview({ note, note: { id: noteId, title, contentPreview, preferences, createdAt, updatedAt }, availNoteTags }: NotePreviewProps) {
   // A hook to easily create new route strings with updated search parameters (it preserves existing search params)
   const { createHref } = useUrlScribe();
 
@@ -56,7 +52,7 @@ export default function NotePreview({
       </CardContent>
       <CardFooter className="flex flex-wrap items-center justify-around gap-6 border-t pt-6">
         <ColorPicker note={note} />
-        <NoteTagsPopover noteId={noteId} currNoteTagIds={tags.map(({ id }) => id)} availNoteTags={availNoteTags} />
+        <NoteTagsPopover note={note} availNoteTags={availNoteTags} />
         <CreatedAt createdAt={createdAt} />
         <UpdatedAt updatedAt={updatedAt} />
       </CardFooter>

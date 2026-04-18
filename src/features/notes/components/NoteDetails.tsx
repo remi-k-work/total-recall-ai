@@ -8,7 +8,7 @@ import { useAtomValue } from "@effect-atom/atom-react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
 import { Response } from "@/components/ai-elements/response";
 import ColorPicker from "./ColorPicker";
-import NoteTagsPopover from "./note-tags-popover";
+import NoteTagsPopover from "./NoteTagsPopover";
 import CreatedAt from "./CreatedAt";
 import UpdatedAt from "./UpdatedAt";
 
@@ -26,7 +26,7 @@ import { REHYPE_PLUGINS } from "@/features/notes-assistant/constants/plugins";
 
 export default function NoteDetails({
   note,
-  note: { id: noteId, title, content, preferences, createdAt, updatedAt, noteToNoteTag },
+  note: { id: noteId, title, content, preferences, createdAt, updatedAt },
   availNoteTags,
   inNoteModal = false,
 }: NoteDetailsProps) {
@@ -48,7 +48,7 @@ export default function NoteDetails({
       </CardContent>
       <CardFooter className="flex flex-wrap items-center justify-around gap-6 border-t pt-6">
         <ColorPicker note={note} />
-        <NoteTagsPopover noteId={noteId} currNoteTagIds={noteToNoteTag.map(({ noteTagId }) => noteTagId)} availNoteTags={availNoteTags} />
+        <NoteTagsPopover note={note} availNoteTags={availNoteTags} />
         <CreatedAt createdAt={createdAt} />
         <UpdatedAt updatedAt={updatedAt} />
       </CardFooter>
