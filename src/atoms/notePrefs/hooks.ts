@@ -2,29 +2,29 @@
 import { startTransition, useCallback, useMemo } from "react";
 
 // services, features, and other libraries
-import { useAtomInitialValues, useAtomSet, useAtomValue } from "@effect-atom/atom-react";
-import { notePrefsAtom, selIsPinnedAtom, syncToDbNotePrefsAtom } from ".";
+import { useAtomInitialValues, useAtomSet } from "@effect-atom/atom-react";
+import { notePrefsAtom, syncToDbNotePrefsAtom, togglePinAtom } from ".";
 
 // types
-import type { NotePrefs } from ".";
+import type { NoteDetails, NoteWithPagination } from "@/features/notes/db";
 
 // constants
 import { INIT_NOTE_PREFS } from ".";
 
-// Hydrates the master atom with server-rendered preferences on mount
-export function useNotePrefsManager(noteId: string, preferences: NotePrefs | null) {
+// Manages note preferences, including hydration, zero-read setter actions, and debounced database synchronization
+export function useNotePrefs(note: NoteWithPagination | NoteDetails) {
+  // Hydrate the master atom with server-rendered preferences on mount
+  const { id: noteId, preferences } = note;
   const incomingNotePrefs = useMemo(() => ({ ...INIT_NOTE_PREFS, ...preferences }), [preferences]);
   useAtomInitialValues([[notePrefsAtom(noteId), incomingNotePrefs]]);
-}
 
-// Exposes zero-read setter actions that never cause component re-renders
-export function useNotePrefsActions(noteId: string) {
+  // Setter actions utilizing the optimistic sync and toggle atoms for zero-read updates
   const syncToDbNotePrefs = useAtomSet(syncToDbNotePrefsAtom(noteId));
-  const isPinned = useAtomValue(selIsPinnedAtom(noteId));
+  const togglePin = useAtomSet(togglePinAtom(noteId));
 
   const changedColor = useCallback((color: string) => startTransition(() => syncToDbNotePrefs({ color })), [syncToDbNotePrefs]);
   const changedPosition = useCallback((posX: number, posY: number) => startTransition(() => syncToDbNotePrefs({ posX, posY })), [syncToDbNotePrefs]);
-  const toggledPin = useCallback(() => startTransition(() => syncToDbNotePrefs({ isPinned: !isPinned })), [syncToDbNotePrefs, isPinned]);
+  const toggledPin = useCallback(() => startTransition(() => togglePin()), [togglePin]);
 
   return { changedColor, changedPosition, toggledPin } as const;
 }

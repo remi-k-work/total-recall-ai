@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 // services, features, and other libraries
 import { useTheme } from "next-themes";
-import { selColorAtom, useNotePrefsActions } from "@/atoms";
+import { selColorAtom, useNotePrefs } from "@/atoms";
 import { useAtomValue } from "@effect-atom/atom-react";
 import Color from "colorjs.io";
 
@@ -16,13 +16,13 @@ interface ColorPickerProps {
   note: NoteWithPagination | NoteDetails;
 }
 
-export default function ColorPicker({ note: { id: noteId } }: ColorPickerProps) {
+export default function ColorPicker({ note, note: { id: noteId } }: ColorPickerProps) {
   // Determine whether the current theme is dark or light
   const { resolvedTheme } = useTheme();
 
   // Retrieve the necessary state and actions from the note preferences store
   const curNoteColor = useAtomValue(selColorAtom(noteId));
-  const { changedColor } = useNotePrefsActions(noteId);
+  const { changedColor } = useNotePrefs(note);
 
   // The default note color should use the fallback value until CSS variables become available
   const [defNoteColor, setDefNoteColor] = useState("#000000");

@@ -1,7 +1,7 @@
 "use client";
 
 // services, features, and other libraries
-import { selColorAtom, useNotePrefsManager } from "@/atoms";
+import { selColorAtom } from "@/atoms";
 import { useAtomValue } from "@effect-atom/atom-react";
 
 // components
@@ -26,13 +26,10 @@ import { REHYPE_PLUGINS } from "@/features/notes-assistant/constants/plugins";
 
 export default function NoteDetails({
   note,
-  note: { id: noteId, title, content, preferences, createdAt, updatedAt },
+  note: { id: noteId, title, content, createdAt, updatedAt },
   availNoteTags,
   inNoteModal = false,
 }: NoteDetailsProps) {
-  // The hook should be mounted once for each note (for example, in the root wrapper) to manage hydration and database synchronization
-  useNotePrefsManager(noteId, preferences);
-
   // Retrieve the necessary state and actions from the note preferences store
   const color = useAtomValue(selColorAtom(noteId));
 

@@ -20,7 +20,7 @@ export const notePrefsAtom = Atom.family(() =>
   Atom.writable<NotePrefs, NotePrefs>(
     (get) => Option.getOrElse(get.self(), () => INIT_NOTE_PREFS),
     (ctx, value) => ctx.setSelf(value)
-  )
+  ).pipe(Atom.keepAlive)
 );
 
 // Optimistic view of the master atom for immediate UI feedback and automatic rollback
@@ -52,3 +52,11 @@ export const selColorAtom = Atom.family((noteId: string) => optiNotePrefsAtom(no
 export const selPosXAtom = Atom.family((noteId: string) => optiNotePrefsAtom(noteId).pipe(Atom.map((state) => state.posX)));
 export const selPosYAtom = Atom.family((noteId: string) => optiNotePrefsAtom(noteId).pipe(Atom.map((state) => state.posY)));
 export const selIsPinnedAtom = Atom.family((noteId: string) => optiNotePrefsAtom(noteId).pipe(Atom.map((state) => state.isPinned)));
+
+// Atom function for toggling the pin state without requiring a component-side read
+export const togglePinAtom = Atom.family((noteId: string) =>
+  Atom.fnSync((_, get) => {
+    const isPinned = get(selIsPinnedAtom(noteId));
+    get.set(syncToDbNotePrefsAtom(noteId), { isPinned: !isPinned });
+  })
+);

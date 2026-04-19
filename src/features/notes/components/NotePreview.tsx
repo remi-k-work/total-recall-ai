@@ -5,7 +5,7 @@ import Link from "next/link";
 
 // services, features, and other libraries
 import useUrlScribe from "@/hooks/useUrlScribe";
-import { selColorAtom, useNotePrefsManager } from "@/atoms";
+import { selColorAtom } from "@/atoms";
 import { useAtomValue } from "@effect-atom/atom-react";
 
 // components
@@ -28,12 +28,9 @@ interface NotePreviewProps {
 // constants
 import { REHYPE_PLUGINS } from "@/features/notes-assistant/constants/plugins";
 
-export default function NotePreview({ note, note: { id: noteId, title, contentPreview, preferences, createdAt, updatedAt }, availNoteTags }: NotePreviewProps) {
+export default function NotePreview({ note, note: { id: noteId, title, contentPreview, createdAt, updatedAt }, availNoteTags }: NotePreviewProps) {
   // A hook to easily create new route strings with updated search parameters (it preserves existing search params)
   const { createHref } = useUrlScribe();
-
-  // The hook should be mounted once for each note (for example, in the root wrapper) to manage hydration and database synchronization
-  useNotePrefsManager(noteId, preferences);
 
   // Retrieve the necessary state and actions from the note preferences store
   const color = useAtomValue(selColorAtom(noteId));

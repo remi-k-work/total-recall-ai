@@ -8,7 +8,7 @@ import { noteTagsAtom, optiNoteTagsAtom, syncToDbNoteTagsAtom } from ".";
 // types
 import type { AvailNoteTags, NoteDetails, NoteWithPagination } from "@/features/notes/db";
 
-// The hook should be mounted once for each note (for example, in the root wrapper) to manage hydration and database synchronization
+// Manages note tags, including hydration, zero-read setter actions, and debounced database synchronization
 export function useNoteTags(note: NoteWithPagination | NoteDetails, availNoteTags: AvailNoteTags) {
   // Hydrate the master atom with server-rendered tags on mount
   const { id: noteId } = note;

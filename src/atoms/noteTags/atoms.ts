@@ -9,7 +9,7 @@ export const noteTagsAtom = Atom.family(() =>
   Atom.writable<string[], string[]>(
     (get) => Option.getOrElse(get.self(), () => []),
     (ctx, value) => ctx.setSelf(value)
-  )
+  ).pipe(Atom.keepAlive)
 );
 
 // Optimistic view of the master atom for immediate UI feedback and automatic rollback
