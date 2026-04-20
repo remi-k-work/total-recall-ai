@@ -3,7 +3,7 @@ import type { Route } from "next";
 import type { SortField } from "@/features/notes/components/browse-bar/SortByField";
 import type { ReactNode } from "react";
 import type useUrlScribe from "@/hooks/useUrlScribe";
-import type { getAvailNoteTags } from "@/features/notes/db";
+import type { AvailNoteTags } from "@/features/notes/db";
 
 export interface NotesRoot {
   kind: "notes-root";
@@ -11,7 +11,7 @@ export interface NotesRoot {
   totalPages: number;
   searchRoute: Route;
   searchTerm: string;
-  availNoteTags: Awaited<ReturnType<typeof getAvailNoteTags>>;
+  availNoteTags: AvailNoteTags;
   filterByTagIndxs: readonly number[];
   sortByFields: SortField[];
   sortByField: string;

@@ -15,7 +15,7 @@ const FbtSchema = Schema.transform(
       return input.split(",");
     },
     encode: (output) => output.join(","),
-  },
+  }
 );
 
 const NotesPageSearchParams = Schema.Struct({
@@ -33,6 +33,6 @@ export const NotesPageSchema = Schema.Struct({
   }),
 });
 
-type NotesPageSchemaT = typeof NotesPageSchema.Type;
+export type NotesPageSchemaT = typeof NotesPageSchema.Type;
 export type SBF = NotesPageSchemaT["searchParams"]["sbf"];
 export type SBD = NotesPageSchemaT["searchParams"]["sbd"];
