@@ -18,20 +18,19 @@ export const optiNoteTagsAtom = Atom.family((noteId: string) => Atom.optimistic(
 // Async atom for debounced server sync, utilizing optimisticFn for UI/DB coordination
 export const syncToDbNoteTagsAtom = Atom.family((noteId: string) =>
   Atom.optimisticFn(optiNoteTagsAtom(noteId), {
-    reducer: (_, value: string[]) => value,
+    reducer: (_, update: string[]) => update,
     fn: RuntimeAtom.fn((_, get) =>
       Effect.gen(function* () {
         yield* Effect.sleep("3 seconds");
 
         // Retrieve the finalized state from the optimistic atom for commitment
-        const value = get(optiNoteTagsAtom(noteId));
+        const result = get(optiNoteTagsAtom(noteId));
 
         const { syncToDbNoteTags } = yield* RpcNotesClient;
-        yield* syncToDbNoteTags({ noteId, tags: value });
+        yield* syncToDbNoteTags({ noteId, tags: result });
+        get.set(noteTagsAtom(noteId), result);
 
-        yield* Effect.log(`[DB SYNC] Saving note tags for ${noteId}: ${JSON.stringify(value)}`);
-
-        get.set(noteTagsAtom(noteId), value);
+        yield* Effect.log(`[DB SYNC] Saving note tags for ${noteId}: ${JSON.stringify(result)}`);
       })
     ),
   })

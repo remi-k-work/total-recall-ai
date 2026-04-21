@@ -10,12 +10,12 @@ import type { AvailNoteTags, NoteDetails, NoteWithPagination } from "@/features/
 
 // Manages note tags, including hydration, zero-read setter actions, and debounced database synchronization
 export function useNoteTags(note: NoteWithPagination | NoteDetails, availNoteTags: AvailNoteTags) {
-  // Hydrate the master atom with server-rendered tags on mount
+  // Hydrate the master atom on mount
   const { id: noteId } = note;
   const tagIds = useMemo(() => ("contentPreview" in note ? note.tags.map(({ id }) => id) : note.noteToNoteTag.map(({ noteTagId }) => noteTagId)), [note]);
   useAtomInitialValues([[noteTagsAtom(noteId), tagIds]]);
 
-  // Subscriptions and actions using optimistic atoms
+  // Subscriptions and actions
   const optiNoteTags = useAtomValue(optiNoteTagsAtom(noteId));
   const syncToDbNoteTags = useAtomSet(syncToDbNoteTagsAtom(noteId));
 

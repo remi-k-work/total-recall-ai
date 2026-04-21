@@ -13,12 +13,12 @@ import { INIT_NOTE_PREFS } from ".";
 
 // Manages note preferences, including hydration, zero-read setter actions, and debounced database synchronization
 export function useNotePrefs(note: NoteWithPagination | NoteDetails) {
-  // Hydrate the master atom with server-rendered preferences on mount
+  // Hydrate the master atom on mount
   const { id: noteId, preferences } = note;
   const incomingNotePrefs = useMemo(() => ({ ...INIT_NOTE_PREFS, ...preferences }), [preferences]);
   useAtomInitialValues([[notePrefsAtom(noteId), incomingNotePrefs]]);
 
-  // Setter actions utilizing the optimistic sync and toggle atoms for zero-read updates
+  // Subscriptions and actions
   const syncToDbNotePrefs = useAtomSet(syncToDbNotePrefsAtom(noteId));
   const togglePin = useAtomSet(togglePinAtom(noteId));
 

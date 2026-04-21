@@ -8,8 +8,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { Route } from "next";
 
 // Define a more convenient type for the params object
-type QueryValue = string | number | (string | number)[];
-type QueryParams = Record<string, QueryValue>;
+type QueryValue = Readonly<string | number | (string | number)[]>;
+type QueryParams = Readonly<Record<string, QueryValue>>;
 
 // Define the overload signatures interface
 interface CreateHrefFn {
@@ -68,7 +68,7 @@ export default function useUrlScribe() {
       // Return the new href and do not include the search params if they are empty (the "?" becomes unnecessary)
       return params.toString().length > 0 ? (`${newRoute ?? pathname}?${params.toString()}` as Route) : (`${newRoute ?? pathname}` as Route);
     },
-    [pathname, searchParams],
+    [pathname, searchParams]
   );
 
   // Programmatically navigates to a new url with updated search params

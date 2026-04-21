@@ -26,22 +26,22 @@ export const notePrefsAtom = Atom.family(() =>
 // Optimistic view of the master atom for immediate UI feedback and automatic rollback
 export const optiNotePrefsAtom = Atom.family((noteId: string) => Atom.optimistic(notePrefsAtom(noteId)));
 
-// Mutation atom that updates the local state immediately and syncs to the DB after a 3s debounce
+// Async atom for debounced server sync, utilizing optimisticFn for UI/DB coordination
 export const syncToDbNotePrefsAtom = Atom.family((noteId: string) =>
   Atom.optimisticFn(optiNotePrefsAtom(noteId), {
-    reducer: (current, patch: Partial<NotePrefs>) => ({ ...current, ...patch }),
+    reducer: (current, update: Partial<NotePrefs>) => ({ ...current, ...update }),
     fn: RuntimeAtom.fn((_, get) =>
       Effect.gen(function* () {
         yield* Effect.sleep("3 seconds");
 
-        const value = get(optiNotePrefsAtom(noteId));
+        // Retrieve the finalized state from the optimistic atom for commitment
+        const result = get(optiNotePrefsAtom(noteId));
 
         const { syncToDbNotePrefs } = yield* RpcNotesClient;
-        yield* syncToDbNotePrefs({ noteId, ...value });
+        yield* syncToDbNotePrefs({ noteId, ...result });
+        get.set(notePrefsAtom(noteId), result);
 
-        yield* Effect.log(`[DB SYNC] Saving note prefs for ${noteId}: ${JSON.stringify(value)}`);
-
-        get.set(notePrefsAtom(noteId), value);
+        yield* Effect.log(`[DB SYNC] Saving note prefs for ${noteId}: ${JSON.stringify(result)}`);
       })
     ),
   })

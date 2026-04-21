@@ -1,35 +1,29 @@
-// next
-import Form from "next/form";
-
 // services, features, and other libraries
-import { useBrowseBarContext } from "@/features/notes/components/browse-bar/context";
 import { selStrAtom, useBrowseBar } from "@/atoms";
 import { useAtomValue } from "@effect-atom/atom-react";
 
 // components
 import { Badge } from "@/components/ui/custom/badge";
 import { Input } from "@/components/ui/custom/input";
-import SearchButton from "./SearchButton";
 
-export default function Search() {
-  // Access the browse bar context and retrieve all necessary information
-  const browseBarContext = useBrowseBarContext();
+// types
+import type { BrowseBar } from "@/atoms";
 
+interface SearchProps {
+  kind: "root" | "new" | "edit" | "details";
+  borwseBar: BrowseBar;
+  totalItems: number;
+}
+
+export default function Search({ kind, borwseBar, totalItems }: SearchProps) {
+  // Manages browse bar state, including hydration, zero-read setter actions, and debounced url synchronization
   const str = useAtomValue(selStrAtom);
-  const { setStr } = useBrowseBar({
-    str: browseBarContext.searchTerm,
-    crp: browseBarContext.currentPage,
-    fbt: browseBarContext.filterByTagIndxs,
-    sbf: browseBarContext.sortByField,
-    sbd: browseBarContext.sortByDirection,
-  });
+  const { setStr } = useBrowseBar(borwseBar);
 
   // Render the search form for the "notes root" kind
-  if (browseBarContext.kind === "notes-root") {
-    const { totalItems, searchRoute, searchTerm } = browseBarContext;
-
+  if (kind === "root") {
     return (
-      <Form action={searchRoute} className="flex items-center gap-2 bg-red-500">
+      <section className="flex items-center gap-2">
         <Badge>{totalItems}</Badge>
         <Input
           type="search"
@@ -41,18 +35,21 @@ export default function Search() {
           value={str}
           onChange={(ev) => setStr(ev.target.value)}
         />
-        <SearchButton />
-      </Form>
+      </section>
     );
   }
 
   // Otherwise, render the search form for the "note details" kind
-  const { searchRoute, searchTerm } = browseBarContext;
-
   return (
-    <Form action={searchRoute} className="flex items-center gap-2">
-      <Input type="search" name="str" size={15} maxLength={25} aria-label="Search Notes" placeholder="Search Notes" defaultValue={searchTerm} />
-      <SearchButton />
-    </Form>
+    <Input
+      type="search"
+      name="str"
+      size={15}
+      maxLength={25}
+      aria-label="Search Notes"
+      placeholder="Search Notes"
+      value={str}
+      onChange={(ev) => setStr(ev.target.value)}
+    />
   );
 }

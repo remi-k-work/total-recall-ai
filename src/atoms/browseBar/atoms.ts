@@ -5,6 +5,7 @@ import { RuntimeAtom } from "@/lib/RuntimeClient";
 
 // types
 import type { NotesPageSchemaT } from "@/features/notes/schemas/notesPage";
+import type useUrlScribe from "@/hooks/useUrlScribe";
 
 export type BrowseBar = Pick<NotesPageSchemaT["searchParams"], "str" | "crp" | "fbt" | "sbf" | "sbd">;
 
@@ -16,12 +17,19 @@ export const browseBarAtom = Atom.make<BrowseBar>(INIT_BROWSE_BAR).pipe(Atom.kee
 
 // Mutation atom that syncs the master atom to the URL search params after a 3s debounce
 export const syncToUrlBrowseBarAtom = RuntimeAtom.fn(
-  Effect.fnUntraced(function* (newValue, get: Atom.FnContext) {
-    const curValue = get(browseBarAtom);
-    get.set(browseBarAtom, { ...curValue, ...newValue });
+  Effect.fnUntraced(function* (
+    { update, navigate }: { update: Partial<BrowseBar>; navigate: ReturnType<typeof useUrlScribe>["navigate"] },
+    get: Atom.FnContext
+  ) {
+    // Update the master atom right away to provide immediate feedback in the UI
+    const result = get(browseBarAtom);
+    get.set(browseBarAtom, { ...result, ...update });
+
     yield* Effect.sleep("3 seconds");
 
-    yield* Effect.log(`[BROWSE BAR URL SYNC]: ${JSON.stringify({ ...curValue, ...newValue })}`);
+    yield* Effect.log(`[BROWSE BAR URL SYNC]: ${JSON.stringify({ ...result, ...update })}`);
+
+    yield* Effect.sync(() => navigate({ ...result, ...update }));
   })
 );
 
