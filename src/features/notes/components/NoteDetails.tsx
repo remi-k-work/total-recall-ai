@@ -1,7 +1,7 @@
 "use client";
 
 // services, features, and other libraries
-import { selColorAtom } from "@/atoms";
+import { notePrefsColorAtom } from "@/atoms";
 import { useAtomValue } from "@effect-atom/atom-react";
 
 // components
@@ -30,8 +30,8 @@ export default function NoteDetails({
   availNoteTags,
   inNoteModal = false,
 }: NoteDetailsProps) {
-  // Retrieve the necessary state and actions from the note preferences store
-  const color = useAtomValue(selColorAtom(noteId));
+  // Manages note preferences, including hydration, zero-read setter actions, and debounced database synchronization
+  const color = useAtomValue(notePrefsColorAtom(noteId));
 
   return (
     <Card className="max-w-2xl rounded-[255px_15px_225px_15px/15px_225px_15px_255px]" style={color ? { backgroundColor: color } : undefined}>

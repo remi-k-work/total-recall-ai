@@ -12,7 +12,7 @@ import { getUserSessionData } from "@/features/auth/lib/helpersEffect";
 
 // components
 import PageHeader from "@/components/PageHeader";
-import BrowseBar from "@/features/notes/components/browse-bar";
+import BrowseBar from "@/features/notes/components/BrowseBar";
 import NoteDetails from "@/features/notes/components/NoteDetails";
 
 // types
@@ -28,7 +28,7 @@ const main = ({ params, searchParams }: PageProps<"/notes/[id]">) =>
     // Safely validate next.js route inputs (`params` and `searchParams`) against a schema; return typed data or trigger a 404 on failure
     const {
       params: { id: noteId },
-      searchParams: { str: searchTerm },
+      searchParams: { str },
     } = yield* validatePageInputs(NoteDetailsPageSchema, { params, searchParams });
 
     // Access the user session data from the server side or fail with an unauthorized access error
@@ -45,7 +45,7 @@ const main = ({ params, searchParams }: PageProps<"/notes/[id]">) =>
     // If the note is not found, fail with item not found error
     if (!note) return yield* new ItemNotFoundError({ message: "Note not found" });
 
-    return { noteId, searchTerm, note, availNoteTags };
+    return { str, note, availNoteTags };
   });
 
 // Page remains the fast, static shell
@@ -60,12 +60,17 @@ export default function Page({ params, searchParams }: PageProps<"/notes/[id]">)
 // This new async component contains the dynamic logic
 async function PageContent({ params, searchParams }: PageProps<"/notes/[id]">) {
   // Execute the main effect for the page, map known errors to the subsequent navigation helpers, and return the payload
-  const { searchTerm, note, availNoteTags } = await runPageMainOrNavigate(main({ params, searchParams }));
+  const {
+    str,
+    note,
+    note: { id: noteId },
+    availNoteTags,
+  } = await runPageMainOrNavigate(main({ params, searchParams }));
 
   return (
     <>
       <PageHeader title="Note Details" description="Below are all your note details" />
-      <BrowseBar kind="note-details" searchTerm={searchTerm} />
+      <BrowseBar kind="details" browseBar={{ str }} noteId={noteId} />
       <NoteDetails note={note} availNoteTags={availNoteTags} />
     </>
   );

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 // services, features, and other libraries
 import { useTheme } from "next-themes";
-import { selColorAtom, useNotePrefs } from "@/atoms";
+import { notePrefsColorAtom, useNotePrefs } from "@/atoms";
 import { useAtomValue } from "@effect-atom/atom-react";
 import Color from "colorjs.io";
 
@@ -20,8 +20,8 @@ export default function ColorPicker({ note, note: { id: noteId } }: ColorPickerP
   // Determine whether the current theme is dark or light
   const { resolvedTheme } = useTheme();
 
-  // Retrieve the necessary state and actions from the note preferences store
-  const curNoteColor = useAtomValue(selColorAtom(noteId));
+  // Manages note preferences, including hydration, zero-read setter actions, and debounced database synchronization
+  const curNoteColor = useAtomValue(notePrefsColorAtom(noteId));
   const { changedColor } = useNotePrefs(note);
 
   // The default note color should use the fallback value until CSS variables become available

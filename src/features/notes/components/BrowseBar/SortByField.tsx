@@ -1,5 +1,5 @@
 // services, features, and other libraries
-import { selSbfAtom, useBrowseBar } from "@/atoms";
+import { browseBarSbfAtom, useBrowseBar } from "@/atoms";
 import { useAtomValue } from "@effect-atom/atom-react";
 
 // components
@@ -12,14 +12,14 @@ import { CalendarIcon, LanguageIcon } from "@heroicons/react/24/outline";
 import type { BrowseBar } from "@/atoms";
 
 interface SortByFieldProps {
-  borwseBar: BrowseBar;
+  browseBar: BrowseBar;
   totalItems: number;
 }
 
-export default function SortByField({ borwseBar, totalItems }: SortByFieldProps) {
+export default function SortByField({ browseBar, totalItems }: SortByFieldProps) {
   // Manages browse bar state, including hydration, zero-read setter actions, and debounced url synchronization
-  const sbf = useAtomValue(selSbfAtom);
-  const { setSbf } = useBrowseBar(borwseBar);
+  const sbf = useAtomValue(browseBarSbfAtom);
+  const { setSbf } = useBrowseBar(browseBar);
 
   return (
     <ToggleGroup disabled={totalItems <= 1} value={[sbf]} onValueChange={([sbf]) => setSbf(sbf as BrowseBar["sbf"])} className="items-start">

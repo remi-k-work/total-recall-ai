@@ -25,7 +25,7 @@ export function useBrowseBar(browseBar: BrowseBar) {
   const { navigate } = useUrlScribe();
 
   const setStr = useCallback(
-    (str: BrowseBar["str"]) => startTransition(() => syncToUrlBrowseBar(() => ({ update: { str }, navigate }))),
+    (str: BrowseBar["str"]) => startTransition(() => syncToUrlBrowseBar(() => ({ update: { str, crp: 1 }, navigate }))),
     [syncToUrlBrowseBar, navigate]
   );
   const setCrp = useCallback(
@@ -33,7 +33,7 @@ export function useBrowseBar(browseBar: BrowseBar) {
     [syncToUrlBrowseBar, navigate]
   );
   const setFbt = useCallback(
-    (fbt: BrowseBar["fbt"]) => startTransition(() => syncToUrlBrowseBar(() => ({ update: { fbt }, navigate }))),
+    (fbt: BrowseBar["fbt"]) => startTransition(() => syncToUrlBrowseBar(() => ({ update: { fbt, crp: 1 }, navigate }))),
     [syncToUrlBrowseBar, navigate]
   );
   const setSbf = useCallback(

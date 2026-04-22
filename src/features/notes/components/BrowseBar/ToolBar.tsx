@@ -1,13 +1,12 @@
 // next
 import Link from "next/link";
-import { useParams } from "next/navigation";
 
 // services, features, and other libraries
 import useUrlScribe from "@/hooks/useUrlScribe";
 
 // components
 import { Button } from "@/components/ui/custom/button";
-import DeleteNote from "./DeleteNote2";
+import DeleteNote from "./DeleteNote";
 
 // assets
 import { DocumentDuplicateIcon, DocumentPlusIcon, DocumentTextIcon, TagIcon, TrashIcon } from "@heroicons/react/24/outline";
@@ -15,18 +14,24 @@ import { DocumentDuplicateIcon, DocumentPlusIcon, DocumentTextIcon, TagIcon, Tra
 // types
 import type { Route } from "next";
 
-interface ToolBarProps {
-  kind: "root" | "new" | "edit" | "details";
+interface Details {
+  kind: "details";
+  noteId: string;
 }
 
-export default function ToolBar({ kind }: ToolBarProps) {
+interface Rest {
+  kind: "root" | "new" | "edit";
+}
+
+type ToolBarProps = Details | Rest;
+
+export default function ToolBar(props: ToolBarProps) {
   // A hook to easily create new route strings with updated search parameters (it preserves existing search params)
   const { createHref } = useUrlScribe();
-  const { id: noteId } = useParams<{ id: string }>();
 
   return (
     <section className="flex flex-wrap items-center justify-around gap-4 *:basis-24">
-      {kind === "root" ? (
+      {props.kind === "root" ? (
         <Button
           variant="ghost"
           nativeButton={false}
@@ -45,20 +50,20 @@ export default function ToolBar({ kind }: ToolBarProps) {
         </Button>
       )}
 
-      {kind === "details" ? (
+      {props.kind === "details" ? (
         <>
           <Button
             variant="ghost"
             nativeButton={false}
             className="flex-col text-center whitespace-pre-line"
             render={
-              <Link href={createHref(`/notes/${noteId}/edit` as Route)}>
+              <Link href={createHref(`/notes/${props.noteId}/edit` as Route)}>
                 <DocumentTextIcon className="size-11" />
                 {"Edit Note".replaceAll(" ", "\n")}
               </Link>
             }
           />
-          <DeleteNote />
+          <DeleteNote noteId={props.noteId} />
         </>
       ) : (
         <>
@@ -73,7 +78,7 @@ export default function ToolBar({ kind }: ToolBarProps) {
         </>
       )}
 
-      {kind !== "root" ? (
+      {props.kind !== "root" ? (
         <Button
           variant="ghost"
           nativeButton={false}

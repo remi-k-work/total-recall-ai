@@ -29,13 +29,13 @@ export const syncToUrlBrowseBarAtom = RuntimeAtom.fn(
 
     yield* Effect.log(`[BROWSE BAR URL SYNC]: ${JSON.stringify({ ...result, ...update })}`);
 
-    yield* Effect.sync(() => navigate({ ...result, ...update }));
+    yield* Effect.sync(() => navigate("/notes", { ...result, ...update }));
   })
 );
 
 // Granular selectors derived from the master atom to minimize unnecessary re-renders
-export const selStrAtom = browseBarAtom.pipe(Atom.map((state) => state.str));
-export const selCrpAtom = browseBarAtom.pipe(Atom.map((state) => state.crp));
-export const selFbtAtom = browseBarAtom.pipe(Atom.map((state) => state.fbt));
-export const selSbfAtom = browseBarAtom.pipe(Atom.map((state) => state.sbf));
-export const selSbdAtom = browseBarAtom.pipe(Atom.map((state) => state.sbd));
+export const browseBarStrAtom = browseBarAtom.pipe(Atom.map((state) => state.str));
+export const browseBarCrpAtom = browseBarAtom.pipe(Atom.map((state) => state.crp));
+export const browseBarFbtAtom = browseBarAtom.pipe(Atom.map((state) => state.fbt));
+export const browseBarSbfAtom = browseBarAtom.pipe(Atom.map((state) => state.sbf));
+export const browseBarSbdAtom = browseBarAtom.pipe(Atom.map((state) => state.sbd));

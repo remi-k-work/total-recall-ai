@@ -2,7 +2,7 @@
 import { useMemo } from "react";
 
 // services, features, and other libraries
-import { selFbtAtom, useBrowseBar } from "@/atoms";
+import { browseBarFbtAtom, useBrowseBar } from "@/atoms";
 import { useAtomValue } from "@effect-atom/atom-react";
 
 // components
@@ -18,14 +18,14 @@ import type { BrowseBar } from "@/atoms";
 import type { AvailNoteTags } from "@/features/notes/db";
 
 interface FilterByTagsProps {
-  borwseBar: BrowseBar;
+  browseBar: BrowseBar;
   availNoteTags: AvailNoteTags;
 }
 
-export default function FilterByTags({ borwseBar, availNoteTags }: FilterByTagsProps) {
+export default function FilterByTags({ browseBar, availNoteTags }: FilterByTagsProps) {
   // Manages browse bar state, including hydration, zero-read setter actions, and debounced url synchronization
-  const fbt = useAtomValue(selFbtAtom);
-  const { setFbt } = useBrowseBar(borwseBar);
+  const fbt = useAtomValue(browseBarFbtAtom);
+  const { setFbt } = useBrowseBar(browseBar);
 
   // Compute selected tag objects for rendering badges
   const selectedTags = useMemo(() => {

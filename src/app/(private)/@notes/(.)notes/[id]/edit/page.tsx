@@ -12,7 +12,7 @@ import { getUserSessionData } from "@/features/auth/lib/helpersEffect";
 
 // components
 import NoteModal from "@/features/notes/components/note-modal";
-import BrowseBar from "@/features/notes/components/browse-bar";
+import BrowseBar from "@/features/notes/components/BrowseBar";
 import EditNoteForm from "@/features/notes/components/EditNoteForm";
 
 // assets
@@ -23,7 +23,7 @@ const main = ({ params, searchParams }: PageProps<"/notes/[id]/edit">) =>
     // Safely validate next.js route inputs (`params` and `searchParams`) against a schema; return typed data or trigger a 404 on failure
     const {
       params: { id: noteId },
-      searchParams: { str: searchTerm },
+      searchParams: { str },
     } = yield* validatePageInputs(EditNotePageSchema, { params, searchParams });
 
     // Access the user session data from the server side or fail with an unauthorized access error
@@ -39,7 +39,7 @@ const main = ({ params, searchParams }: PageProps<"/notes/[id]/edit">) =>
     // If the note is not found, fail with item not found error
     if (!note) return yield* new ItemNotFoundError({ message: "Note not found" });
 
-    return { searchTerm, note };
+    return { str, note };
   });
 
 // Page remains the fast, static shell
@@ -54,13 +54,17 @@ export default function Page({ params, searchParams }: PageProps<"/notes/[id]/ed
 // This new async component contains the dynamic logic
 async function PageContent({ params, searchParams }: PageProps<"/notes/[id]/edit">) {
   // Execute the main effect for the page, map known errors to the subsequent navigation helpers, and return the payload
-  const { searchTerm, note } = await runPageMainOrNavigate(main({ params, searchParams }));
+  const {
+    str,
+    note,
+    note: { id: noteId, title },
+  } = await runPageMainOrNavigate(main({ params, searchParams }));
 
   return (
     <NoteModal
       icon={<DocumentTextIcon className="size-11 flex-none" />}
-      browseBar={<BrowseBar kind="note-edit" searchTerm={searchTerm} />}
-      noteTitle={note.title}
+      browseBar={<BrowseBar kind="edit" browseBar={{ str }} noteId={noteId} />}
+      noteTitle={title}
     >
       <EditNoteForm note={note} inNoteModal />
     </NoteModal>

@@ -1,5 +1,5 @@
 // services, features, and other libraries
-import { selStrAtom, useBrowseBar } from "@/atoms";
+import { browseBarStrAtom, useBrowseBar } from "@/atoms";
 import { useAtomValue } from "@effect-atom/atom-react";
 
 // components
@@ -9,19 +9,28 @@ import { Input } from "@/components/ui/custom/input";
 // types
 import type { BrowseBar } from "@/atoms";
 
-interface SearchProps {
-  kind: "root" | "new" | "edit" | "details";
-  borwseBar: BrowseBar;
+interface Root {
+  kind: "root";
+  browseBar: BrowseBar;
   totalItems: number;
 }
 
-export default function Search({ kind, borwseBar, totalItems }: SearchProps) {
-  // Manages browse bar state, including hydration, zero-read setter actions, and debounced url synchronization
-  const str = useAtomValue(selStrAtom);
-  const { setStr } = useBrowseBar(borwseBar);
+interface Rest {
+  kind: "new" | "edit" | "details";
+  browseBar: BrowseBar;
+}
 
-  // Render the search form for the "notes root" kind
-  if (kind === "root") {
+type SearchProps = Root | Rest;
+
+export default function Search(props: SearchProps) {
+  // Manages browse bar state, including hydration, zero-read setter actions, and debounced url synchronization
+  const { browseBar } = props;
+  const str = useAtomValue(browseBarStrAtom);
+  const { setStr } = useBrowseBar(browseBar);
+
+  if (props.kind === "root") {
+    const { totalItems } = props;
+
     return (
       <section className="flex items-center gap-2">
         <Badge>{totalItems}</Badge>
@@ -37,19 +46,17 @@ export default function Search({ kind, borwseBar, totalItems }: SearchProps) {
         />
       </section>
     );
-  }
-
-  // Otherwise, render the search form for the "note details" kind
-  return (
-    <Input
-      type="search"
-      name="str"
-      size={15}
-      maxLength={25}
-      aria-label="Search Notes"
-      placeholder="Search Notes"
-      value={str}
-      onChange={(ev) => setStr(ev.target.value)}
-    />
-  );
+  } else
+    return (
+      <Input
+        type="search"
+        name="str"
+        size={15}
+        maxLength={25}
+        aria-label="Search Notes"
+        placeholder="Search Notes"
+        value={str}
+        onChange={(ev) => setStr(ev.target.value)}
+      />
+    );
 }

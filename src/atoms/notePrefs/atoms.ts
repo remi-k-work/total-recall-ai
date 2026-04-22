@@ -48,15 +48,15 @@ export const syncToDbNotePrefsAtom = Atom.family((noteId: string) =>
 );
 
 // Granular selectors derived from the optimistic atom to minimize unnecessary re-renders
-export const selColorAtom = Atom.family((noteId: string) => optiNotePrefsAtom(noteId).pipe(Atom.map((state) => state.color)));
-export const selPosXAtom = Atom.family((noteId: string) => optiNotePrefsAtom(noteId).pipe(Atom.map((state) => state.posX)));
-export const selPosYAtom = Atom.family((noteId: string) => optiNotePrefsAtom(noteId).pipe(Atom.map((state) => state.posY)));
-export const selIsPinnedAtom = Atom.family((noteId: string) => optiNotePrefsAtom(noteId).pipe(Atom.map((state) => state.isPinned)));
+export const notePrefsColorAtom = Atom.family((noteId: string) => optiNotePrefsAtom(noteId).pipe(Atom.map((state) => state.color)));
+export const notePrefsPosXAtom = Atom.family((noteId: string) => optiNotePrefsAtom(noteId).pipe(Atom.map((state) => state.posX)));
+export const notePrefsPosYAtom = Atom.family((noteId: string) => optiNotePrefsAtom(noteId).pipe(Atom.map((state) => state.posY)));
+export const notePrefsIsPinnedAtom = Atom.family((noteId: string) => optiNotePrefsAtom(noteId).pipe(Atom.map((state) => state.isPinned)));
 
 // Atom function for toggling the pin state without requiring a component-side read
 export const togglePinAtom = Atom.family((noteId: string) =>
   Atom.fnSync((_, get) => {
-    const isPinned = get(selIsPinnedAtom(noteId));
+    const isPinned = get(notePrefsIsPinnedAtom(noteId));
     get.set(syncToDbNotePrefsAtom(noteId), { isPinned: !isPinned });
   })
 );

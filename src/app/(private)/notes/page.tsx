@@ -12,7 +12,7 @@ import { getUserSessionData } from "@/features/auth/lib/helpersEffect";
 
 // components
 import PageHeader from "@/components/PageHeader";
-import BrowseBar from "@/features/notes/components/browse-bar/index2";
+import BrowseBar from "@/features/notes/components/BrowseBar";
 import NotesPreview from "@/features/notes/components/NotesPreview";
 
 // types
@@ -67,9 +67,9 @@ async function PageContent({ params, searchParams }: PageProps<"/notes">) {
   return (
     <>
       <PageHeader title="Notes" description="Welcome back! Below are all your notes" />
-      <BrowseBar kind="root" borwseBar={{ str, crp, fbt, sbf, sbd }} totalItems={totalItems} totalPages={totalPages} availNoteTags={availNoteTags} />
+      <BrowseBar kind="root" browseBar={{ str, crp, fbt, sbf, sbd }} totalItems={totalItems} totalPages={totalPages} availNoteTags={availNoteTags} />
       <NotesPreview notes={notes} availNoteTags={availNoteTags} />
-      <BrowseBar kind="root" borwseBar={{ str, crp, fbt, sbf, sbd }} totalItems={totalItems} totalPages={totalPages} availNoteTags={availNoteTags} />
+      <BrowseBar kind="root" browseBar={{ str, crp, fbt, sbf, sbd }} totalItems={totalItems} totalPages={totalPages} availNoteTags={availNoteTags} />
     </>
   );
 }

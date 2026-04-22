@@ -23,6 +23,7 @@ interface NoteTagsPopoverProps {
 }
 
 export default function NoteTagsPopover({ note, availNoteTags }: NoteTagsPopoverProps) {
+  // Manages note tags, including hydration, zero-read setter actions, and debounced database synchronization
   const { optiNoteTags, selectedTags, syncToDbNoteTags } = useNoteTags(note, availNoteTags);
 
   return (

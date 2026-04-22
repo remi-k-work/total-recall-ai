@@ -5,7 +5,6 @@ import { startTransition, useActionState } from "react";
 import deleteNote from "@/features/notes/actions/deleteNote";
 
 // services, features, and other libraries
-import { useBrowseBarContext } from "./context";
 import { useConfirmModalContext } from "@/contexts/ConfirmModal";
 import useDeleteNoteFeedback from "@/features/notes/hooks/feedbacks/useDeleteNote";
 
@@ -19,10 +18,11 @@ import { Loader2 } from "lucide-react";
 // types
 import type { DeleteNoteActionResult } from "@/features/notes/actions/deleteNote";
 
-export default function DeleteNote() {
-  // Access the browse bar context and retrieve all necessary information
-  const { noteId } = useBrowseBarContext("note-details");
+interface DeleteNoteProps {
+  noteId: string;
+}
 
+export default function DeleteNote({ noteId }: DeleteNoteProps) {
   // Access the confirm modal context and retrieve all necessary information
   const { hasPressedConfirmRef, openConfirmModal } = useConfirmModalContext();
 
@@ -47,7 +47,7 @@ export default function DeleteNote() {
           </p>,
           () => {
             startTransition(deleteNoteAction);
-          },
+          }
         );
       }}
     >

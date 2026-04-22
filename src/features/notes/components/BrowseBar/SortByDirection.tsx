@@ -1,5 +1,5 @@
 // services, features, and other libraries
-import { selSbdAtom, useBrowseBar } from "@/atoms";
+import { browseBarSbdAtom, useBrowseBar } from "@/atoms";
 import { useAtomValue } from "@effect-atom/atom-react";
 
 // components
@@ -10,14 +10,14 @@ import { Switch } from "@/components/ui/custom/switch";
 import type { BrowseBar } from "@/atoms";
 
 interface SortByDirectionProps {
-  borwseBar: BrowseBar;
+  browseBar: BrowseBar;
   totalItems: number;
 }
 
-export default function SortByDirection({ borwseBar, totalItems }: SortByDirectionProps) {
+export default function SortByDirection({ browseBar, totalItems }: SortByDirectionProps) {
   // Manages browse bar state, including hydration, zero-read setter actions, and debounced url synchronization
-  const sbd = useAtomValue(selSbdAtom);
-  const { setSbd } = useBrowseBar(borwseBar);
+  const sbd = useAtomValue(browseBarSbdAtom);
+  const { setSbd } = useBrowseBar(browseBar);
 
   return (
     <Label className="flex items-center border px-3 font-normal">
