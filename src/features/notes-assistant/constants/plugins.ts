@@ -4,14 +4,15 @@ import { harden } from "rehype-harden";
 
 // types
 import type { ComponentPropsWithoutRef } from "react";
-import type { Response } from "@/components/ai-elements/response";
+import type { MessageResponse } from "@/components/ai-elements/custom/message";
 
-type ResponseType = ComponentPropsWithoutRef<typeof Response>;
+type ResponseType = ComponentPropsWithoutRef<typeof MessageResponse>;
 
 // This is a list of rehype plugins along with their respective settings
 export const REHYPE_PLUGINS: ResponseType["rehypePlugins"] = [
   defaultRehypePlugins.raw,
   defaultRehypePlugins.katex,
+  defaultRehypePlugins.sanitize,
   [
     harden,
     {

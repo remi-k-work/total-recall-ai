@@ -8,7 +8,8 @@ import { getUserSessionData } from "@/features/auth/lib/helpers";
 // components
 import { Logo, LogoSkeleton } from "./logo";
 import NavItem, { NavItemSkeleton } from "./NavItem";
-import NotesAssistant, { NotesAssistantSkeleton } from "@/features/notes-assistant/components/notes-assistant";
+import NotesAssistant, { NotesAssistantSkeleton } from "./NotesAssistant";
+import { NotesAssistantModalRoot } from "@/atoms/modals/notesAssistant";
 import UserPopover, { UserPopoverSkeleton } from "@/components/user-popover";
 import { ThemeChanger, ThemeChangerSkeleton } from "@/components/theme-changer";
 
@@ -31,7 +32,7 @@ async function HeaderContent() {
 
   return (
     <header
-      className={cn("from-background via-secondary z-10 flex items-center gap-4 bg-linear-to-b to-transparent p-2 [grid-area:header]", "lg:sticky lg:top-0")}
+      className={cn("z-10 flex items-center gap-4 bg-linear-to-b from-background via-secondary to-transparent p-2 [grid-area:header]", "lg:sticky lg:top-0")}
     >
       <Logo />
       <nav className="flex flex-1 flex-wrap items-center justify-end gap-4">
@@ -42,7 +43,8 @@ async function HeaderContent() {
         ))}
         {userSessionData ? (
           <>
-            <NotesAssistant user={userSessionData.user} session={userSessionData.session} />
+            <NotesAssistantModalRoot user={userSessionData.user} session={userSessionData.session} />
+            <NotesAssistant />
             <UserPopover user={userSessionData.user} session={userSessionData.session} />
           </>
         ) : (
@@ -60,7 +62,7 @@ async function HeaderContent() {
 function HeaderSkeleton() {
   return (
     <header
-      className={cn("from-background via-secondary z-10 flex items-center gap-4 bg-linear-to-b to-transparent p-2 [grid-area:header]", "lg:sticky lg:top-0")}
+      className={cn("z-10 flex items-center gap-4 bg-linear-to-b from-background via-secondary to-transparent p-2 [grid-area:header]", "lg:sticky lg:top-0")}
     >
       <LogoSkeleton />
       <nav className="flex flex-1 flex-wrap items-center justify-end gap-4">

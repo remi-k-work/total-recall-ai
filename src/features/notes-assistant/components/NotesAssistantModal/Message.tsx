@@ -1,0 +1,49 @@
+// components
+import { Message as AIEMessage, MessageContent, MessageResponse } from "@/components/ai-elements/custom/message";
+import { UserAvatar } from "@/components/avatar/user";
+import AgentAvatar from "@/components/avatar/Agent";
+
+// types
+import type { UIMessage, useChat } from "@ai-sdk/react";
+import type { Session, User } from "@/services/better-auth/auth";
+
+interface MessageProps {
+  user: User;
+  session: Session;
+  message: UIMessage;
+  status: ReturnType<typeof useChat>["status"];
+}
+
+export default function Message({ user, session, message: { id, role, parts }, status }: MessageProps) {
+  return (
+    <AIEMessage from={role}>
+      <MessageContent>
+        {parts.map((part, index) => {
+          switch (part.type) {
+            // Render text parts as markdown
+            case "text":
+              return (
+                <MessageResponse key={`${id}-${index}`} isAnimating={status === "streaming"}>
+                  {part.text}
+                </MessageResponse>
+              );
+
+            // For tool parts, use the typed tool part names
+            case "tool-searchNoteChunksForUser":
+              const { toolCallId } = part;
+
+              return (
+                <p key={toolCallId} className="italic">
+                  Searching Notes...
+                </p>
+              );
+
+            default:
+              return null;
+          }
+        })}
+      </MessageContent>
+      {role === "user" ? <UserAvatar user={user} session={session} isSmall /> : <AgentAvatar isSmall />}
+    </AIEMessage>
+  );
+}

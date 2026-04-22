@@ -10,7 +10,7 @@ import { useAtomValue } from "@effect-atom/atom-react";
 
 // components
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
-import { Response } from "@/components/ai-elements/response";
+import { MessageResponse } from "@/components/ai-elements/custom/message";
 import ColorPicker from "./ColorPicker";
 import NoteTagsPopover from "./NoteTagsPopover";
 import CreatedAt from "./CreatedAt";
@@ -24,9 +24,6 @@ interface NotePreviewProps {
   note: NoteWithPagination;
   availNoteTags: AvailNoteTags;
 }
-
-// constants
-import { REHYPE_PLUGINS } from "@/features/notes-assistant/constants/plugins";
 
 export default function NotePreview({ note, note: { id: noteId, title, contentPreview, createdAt, updatedAt }, availNoteTags }: NotePreviewProps) {
   // A hook to easily create new route strings with updated search parameters (it preserves existing search params)
@@ -45,7 +42,7 @@ export default function NotePreview({ note, note: { id: noteId, title, contentPr
         </CardTitle>
       </CardHeader>
       <CardContent className="line-clamp-6">
-        <Response rehypePlugins={REHYPE_PLUGINS}>{contentPreview}</Response>
+        <MessageResponse>{contentPreview}</MessageResponse>
       </CardContent>
       <CardFooter className="flex flex-wrap items-center justify-around gap-6 border-t pt-6">
         <ColorPicker note={note} />

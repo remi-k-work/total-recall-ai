@@ -6,7 +6,7 @@ import { useAtomValue } from "@effect-atom/atom-react";
 
 // components
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
-import { Response } from "@/components/ai-elements/response";
+import { MessageResponse } from "@/components/ai-elements/custom/message";
 import ColorPicker from "./ColorPicker";
 import NoteTagsPopover from "./NoteTagsPopover";
 import CreatedAt from "./CreatedAt";
@@ -20,9 +20,6 @@ interface NoteDetailsProps {
   availNoteTags: AvailNoteTags;
   inNoteModal?: boolean;
 }
-
-// constants
-import { REHYPE_PLUGINS } from "@/features/notes-assistant/constants/plugins";
 
 export default function NoteDetails({
   note,
@@ -41,7 +38,7 @@ export default function NoteDetails({
         </CardHeader>
       )}
       <CardContent>
-        <Response rehypePlugins={REHYPE_PLUGINS}>{content}</Response>
+        <MessageResponse>{content}</MessageResponse>
       </CardContent>
       <CardFooter className="flex flex-wrap items-center justify-around gap-6 border-t pt-6">
         <ColorPicker note={note} />
