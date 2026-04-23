@@ -7,10 +7,8 @@ import { Suspense } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 
 // components
-import Slide, { SlideSkeleton } from "./slide";
-import Prev from "./buttons/Prev";
-import Next from "./buttons/Next";
-import Dot from "./buttons/Dot";
+import Slide, { SlideSkeleton } from "./Slide";
+import { Dot, Next, Prev } from "./Buttons";
 
 // constants
 import { TESTIMONIALS } from "./constants";
@@ -32,11 +30,11 @@ export default function TestimonialSlider() {
             ))}
           </div>
         </section>
-        <header className="via-secondary flex items-center gap-4 bg-linear-to-b from-transparent to-transparent px-3 py-6 [grid-area:prevnext]">
+        <header className="flex items-center gap-4 bg-linear-to-b from-transparent via-secondary to-transparent px-3 py-6 [grid-area:prevnext]">
           <Prev emblaApi={emblaApi} />
           <Next emblaApi={emblaApi} />
         </header>
-        <footer className="via-secondary flex flex-wrap items-center justify-end gap-1 bg-linear-to-b from-transparent to-transparent px-3 py-6 [grid-area:dots]">
+        <footer className="flex flex-wrap items-center justify-end gap-1 bg-linear-to-b from-transparent via-secondary to-transparent px-3 py-6 [grid-area:dots]">
           {emblaApi?.scrollSnapList().map((_, index) => (
             <Dot key={index} emblaApi={emblaApi} index={index} />
           ))}

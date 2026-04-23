@@ -10,7 +10,7 @@ import { runComponentMain } from "@/lib/helpersEffect";
 import { Auth } from "@/features/auth/lib/auth";
 
 // components
-import Header, { HeaderSkeleton } from "@/components/header";
+import Header, { HeaderSkeleton } from "@/components/Header";
 
 const main = Effect.gen(function* () {
   // Only check if the current user is authenticated (the check runs on the server side)

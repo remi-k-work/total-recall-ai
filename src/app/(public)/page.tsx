@@ -1,8 +1,8 @@
 // components
 import PageHeader from "@/components/PageHeader";
 import SectionHeader from "@/components/SectionHeader";
-import Hero from "@/components/hero";
-import TestimonialSlider from "@/components/testimonial-slider";
+import Hero from "@/components/Hero";
+import TestimonialSlider from "@/components/TestimonialSlider";
 import SignInDemoUser from "@/features/auth/components/SignInDemoUser";
 
 export default function Page() {

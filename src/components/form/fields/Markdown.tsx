@@ -6,7 +6,7 @@ import { useFieldContext } from "@/components/form";
 
 // components
 import { Label } from "@/components/ui/custom/label";
-import { MarkdownEditor } from "@/components/markdown-editor";
+import { MarkdownEditor } from "@/components/MarkdownEditor";
 
 // types
 import type { ComponentProps } from "react";

@@ -5,20 +5,20 @@ import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/custom/button";
 
 // assets
-import NextIcon from "@/assets/icons/Next";
+import PrevIcon from "@/assets/icons/Prev";
 
 // types
 import type { EmblaCarouselType } from "embla-carousel";
 
-interface NextProps {
+interface PrevProps {
   emblaApi?: EmblaCarouselType;
 }
 
-export default function Next({ emblaApi }: NextProps) {
+export function Prev({ emblaApi }: PrevProps) {
   const [isDisabled, setIsDisabled] = useState(true);
 
   const onSelect = useCallback((emblaApi: EmblaCarouselType) => {
-    setIsDisabled(!emblaApi.canScrollNext());
+    setIsDisabled(!emblaApi.canScrollPrev());
   }, []);
 
   useEffect(() => {
@@ -33,8 +33,8 @@ export default function Next({ emblaApi }: NextProps) {
   }, [emblaApi, onSelect]);
 
   return (
-    <Button type="button" disabled={isDisabled} onClick={() => emblaApi?.scrollNext()}>
-      <NextIcon className="size-9" />
+    <Button type="button" disabled={isDisabled} onClick={() => emblaApi?.scrollPrev()}>
+      <PrevIcon className="size-9" />
     </Button>
   );
 }

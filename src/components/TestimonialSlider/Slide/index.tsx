@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/custom/avat
 import { StarIcon } from "@heroicons/react/24/outline";
 
 // types
-import type { Testimonial } from "@/components/testimonial-slider/types";
+import type { Testimonial } from "@/components/TestimonialSlider/types";
 
 interface SlideProps {
   testimonial: Testimonial;
@@ -16,10 +16,10 @@ interface SlideProps {
 
 export default function Slide({ testimonial: { stars, byWhom, testimonial } }: SlideProps) {
   return (
-    <article className="bg-card rounded-[255px_15px_225px_15px_/_15px_225px_15px_255px] px-9 py-12 select-none">
+    <article className="rounded-[255px_15px_225px_15px/15px_225px_15px_255px] bg-card px-9 py-12 select-none">
       <header className="flex items-center gap-2">
         {[...Array(stars)].map((_, index) => (
-          <StarIcon key={index} className="text-accent size-13" />
+          <StarIcon key={index} className="size-13 text-accent" />
         ))}
       </header>
       <p className="mt-4 sm:text-xl">
@@ -29,17 +29,17 @@ export default function Slide({ testimonial: { stars, byWhom, testimonial } }: S
         </Avatar>
         {testimonial}
       </p>
-      <footer className="text-muted-foreground mt-4 text-end">{byWhom}</footer>
+      <footer className="mt-4 text-end text-muted-foreground">{byWhom}</footer>
     </article>
   );
 }
 
 export function SlideSkeleton({ testimonial: { stars, byWhom, testimonial } }: SlideProps) {
   return (
-    <article className="bg-card rounded-[255px_15px_225px_15px_/_15px_225px_15px_255px] px-9 py-12 select-none">
+    <article className="rounded-[255px_15px_225px_15px/15px_225px_15px_255px] bg-card px-9 py-12 select-none">
       <header className="flex items-center gap-2">
         {[...Array(stars)].map((_, index) => (
-          <StarIcon key={index} className="text-accent size-13" />
+          <StarIcon key={index} className="size-13 text-accent" />
         ))}
       </header>
       <p className="mt-4 sm:text-xl">
@@ -49,7 +49,7 @@ export function SlideSkeleton({ testimonial: { stars, byWhom, testimonial } }: S
         </Avatar>
         {testimonial}
       </p>
-      <footer className="text-muted-foreground mt-4 text-end">{byWhom}</footer>
+      <footer className="mt-4 text-end text-muted-foreground">{byWhom}</footer>
     </article>
   );
 }

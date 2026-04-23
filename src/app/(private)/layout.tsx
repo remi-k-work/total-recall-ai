@@ -1,5 +1,5 @@
 // components
-import Header from "@/components/header";
+import Header from "@/components/Header";
 
 export default function Layout({ notes, children }: LayoutProps<"/">) {
   return (
