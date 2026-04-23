@@ -9,7 +9,6 @@ import { getUserSessionData } from "@/features/auth/lib/helpers";
 import { Logo, LogoSkeleton } from "./logo";
 import NavItem, { NavItemSkeleton } from "./NavItem";
 import NotesAssistant, { NotesAssistantSkeleton } from "./NotesAssistant";
-import { NotesAssistantModalRoot } from "@/atoms/modals/notesAssistant";
 import UserPopover, { UserPopoverSkeleton } from "@/components/user-popover";
 import { ThemeChanger, ThemeChangerSkeleton } from "@/components/theme-changer";
 
@@ -43,7 +42,6 @@ async function HeaderContent() {
         ))}
         {userSessionData ? (
           <>
-            <NotesAssistantModalRoot user={userSessionData.user} session={userSessionData.session} />
             <NotesAssistant />
             <UserPopover user={userSessionData.user} session={userSessionData.session} />
           </>
@@ -59,7 +57,7 @@ async function HeaderContent() {
   );
 }
 
-function HeaderSkeleton() {
+export function HeaderSkeleton() {
   return (
     <header
       className={cn("z-10 flex items-center gap-4 bg-linear-to-b from-background via-secondary to-transparent p-2 [grid-area:header]", "lg:sticky lg:top-0")}

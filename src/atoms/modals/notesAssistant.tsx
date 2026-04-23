@@ -30,7 +30,7 @@ export function useNotesAssistantModal() {
     setNotesAssistantModal(Option.some(undefined));
   }, [setNotesAssistantModal]);
 
-  return { openNotesAssistantModal };
+  return { openNotesAssistantModal } as const;
 }
 
 // The root component that renders the modal based on the atom state

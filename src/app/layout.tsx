@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/next";
 
 // components
 import { ThemeProvider } from "next-themes";
+import Footer from "@/components/Footer";
 import DemoModeProvider from "@/contexts/DemoMode";
 import ConfirmModalProvider from "@/contexts/ConfirmModal";
 import { Toaster } from "@/components/ui/custom/sonner";
@@ -33,13 +34,14 @@ export default function Layout({ children }: LayoutProps<"/">) {
       <body
         className={cn(
           `${fontSans.variable} ${fontMono.variable} grid font-mono antialiased`,
-          "grid-cols-[1fr] grid-rows-[auto_1fr] [grid-template-areas:'header''main']",
+          "grid-cols-[1fr] grid-rows-[auto_1fr_auto] [grid-template-areas:'header''main''footer']"
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <DemoModeProvider>
             <ConfirmModalProvider>
               {children}
+              <Footer />
               <Toaster richColors />
               <Analytics debug={false} />
             </ConfirmModalProvider>

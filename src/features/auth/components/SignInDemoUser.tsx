@@ -1,6 +1,6 @@
 // components
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
-import DemoAvatar from "@/components/avatar/Demo";
+import DemoAvatar from "@/components/Avatar/Demo";
 import SignInDemo from "./SignInDemo";
 
 // types

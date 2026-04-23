@@ -1,7 +1,7 @@
 // components
 import { Message as AIEMessage, MessageContent, MessageResponse } from "@/components/ai-elements/custom/message";
-import { UserAvatar } from "@/components/avatar/user";
-import AgentAvatar from "@/components/avatar/Agent";
+import { UserAvatar } from "@/components/Avatar/User";
+import AgentAvatar from "@/components/Avatar/Agent";
 
 // types
 import type { UIMessage, useChat } from "@ai-sdk/react";

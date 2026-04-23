@@ -20,7 +20,7 @@ export default function UserAvatar({ user: { name, image, role }, session: { id:
     <Avatar className={cn(isSmall && "size-11", className)} {...props}>
       {/* If the user is a demo user, use a different avatar image (always random per session) */}
       <AvatarImage src={role === "demo" ? getUserAvatarUrl(sessionId) : (image ?? undefined)} alt={name} />
-      <AvatarFallback className={cn(isSmall && "border-none text-3xl")}>{getInitialsFromName(name)}</AvatarFallback>
+      <AvatarFallback className={cn(isSmall && "border-none text-2xl")}>{getInitialsFromName(name)}</AvatarFallback>
     </Avatar>
   );
 }

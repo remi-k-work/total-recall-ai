@@ -23,7 +23,7 @@ export const validatePageInputs = <A, I>(schema: Schema.Schema<A, I>, { params, 
   Effect.gen(function* () {
     const [p, sp] = yield* Effect.all([Effect.promise(() => params), Effect.promise(() => searchParams)], { concurrency: 2 });
     return yield* Schema.decodeUnknown(schema)({ params: p, searchParams: sp }).pipe(
-      Effect.mapError((cause) => new InvalidPageInputsError({ message: "Invalid page inputs", cause })),
+      Effect.mapError((cause) => new InvalidPageInputsError({ message: "Invalid page inputs", cause }))
     );
   });
 
@@ -36,8 +36,8 @@ export const runPageMainOrNavigate = async <A, E extends { _tag: string }>(pageM
   const pageMainResult = await RuntimeServer.runPromise(
     pageMain.pipe(
       Effect.tapError((error) => Console.log(`[PAGE MAIN ERROR]: ${error}`)),
-      Effect.either,
-    ),
+      Effect.either
+    )
   );
 
   // Standardized error handling
@@ -47,11 +47,37 @@ export const runPageMainOrNavigate = async <A, E extends { _tag: string }>(pageM
     if (error._tag === "InvalidPageInputsError") notFound();
     if (error._tag === "ItemNotFoundError") notFound();
     if (error._tag === "UnauthorizedAccessError") unauthorized();
+    if (error._tag === "BetterAuthApiError") unauthorized();
 
     // Allow the next.js error boundary to catch any unexpected errors
     throw error;
   } else {
     // Return success result
     return pageMainResult.right;
+  }
+};
+
+// Execute the main effect for the component, handle known errors, and return the payload
+export const runComponentMain = async <A, E extends { _tag: string }>(componentMain: Effect.Effect<A, E, any>) => {
+  // Explicitly defer to request time (Effect uses Date.now() internally)
+  await connection();
+
+  // We wrap in Effect.either to catch failures gracefully
+  const componentMainResult = await RuntimeServer.runPromise(
+    componentMain.pipe(
+      Effect.tapError((error) => Console.log(`[COMPONENT MAIN ERROR]: ${error}`)),
+      Effect.either
+    )
+  );
+
+  // Standardized error handling
+  if (Either.isLeft(componentMainResult)) {
+    const error = componentMainResult.left;
+
+    // Allow the next.js error boundary to catch any unexpected errors
+    throw error;
+  } else {
+    // Return success result
+    return componentMainResult.right;
   }
 };

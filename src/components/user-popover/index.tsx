@@ -6,7 +6,7 @@ import { useState } from "react";
 // components
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/custom/popover";
 import { Button } from "@/components/ui/custom/button";
-import { UserAvatar, UserAvatarSkeleton } from "@/components/avatar/user";
+import { UserAvatar, UserAvatarSkeleton } from "@/components/Avatar/User";
 import SignOut from "./SignOut";
 
 // assets

@@ -22,7 +22,7 @@ export function UserAvatarSkeleton({ isSmall = false, className, ...props }: Omi
   return (
     <Avatar className={cn(isSmall && "size-11", className)} {...props}>
       <AvatarImage src="https://robohash.org/placeholder.png" alt={DEMO_USER_NAME} />
-      <AvatarFallback className={cn(isSmall && "border-none text-3xl")}>{getInitialsFromName(DEMO_USER_NAME)}</AvatarFallback>
+      <AvatarFallback className={cn(isSmall && "border-none text-2xl")}>{getInitialsFromName(DEMO_USER_NAME)}</AvatarFallback>
     </Avatar>
   );
 }

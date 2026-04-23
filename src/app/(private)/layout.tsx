@@ -6,8 +6,8 @@ export default function Layout({ notes, children }: LayoutProps<"/">) {
     <>
       <Header />
       <main className="mx-4 [grid-area:main]">
-        {notes}
         {children}
+        {notes}
       </main>
     </>
   );
