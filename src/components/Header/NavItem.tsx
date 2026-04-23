@@ -28,10 +28,7 @@ export default function NavItem({ href, match, title, icon, isExternal = false }
 
   return (
     <Link
-      // href={href}
-
-      // Temporary workaround that avoids going through the "unauthorized" page
-      href="/sign-in?redirect=/notes"
+      href={href}
       title={title}
       prefetch={!isExternal}
       target={isExternal ? "_blank" : undefined}
