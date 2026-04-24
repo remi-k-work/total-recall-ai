@@ -39,7 +39,6 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "colorjs.io": "^0.6.0",
-    "date-fns": "^4.1.0",
     "drizzle-orm": "^0.45.1",
     "effect": "^3.19.14",
     "embla-carousel-react": "^8.6.0",

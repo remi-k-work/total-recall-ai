@@ -13,8 +13,10 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { MessageResponse } from "@/components/ai-elements/custom/message";
 import ColorPicker from "./ColorPicker";
 import NoteTagsPopover from "./NoteTagsPopover";
-import CreatedAt from "./CreatedAt";
-import UpdatedAt from "./UpdatedAt";
+import DateTimeAt from "@/components/DateTimeAt";
+
+// assets
+import { CalendarIcon } from "@heroicons/react/24/outline";
 
 // types
 import type { AvailNoteTags, NoteWithPagination } from "@/features/notes/db";
@@ -47,8 +49,8 @@ export default function NotePreview({ note, note: { id: noteId, title, contentPr
       <CardFooter className="flex flex-wrap items-center justify-around gap-6 border-t pt-6">
         <ColorPicker note={note} />
         <NoteTagsPopover note={note} availNoteTags={availNoteTags} />
-        <CreatedAt createdAt={createdAt} />
-        <UpdatedAt updatedAt={updatedAt} />
+        <DateTimeAt icon={<CalendarIcon className="size-9" />} title="Created At" date={createdAt} />
+        <DateTimeAt icon={<CalendarIcon className="size-9" />} title="Updated At" date={updatedAt} />
       </CardFooter>
     </Card>
   );
