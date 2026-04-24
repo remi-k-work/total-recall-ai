@@ -1,7 +1,14 @@
 // services, features, and other libraries
-import { z } from "zod";
+import { Schema } from "effect";
 
 // schemas
-import { BasePageSchema } from "@/schemas/basePage";
+import { BasePageSchema, BasePageSearchParamsSchema } from "@/schemas";
 
-export const ResetPassPageSchema = BasePageSchema.extend({ searchParams: z.object({ token: z.string().trim().min(1) }) });
+const ResetPassPageSearchParams = Schema.Struct({
+  token: Schema.Trim.pipe(Schema.nonEmptyString()),
+}).pipe(Schema.extend(BasePageSearchParamsSchema));
+
+export const ResetPassPageSchema = Schema.Struct({
+  params: BasePageSchema.fields.params,
+  searchParams: ResetPassPageSearchParams,
+});

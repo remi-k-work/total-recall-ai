@@ -2,7 +2,7 @@
 import { Schema } from "effect";
 
 // schemas
-import { BasePageSchema, BasePageSearchParamsSchema } from "@/schemas/basePageEffect";
+import { BasePageSchema, BasePageSearchParamsSchema } from "@/schemas/basePage";
 
 const NewNotePageSearchParams = Schema.Struct({
   str: Schema.optionalWith(Schema.Trim.pipe(Schema.maxLength(25)), { default: () => "" }),

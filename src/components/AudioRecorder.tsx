@@ -5,7 +5,7 @@ import { useCallback, useEffect, useEffectEvent, useRef, useState, useTransition
 
 // components
 import { Button } from "@/components/ui/custom/button";
-import ErrorLine from "./form/field-errors/ErrorLine";
+import ErrorLine from "./formOld/field-errors/ErrorLine";
 
 // assets
 import { MicrophoneIcon } from "@heroicons/react/24/outline";
@@ -19,7 +19,7 @@ interface ProcessRecordingActionResult<T> {
 export type ProcessRecordingAction<T> = (
   formData: FormData,
   recordingFieldName: string,
-  otherFields?: Record<string, string>,
+  otherFields?: Record<string, string>
 ) => Promise<ProcessRecordingActionResult<T>>;
 
 interface AudioRecorderProps<T> {
@@ -194,9 +194,9 @@ export default function AudioRecorder<T>({
       </Button>
       {isRecording && (
         <footer className="grid">
-          <div className="bg-background col-span-full row-span-full overflow-clip">
+          <div className="col-span-full row-span-full overflow-clip bg-background">
             <div
-              className="from-primary to-destructive h-full bg-linear-to-r transition-all duration-1000 ease-linear"
+              className="h-full bg-linear-to-r from-primary to-destructive transition-all duration-1000 ease-linear"
               style={{ width: `${(recordingTime / MAX_RECORD_SECONDS) * 100}%` }}
             />
           </div>

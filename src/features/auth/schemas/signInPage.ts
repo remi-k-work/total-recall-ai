@@ -1,7 +1,14 @@
 // services, features, and other libraries
-import { z } from "zod";
+import { Schema } from "effect";
 
 // schemas
-import { BasePageSchema } from "@/schemas/basePage";
+import { BasePageSchema, BasePageSearchParamsSchema } from "@/schemas";
 
-export const SignInPageSchema = BasePageSchema.extend({ searchParams: z.object({ redirect: z.string().trim().min(1).optional() }) });
+const SignInPageSearchParams = Schema.Struct({
+  redirect: Schema.optional(Schema.Trim.pipe(Schema.nonEmptyString())),
+}).pipe(Schema.extend(BasePageSearchParamsSchema));
+
+export const SignInPageSchema = Schema.Struct({
+  params: BasePageSchema.fields.params,
+  searchParams: SignInPageSearchParams,
+});

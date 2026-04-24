@@ -10,7 +10,7 @@ import { toast } from "sonner";
 
 export default function UploadAvatar() {
   // To be able to refresh the page
-  const router = useRouter();
+  const { refresh } = useRouter();
 
   return (
     <UploadButton
@@ -24,14 +24,14 @@ export default function UploadAvatar() {
           toast.success("SUCCESS!", { description: message });
 
           // Refresh the page
-          router.refresh();
+          refresh();
         });
       }}
       onUploadError={(error: Error) => {
         // Show the upload error message in case something goes wrong
         toast.error("UPLOAD ERROR!", { description: error.message });
       }}
-      className="ut-button:w-full ut-button:rounded-none ut-button:uppercase ut-button:font-semibold ut-button:tracking-widest ut-button:bg-primary ut-button:text-primary-foreground"
+      className="ut-button:w-full ut-button:rounded-none ut-button:bg-primary ut-button:font-semibold ut-button:tracking-widest ut-button:text-primary-foreground ut-button:uppercase"
     />
   );
 }

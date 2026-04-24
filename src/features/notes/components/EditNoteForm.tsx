@@ -11,13 +11,13 @@ import transcribeNote from "@/features/notes/actions/transcribeNote3";
 
 // services, features, and other libraries
 import { mergeForm, useTransform } from "@tanstack/react-form-nextjs";
-import { useAppForm } from "@/components/form";
+import { useAppForm } from "@/components/formOld";
 import { EditNoteFormSchema } from "@/features/notes/schemas/editNoteForm";
 import useEditNoteFormFeedback from "@/features/notes/hooks/feedbacks/useEditNoteForm";
 
 // components
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
-import InfoLine from "@/components/form/InfoLine";
+import InfoLine from "@/components/formOld/InfoLine";
 import AudioRecorder from "@/components/AudioRecorder";
 
 // assets
@@ -66,7 +66,7 @@ export default function EditNoteForm({ note: { id: noteId, title, content }, inN
       reset();
       markdownFieldRef.current?.setMarkdown(content);
     },
-    store,
+    store
   );
 
   // Function to be called when the transcription is processed

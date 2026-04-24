@@ -1,9 +1,14 @@
 // services, features, and other libraries
-import { z } from "zod";
+import { FormBuilder } from "@lucas-barake/effect-form-react";
 
 // schemas
-import { PasswordSchema } from "@/schemas/password";
+import { PasswordField } from "@/schemas";
 
-export const ResetPassFormSchema = z
-  .object({ newPassword: PasswordSchema, confirmPassword: z.string().trim().min(1, "Please confirm your password") })
-  .refine((data) => data.newPassword === data.confirmPassword, { message: "Passwords do not match", path: ["confirmPassword"] });
+export const resetPassFormBuilder = FormBuilder.empty
+  .addField(PasswordField("newPassword"))
+  .addField(PasswordField("confirmPassword"))
+  .refine(({ newPassword, confirmPassword }) => {
+    if (newPassword !== confirmPassword) {
+      return { path: ["confirmPassword"], message: "Passwords do not match" };
+    }
+  });

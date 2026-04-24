@@ -12,7 +12,7 @@ import useVerifyEmailFeedback from "@/features/dashboard/hooks/feedbacks/useVeri
 // components
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/custom/card";
 import { Button } from "@/components/ui/custom/button";
-import InfoLine from "@/components/form/InfoLine";
+import InfoLine from "@/components/formOld/InfoLine";
 
 // assets
 import { CheckBadgeIcon } from "@heroicons/react/24/outline";

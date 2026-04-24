@@ -2,7 +2,7 @@
 import { Schema } from "effect";
 
 // schemas
-import { BasePageParamsSchema, BasePageSearchParamsSchema } from "@/schemas/basePageEffect";
+import { BasePageParamsSchema, BasePageSearchParamsSchema } from "@/schemas/basePage";
 
 const EditNotePageParams = Schema.Struct({
   id: Schema.UUID,

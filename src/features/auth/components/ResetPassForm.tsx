@@ -1,22 +1,21 @@
-/* eslint-disable react/no-children-prop */
-
 "use client";
 
 // react
-import { useActionState, useEffect, useRef } from "react";
-
-// server actions and mutations
-import resetPass from "@/features/auth/actions/resetPassForm";
+import { useMemo } from "react";
 
 // services, features, and other libraries
-import { mergeForm, useTransform } from "@tanstack/react-form-nextjs";
-import { useAppForm } from "@/components/form";
-import { ResetPassFormSchema } from "@/features/auth/schemas/resetPassForm";
-import useResetPassFormFeedback from "@/features/auth/hooks/feedbacks/useResetPassForm";
+import { Effect } from "effect";
+import { useAtomSet } from "@effect-atom/atom-react";
+import { FormReact } from "@lucas-barake/effect-form-react";
+import { RpcAuthClient } from "@/features/auth/rpc/client";
+import { resetPassFormBuilder } from "@/features/auth/schemas";
+import { RuntimeAtom } from "@/lib/RuntimeClient";
+import { useSubmitToast } from "@/components/Form/hooks";
 
 // components
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
-import InfoLine from "@/components/form/InfoLine";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/custom/card";
+import { PasswordInput } from "@/components/Form/Inputs";
+import { FormSubmit, SubmitStatus } from "@/components/Form";
 
 // assets
 import { KeyIcon } from "@heroicons/react/24/outline";
@@ -26,67 +25,52 @@ interface ResetPassFormProps {
   token: string;
 }
 
-// constants
-import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/auth/constants/resetPassForm";
-
-export default function ResetPassForm({ token }: ResetPassFormProps) {
-  // The main server action that processes the form
-  const [formState, formAction, isPending] = useActionState(resetPass.bind(null, token), INITIAL_FORM_STATE);
-  const { AppField, AppForm, FormSubmit, handleSubmit, reset, store } = useAppForm({
-    ...FORM_OPTIONS,
-    transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
+const resetPassForm = (token: string) =>
+  FormReact.make(resetPassFormBuilder, {
+    runtime: RuntimeAtom,
+    fields: { newPassword: PasswordInput, confirmPassword: PasswordInput },
+    onSubmit: (_, { decoded: { newPassword } }) =>
+      Effect.gen(function* () {
+        const { resetPassForm } = yield* RpcAuthClient;
+        yield* resetPassForm({ token, newPassword });
+      }),
   });
 
-  // Track if the user has pressed the submit button
-  const hasPressedSubmitRef = useRef(false);
-
-  // All this new cleanup code is for the <Activity /> boundary
-  useEffect(() => {
-    // Reset the flag when the component unmounts
-    return () => {
-      hasPressedSubmitRef.current = false;
-    };
-  }, []);
+export default function ResetPassForm({ token }: ResetPassFormProps) {
+  // Get the form context
+  const resetPassFormL = useMemo(() => resetPassForm(token), [token]);
+  const submit = useAtomSet(resetPassFormL.submit);
 
   // Provide feedback to the user regarding this form actions
-  const { feedbackMessage, hideFeedbackMessage } = useResetPassFormFeedback(hasPressedSubmitRef, formState, reset, store);
+  useSubmitToast(resetPassFormL.submit, "[RESET YOUR PASSWORD]", "The password has been reset. Please sign in with your new password.", undefined, "/sign-in");
 
   return (
-    <AppForm>
-      <form
-        action={formAction}
-        onSubmit={async () => {
-          await handleSubmit();
-          hasPressedSubmitRef.current = true;
-        }}
-      >
-        <Card>
-          <CardHeader>
-            <CardTitle>Reset Your Password</CardTitle>
-            <CardDescription>Enter your new password below</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <AppField
-              name="newPassword"
-              validators={{ onChange: ResetPassFormSchema.shape.newPassword }}
-              children={(field) => (
-                <field.PasswordField label="New Password" size={40} maxLength={129} autoComplete="new-password" placeholder="e.g. P@ssw0rd!" />
-              )}
+    <Card>
+      <CardHeader>
+        <CardTitle>Reset Your Password</CardTitle>
+        <CardDescription>Enter your new password below</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <resetPassFormL.Initialize defaultValues={{ newPassword: "", confirmPassword: "" }}>
+          <form
+            onSubmit={(ev) => {
+              ev.preventDefault();
+              submit();
+            }}
+          >
+            <resetPassFormL.newPassword label="New Password" size={40} maxLength={129} autoComplete="new-password" placeholder="e.g. P@ssw0rd!" />
+            <br />
+            <resetPassFormL.confirmPassword label="Confirm Password" size={40} maxLength={129} autoComplete="new-password" placeholder="e.g. P@ssw0rd!" />
+            <br />
+            <SubmitStatus
+              form={resetPassFormL}
+              formName="[RESET YOUR PASSWORD]"
+              succeededDesc="The password has been reset. Please sign in with your new password."
             />
-            <AppField
-              name="confirmPassword"
-              validators={{ onChange: ResetPassFormSchema.shape.confirmPassword }}
-              children={(field) => (
-                <field.PasswordField label="Confirm Password" size={40} maxLength={129} autoComplete="new-password" placeholder="e.g. P@ssw0rd!" />
-              )}
-            />
-          </CardContent>
-          <CardFooter>
-            <InfoLine message={feedbackMessage} />
-            <FormSubmit submitIcon={<KeyIcon className="size-9" />} submitText="Reset Password" isPending={isPending} onClearedForm={hideFeedbackMessage} />
-          </CardFooter>
-        </Card>
-      </form>
-    </AppForm>
+            <FormSubmit form={resetPassFormL} submitIcon={<KeyIcon className="size-9" />} submitText="Reset Password" />
+          </form>
+        </resetPassFormL.Initialize>
+      </CardContent>
+    </Card>
   );
 }

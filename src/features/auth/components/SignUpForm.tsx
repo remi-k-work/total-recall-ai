@@ -1,102 +1,66 @@
-/* eslint-disable react/no-children-prop */
-
 "use client";
 
-// react
-import { useActionState, useEffect, useRef } from "react";
-
-// server actions and mutations
-import signUp from "@/features/auth/actions/signUpForm";
-
 // services, features, and other libraries
-import { mergeForm, useTransform } from "@tanstack/react-form-nextjs";
-import { useAppForm } from "@/components/form";
-import { SignUpFormSchema } from "@/features/auth/schemas/signUpForm";
-import useSignUpFormFeedback from "@/features/auth/hooks/feedbacks/useSignUpForm";
+import { Effect } from "effect";
+import { useAtomSet } from "@effect-atom/atom-react";
+import { FormReact } from "@lucas-barake/effect-form-react";
+import { RpcAuthClient } from "@/features/auth/rpc/client";
+import { signUpFormBuilder } from "@/features/auth/schemas";
+import { RuntimeAtom } from "@/lib/RuntimeClient";
+import { useSubmitToast } from "@/components/Form/hooks";
 
 // components
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
-import InfoLine from "@/components/form/InfoLine";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/custom/card";
+import { PasswordInput, TextInput } from "@/components/Form/Inputs";
+import { FormSubmit, SubmitStatus } from "@/components/Form";
 
 // assets
 import { UserIcon } from "@heroicons/react/24/outline";
 
-// constants
-import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/auth/constants/signUpForm";
+const signUpForm = FormReact.make(signUpFormBuilder, {
+  runtime: RuntimeAtom,
+  fields: { name: TextInput, email: TextInput, password: PasswordInput, confirmPassword: PasswordInput },
+  onSubmit: (_, { decoded: { name, email, password } }) =>
+    Effect.gen(function* () {
+      const { signUpForm } = yield* RpcAuthClient;
+      yield* signUpForm({ name, email, password });
+    }),
+});
 
 export default function SignUpForm() {
-  // The main server action that processes the form
-  const [formState, formAction, isPending] = useActionState(signUp, INITIAL_FORM_STATE);
-  const { AppField, AppForm, FormSubmit, handleSubmit, reset, store } = useAppForm({
-    ...FORM_OPTIONS,
-    transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
-  });
-
-  // Track if the user has pressed the submit button
-  const hasPressedSubmitRef = useRef(false);
-
-  // All this new cleanup code is for the <Activity /> boundary
-  useEffect(() => {
-    // Reset the flag when the component unmounts
-    return () => {
-      hasPressedSubmitRef.current = false;
-    };
-  }, []);
+  // Get the form context
+  const submit = useAtomSet(signUpForm.submit);
 
   // Provide feedback to the user regarding this form actions
-  const { feedbackMessage, hideFeedbackMessage } = useSignUpFormFeedback(hasPressedSubmitRef, formState, reset, store);
+  useSubmitToast(signUpForm.submit, "[SIGN UP]", "You signed up successfully.", undefined, "/dashboard");
 
   return (
-    <AppForm>
-      <form
-        action={formAction}
-        onSubmit={async () => {
-          await handleSubmit();
-          hasPressedSubmitRef.current = true;
-        }}
-      >
-        <Card>
-          <CardHeader>
-            <CardTitle>Sign Up</CardTitle>
-            <CardDescription>To create a new account</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <AppField
-              name="name"
-              validators={{ onChange: SignUpFormSchema.shape.name }}
-              children={(field) => <field.TextField label="Name" size={40} maxLength={26} spellCheck={false} autoComplete="name" placeholder="e.g. John Doe" />}
-            />
-            <AppField
-              name="email"
-              validators={{ onChange: SignUpFormSchema.shape.email }}
-              children={(field) => (
-                <field.TextField label="Email" size={40} maxLength={50} spellCheck={false} autoComplete="email" placeholder="e.g. john.doe@gmail.com" />
-              )}
-            />
-            <AppField
-              name="password"
-              validators={{ onChange: SignUpFormSchema.shape.password }}
-              children={(field) => <field.PasswordField label="Password" size={40} maxLength={129} autoComplete="new-password" placeholder="e.g. P@ssw0rd!" />}
-            />
-            <AppField
-              name="confirmPassword"
-              validators={{ onChange: SignUpFormSchema.shape.confirmPassword }}
-              children={(field) => (
-                <field.PasswordField label="Confirm Password" size={40} maxLength={129} autoComplete="new-password" placeholder="e.g. P@ssw0rd!" />
-              )}
-            />
-          </CardContent>
-          <CardFooter>
-            <InfoLine message={feedbackMessage} />
-            <FormSubmit
-              submitIcon={<UserIcon className="size-9" />}
-              submitText="Create New Account"
-              isPending={isPending}
-              onClearedForm={hideFeedbackMessage}
-            />
-          </CardFooter>
-        </Card>
-      </form>
-    </AppForm>
+    <Card>
+      <CardHeader>
+        <CardTitle>Sign Up</CardTitle>
+        <CardDescription>To create a new account</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <signUpForm.Initialize defaultValues={{ name: "", email: "", password: "", confirmPassword: "" }}>
+          <form
+            onSubmit={(ev) => {
+              ev.preventDefault();
+              submit();
+            }}
+          >
+            <signUpForm.name label="Name" size={40} maxLength={26} spellCheck={false} autoComplete="name" placeholder="e.g. John Doe" />
+            <br />
+            <signUpForm.email label="Email" size={40} maxLength={50} spellCheck={false} autoComplete="email" placeholder="e.g. john.doe@gmail.com" />
+            <br />
+            <signUpForm.password label="Password" size={40} maxLength={129} autoComplete="new-password" placeholder="e.g. P@ssw0rd!" />
+            <br />
+            <signUpForm.confirmPassword label="Confirm Password" size={40} maxLength={129} autoComplete="new-password" placeholder="e.g. P@ssw0rd!" />
+            <br />
+            <SubmitStatus form={signUpForm} formName="[SIGN UP]" succeededDesc="You signed up successfully." />
+            <FormSubmit form={signUpForm} submitIcon={<UserIcon className="size-9" />} submitText="Create New Account" />
+          </form>
+        </signUpForm.Initialize>
+      </CardContent>
+    </Card>
   );
 }

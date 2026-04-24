@@ -1,14 +1,12 @@
 "use client";
 
-// react
-import { startTransition, useActionState } from "react";
-
-// server actions and mutations
-import signOutEverywhere from "@/features/profile/actions/signOutEverywhere";
-
 // services, features, and other libraries
-import { useConfirmModalContext } from "@/contexts/ConfirmModal";
-import useSignOutEverywhereFeedback from "@/features/profile/hooks/feedbacks/useSignOutEverywhere";
+import { Effect } from "effect";
+import { useAtom } from "@effect-atom/atom-react";
+import { RuntimeAtom } from "@/lib/RuntimeClient";
+import { useSubmitToast } from "@/components/Form/hooks";
+import { RpcProfileClient } from "@/features/profile/rpc/client";
+import { useConfirmModal } from "@/atoms";
 
 // components
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/custom/card";
@@ -18,15 +16,22 @@ import { Button } from "@/components/ui/custom/button";
 import { ArrowRightStartOnRectangleIcon } from "@heroicons/react/24/outline";
 import { Loader2 } from "lucide-react";
 
+const signOutEverywhereActionAtom = RuntimeAtom.fn(
+  Effect.fnUntraced(function* () {
+    const { signOutEverywhere } = yield* RpcProfileClient;
+    yield* signOutEverywhere();
+  })
+);
+
 export default function SignOutEverywhere() {
-  // Access the confirm modal context and retrieve all necessary information
-  const { hasPressedConfirmRef, openConfirmModal } = useConfirmModalContext();
+  // This is the hook that components use to open the modal
+  const { openConfirmModal } = useConfirmModal();
 
   // Signs the user out from all devices
-  const [signOutEverywhereState, signOutEverywhereAction, signOutEverywhereIsPending] = useActionState(signOutEverywhere, { actionStatus: "idle" });
+  const [signOutEverywhereResult, signOutEverywhereAction] = useAtom(signOutEverywhereActionAtom);
 
   // Provide feedback to the user regarding this server action
-  useSignOutEverywhereFeedback(hasPressedConfirmRef, signOutEverywhereState);
+  useSubmitToast(signOutEverywhereActionAtom, "[SIGN OUT EVERYWHERE]", "You signed out from all devices successfully.", undefined, undefined, true);
 
   return (
     <Card>
@@ -38,20 +43,22 @@ export default function SignOutEverywhere() {
         <Button
           type="button"
           variant="destructive"
-          disabled={signOutEverywhereIsPending}
+          disabled={signOutEverywhereResult.waiting}
           className="mx-auto"
           onClick={() => {
-            openConfirmModal(
-              <p className="text-center text-xl">
-                Are you sure you want to <b className="text-destructive">sign out</b> from all devices?
-              </p>,
-              () => {
-                startTransition(signOutEverywhereAction);
+            openConfirmModal({
+              content: (
+                <p className="text-center text-xl">
+                  Are you sure you want to <b className="text-destructive">sign out</b> from all devices?
+                </p>
+              ),
+              onConfirmed: () => {
+                signOutEverywhereAction();
               },
-            );
+            });
           }}
         >
-          {signOutEverywhereIsPending ? <Loader2 className="size-9 animate-spin" /> : <ArrowRightStartOnRectangleIcon className="size-9" />}
+          {signOutEverywhereResult.waiting ? <Loader2 className="size-9 animate-spin" /> : <ArrowRightStartOnRectangleIcon className="size-9" />}
           Sign Out Everywhere
         </Button>
       </CardContent>

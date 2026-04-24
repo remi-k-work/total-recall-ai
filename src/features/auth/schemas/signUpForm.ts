@@ -1,15 +1,16 @@
 // services, features, and other libraries
-import { z } from "zod";
+import { FormBuilder } from "@lucas-barake/effect-form-react";
 
 // schemas
-import { EmailSchema } from "@/schemas/email";
-import { PasswordSchema } from "@/schemas/password";
+import { EmailField, NameField, PasswordField } from "@/schemas";
 
-export const SignUpFormSchema = z
-  .object({
-    name: z.string().trim().min(1, "Please provide your name; this is a necessary field").max(25, "Please keep the name to a maximum of 25 characters"),
-    email: EmailSchema,
-    password: PasswordSchema,
-    confirmPassword: z.string().trim().min(1, "Please confirm your password"),
-  })
-  .refine((data) => data.password === data.confirmPassword, { message: "Passwords do not match", path: ["confirmPassword"] });
+export const signUpFormBuilder = FormBuilder.empty
+  .addField(NameField())
+  .addField(EmailField())
+  .addField(PasswordField())
+  .addField(PasswordField("confirmPassword"))
+  .refine(({ password, confirmPassword }) => {
+    if (password !== confirmPassword) {
+      return { path: ["confirmPassword"], message: "Passwords do not match" };
+    }
+  });

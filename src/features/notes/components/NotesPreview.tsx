@@ -2,7 +2,7 @@
 import { cn } from "@/lib/utils";
 
 // components
-import InfoLine from "@/components/form/InfoLine";
+import InfoLine from "@/components/formOld/InfoLine";
 import NotePreview from "@/features/notes/components/NotePreview";
 
 // types

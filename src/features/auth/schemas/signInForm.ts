@@ -1,8 +1,8 @@
 // services, features, and other libraries
-import { z } from "zod";
+import { FormBuilder } from "@lucas-barake/effect-form-react";
 
 // schemas
-import { EmailSchema } from "@/schemas/email";
-import { PasswordSchema } from "@/schemas/password";
+import { EmailField, PasswordField } from "@/schemas";
+import { RememberMeField } from "@/features/auth/schemas";
 
-export const SignInFormSchema = z.object({ email: EmailSchema, password: PasswordSchema, rememberMe: z.coerce.boolean() });
+export const signInFormBuilder = FormBuilder.empty.addField(EmailField()).addField(PasswordField()).addField(RememberMeField);

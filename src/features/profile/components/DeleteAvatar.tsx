@@ -1,12 +1,10 @@
-// react
-import { startTransition, useActionState } from "react";
-
-// server actions and mutations
-import deleteAvatar from "@/features/profile/actions/deleteAvatar";
-
 // services, features, and other libraries
-import { useConfirmModalContext } from "@/contexts/ConfirmModal";
-import useDeleteAvatarFeedback from "@/features/profile/hooks/feedbacks/useDeleteAvatar";
+import { Effect } from "effect";
+import { useAtom } from "@effect-atom/atom-react";
+import { RuntimeAtom } from "@/lib/RuntimeClient";
+import { useSubmitToast } from "@/components/Form/hooks";
+import { RpcProfileClient } from "@/features/profile/rpc/client";
+import { useConfirmModal } from "@/atoms";
 
 // components
 import { Button } from "@/components/ui/custom/button";
@@ -20,33 +18,49 @@ interface DeleteAvatarProps {
   currentImage?: string;
 }
 
+const deleteAvatarActionAtom = RuntimeAtom.fn(
+  Effect.fnUntraced(function* () {
+    const { deleteAvatar } = yield* RpcProfileClient;
+    yield* deleteAvatar();
+  })
+);
+
 export default function DeleteAvatar({ currentImage }: DeleteAvatarProps) {
-  // Access the confirm modal context and retrieve all necessary information
-  const { hasPressedConfirmRef, openConfirmModal } = useConfirmModalContext();
+  // This is the hook that components use to open the modal
+  const { openConfirmModal } = useConfirmModal();
 
   // Deletes a user avatar, sets the user's image to null, and removes the corresponding avatar file from uploadthing
-  const [deleteAvatarState, deleteAvatarAction, deleteAvatarIsPending] = useActionState(deleteAvatar, { actionStatus: "idle" });
+  const [deleteAvatarResult, deleteAvatarAction] = useAtom(deleteAvatarActionAtom);
 
   // Provide feedback to the user regarding this server action
-  useDeleteAvatarFeedback(hasPressedConfirmRef, deleteAvatarState);
+  useSubmitToast(
+    deleteAvatarActionAtom,
+    "[PROFILE DETAILS]",
+    "Your avatar has been deleted.",
+    "Your avatar could not be deleted; please try again later.",
+    undefined,
+    true
+  );
 
   return (
     <Button
       type="button"
       variant="destructive"
-      disabled={!currentImage || deleteAvatarIsPending}
+      disabled={!currentImage || deleteAvatarResult.waiting}
       onClick={() => {
-        openConfirmModal(
-          <p className="text-center text-xl">
-            Are you sure you want to <b className="text-destructive">delete</b> your avatar?
-          </p>,
-          () => {
-            startTransition(deleteAvatarAction);
+        openConfirmModal({
+          content: (
+            <p className="text-center text-xl">
+              Are you sure you want to <b className="text-destructive">delete</b> your avatar?
+            </p>
+          ),
+          onConfirmed: () => {
+            deleteAvatarAction();
           },
-        );
+        });
       }}
     >
-      {deleteAvatarIsPending ? <Loader2 className="size-9 animate-spin" /> : <TrashIcon className="size-9" />}
+      {deleteAvatarResult.waiting ? <Loader2 className="size-9 animate-spin" /> : <TrashIcon className="size-9" />}
       Delete Avatar
     </Button>
   );

@@ -1,85 +1,60 @@
-/* eslint-disable react/no-children-prop */
-
 "use client";
 
-// react
-import { useActionState, useEffect, useRef } from "react";
-
-// server actions and mutations
-import forgotPass from "@/features/auth/actions/forgotPassForm";
-
 // services, features, and other libraries
-import { mergeForm, useTransform } from "@tanstack/react-form-nextjs";
-import { useAppForm } from "@/components/form";
-import { ForgotPassFormSchema } from "@/features/auth/schemas/forgotPassForm";
-import useForgotPassFormFeedback from "@/features/auth/hooks/feedbacks/useForgotPassForm";
+import { Effect } from "effect";
+import { useAtomSet } from "@effect-atom/atom-react";
+import { FormReact } from "@lucas-barake/effect-form-react";
+import { RpcAuthClient } from "@/features/auth/rpc/client";
+import { forgotPassFormBuilder } from "@/features/auth/schemas";
+import { RuntimeAtom } from "@/lib/RuntimeClient";
+import { useSubmitToast } from "@/components/Form/hooks";
 
 // components
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
-import InfoLine from "@/components/form/InfoLine";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/custom/card";
+import { TextInput } from "@/components/Form/Inputs";
+import { FormSubmit, SubmitStatus } from "@/components/Form";
 
 // assets
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 
-// constants
-import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/auth/constants/forgotPassForm";
+const forgotPassForm = FormReact.make(forgotPassFormBuilder, {
+  runtime: RuntimeAtom,
+  fields: { email: TextInput },
+  onSubmit: (_, { decoded: { email } }) =>
+    Effect.gen(function* () {
+      const { forgotPassForm } = yield* RpcAuthClient;
+      yield* forgotPassForm({ email });
+    }),
+});
 
 export default function ForgotPassForm() {
-  // The main server action that processes the form
-  const [formState, formAction, isPending] = useActionState(forgotPass, INITIAL_FORM_STATE);
-  const { AppField, AppForm, FormSubmit, handleSubmit, reset, store } = useAppForm({
-    ...FORM_OPTIONS,
-    transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
-  });
-
-  // Track if the user has pressed the submit button
-  const hasPressedSubmitRef = useRef(false);
-
-  // All this new cleanup code is for the <Activity /> boundary
-  useEffect(() => {
-    // Reset the flag when the component unmounts
-    return () => {
-      hasPressedSubmitRef.current = false;
-    };
-  }, []);
+  // Get the form context
+  const submit = useAtomSet(forgotPassForm.submit);
 
   // Provide feedback to the user regarding this form actions
-  const { feedbackMessage, hideFeedbackMessage } = useForgotPassFormFeedback(hasPressedSubmitRef, formState, reset, store);
+  useSubmitToast(forgotPassForm.submit, "[FORGOT YOUR PASSWORD?]", "We have sent the password reset link.");
 
   return (
-    <AppForm>
-      <form
-        action={formAction}
-        onSubmit={async () => {
-          await handleSubmit();
-          hasPressedSubmitRef.current = true;
-        }}
-      >
-        <Card>
-          <CardHeader>
-            <CardTitle>Forgot Your Password?</CardTitle>
-            <CardDescription>Enter your email below to reset password</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <AppField
-              name="email"
-              validators={{ onChange: ForgotPassFormSchema.shape.email }}
-              children={(field) => (
-                <field.TextField label="Email" size={40} maxLength={50} spellCheck={false} autoComplete="email" placeholder="e.g. john.doe@gmail.com" />
-              )}
-            />
-          </CardContent>
-          <CardFooter>
-            <InfoLine message={feedbackMessage} />
-            <FormSubmit
-              submitIcon={<PaperAirplaneIcon className="size-9" />}
-              submitText="Send Reset Link"
-              isPending={isPending}
-              onClearedForm={hideFeedbackMessage}
-            />
-          </CardFooter>
-        </Card>
-      </form>
-    </AppForm>
+    <Card>
+      <CardHeader>
+        <CardTitle>Forgot Your Password?</CardTitle>
+        <CardDescription>Enter your email below to reset password</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <forgotPassForm.Initialize defaultValues={{ email: "" }}>
+          <form
+            onSubmit={(ev) => {
+              ev.preventDefault();
+              submit();
+            }}
+          >
+            <forgotPassForm.email label="Email" size={40} maxLength={50} spellCheck={false} autoComplete="email" placeholder="e.g. john.doe@gmail.com" />
+            <br />
+            <SubmitStatus form={forgotPassForm} formName="[FORGOT YOUR PASSWORD?]" succeededDesc="We have sent the password reset link." />
+            <FormSubmit form={forgotPassForm} submitIcon={<PaperAirplaneIcon className="size-9" />} submitText="Send Reset Link" />
+          </form>
+        </forgotPassForm.Initialize>
+      </CardContent>
+    </Card>
   );
 }
