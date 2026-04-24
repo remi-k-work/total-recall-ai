@@ -5,18 +5,15 @@ import { connection } from "next/server";
 import { notFound, unauthorized } from "next/navigation";
 
 // services, features, and other libraries
-import { Console, Data, Effect, Either, Schema } from "effect";
+import { Console, Effect, Either, Schema } from "effect";
 import { RuntimeServer } from "@/lib/RuntimeServer";
+import { InvalidPageInputsError } from "./errors";
 
 // types
 interface PageInputPromises {
   params: Promise<Record<string, string>>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
-
-// Define a domain error for invalid page inputs and situations where an item is not found
-class InvalidPageInputsError extends Data.TaggedError("InvalidPageInputsError")<{ readonly message: string; readonly cause?: unknown }> {}
-export class ItemNotFoundError extends Data.TaggedError("ItemNotFoundError")<{ readonly message: string; readonly cause?: unknown }> {}
 
 // Safely validate next.js route inputs (`params` and `searchParams`) against a schema; return typed data or trigger a 404 on failure
 export const validatePageInputs = <A, I>(schema: Schema.Schema<A, I>, { params, searchParams }: PageInputPromises) =>

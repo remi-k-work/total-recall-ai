@@ -1,5 +1,5 @@
 // services, features, and other libraries
-import { format } from "date-fns";
+import { DateTime } from "effect";
 
 // components
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
@@ -24,7 +24,7 @@ export default function ProfileInfo({ user, user: { email, name, createdAt }, se
         <CardDescription>Your account details and current status</CardDescription>
       </CardHeader>
       <CardContent>
-        <UserAvatar user={user} session={session} className="mx-auto" />
+        <UserAvatar user={user} session={session} className="mx-auto size-74" />
         <h4 className="mx-auto mt-4 truncate text-center">{name}</h4>
         <p className="mx-auto truncate text-center text-muted-foreground">{email}</p>
       </CardContent>
@@ -33,7 +33,7 @@ export default function ProfileInfo({ user, user: { email, name, createdAt }, se
           <CalendarIcon className="size-9" />
           Member Since
         </div>
-        <p className="text-center text-muted-foreground">{format(createdAt, "MMMM d, yyyy")}</p>
+        <p className="text-center text-muted-foreground">{DateTime.formatLocal(DateTime.unsafeFromDate(createdAt))}</p>
       </CardFooter>
     </Card>
   );

@@ -6,9 +6,10 @@ import { NoteDB, NoteTagDB } from "@/features/notes/db";
 
 // services, features, and other libraries
 import { Effect } from "effect";
-import { ItemNotFoundError, runPageMainOrNavigate, validatePageInputs } from "@/lib/helpersEffect";
+import { runPageMainOrNavigate, validatePageInputs } from "@/lib/helpersEffect";
 import { NoteDetailsPageSchema } from "@/features/notes/schemas/noteDetailsPage";
-import { getUserSessionData } from "@/features/auth/lib/helpersEffect";
+import { Auth } from "@/features/auth/lib/auth";
+import { ItemNotFoundError } from "@/lib/errors";
 
 // components
 import PageHeader from "@/components/PageHeader";
@@ -32,9 +33,10 @@ const main = ({ params, searchParams }: PageProps<"/notes/[id]">) =>
     } = yield* validatePageInputs(NoteDetailsPageSchema, { params, searchParams });
 
     // Access the user session data from the server side or fail with an unauthorized access error
+    const auth = yield* Auth;
     const {
       user: { id: userId },
-    } = yield* getUserSessionData;
+    } = yield* auth.getUserSessionData;
 
     const noteDB = yield* NoteDB;
     const noteTagDB = yield* NoteTagDB;

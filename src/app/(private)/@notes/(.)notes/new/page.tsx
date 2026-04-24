@@ -5,7 +5,7 @@ import { Suspense } from "react";
 import { Effect } from "effect";
 import { runPageMainOrNavigate, validatePageInputs } from "@/lib/helpersEffect";
 import { NewNotePageSchema } from "@/features/notes/schemas/newNotePage";
-import { getUserSessionData } from "@/features/auth/lib/helpersEffect";
+import { Auth } from "@/features/auth/lib/auth";
 
 // components
 import NoteModal from "@/features/notes/components/note-modal";
@@ -23,7 +23,8 @@ const main = ({ params, searchParams }: PageProps<"/notes/new">) =>
     } = yield* validatePageInputs(NewNotePageSchema, { params, searchParams });
 
     // Access the user session data from the server side or fail with an unauthorized access error
-    yield* getUserSessionData;
+    const auth = yield* Auth;
+    yield* auth.getUserSessionData;
 
     return { str };
   });
