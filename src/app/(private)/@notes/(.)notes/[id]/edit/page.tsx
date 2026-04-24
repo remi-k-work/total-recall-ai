@@ -12,7 +12,7 @@ import { Auth } from "@/features/auth/lib/auth";
 import { ItemNotFoundError } from "@/lib/errors";
 
 // components
-import NoteModal from "@/features/notes/components/note-modal";
+import NoteModal from "@/features/notes/components/NoteModal";
 import BrowseBar from "@/features/notes/components/BrowseBar";
 import EditNoteForm from "@/features/notes/components/EditNoteForm";
 

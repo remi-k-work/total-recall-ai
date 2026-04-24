@@ -18,9 +18,9 @@ export const NoteChunkTable = pgTable(
       .notNull()
       .references(() => NoteTable.id, { onDelete: "cascade" }),
     chunk: text().notNull(),
-    embedding: vector({ dimensions: 768 }),
+    embedding: vector({ dimensions: 1536 }).notNull(),
   },
-  (table) => [index("note_chunk_user_id_idx").on(table.userId), index("note_chunk_embedding_idx").using("hnsw", table.embedding.op("vector_cosine_ops"))],
+  (table) => [index("note_chunk_user_id_idx").on(table.userId), index("note_chunk_embedding_idx").using("hnsw", table.embedding.op("vector_cosine_ops"))]
 );
 
 export const noteChunkRelations = relations(NoteChunkTable, ({ one }) => ({

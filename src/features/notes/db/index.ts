@@ -1,3 +1,4 @@
+export * from "./chunk";
 export * from "./note";
 export * from "./noteEffect";
 export * from "./noteChunk";

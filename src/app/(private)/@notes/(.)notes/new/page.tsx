@@ -8,7 +8,7 @@ import { NewNotePageSchema } from "@/features/notes/schemas/newNotePage";
 import { Auth } from "@/features/auth/lib/auth";
 
 // components
-import NoteModal from "@/features/notes/components/note-modal";
+import NoteModal from "@/features/notes/components/NoteModal";
 import BrowseBar from "@/features/notes/components/BrowseBar";
 import NewNoteForm from "@/features/notes/components/NewNoteForm";
 
