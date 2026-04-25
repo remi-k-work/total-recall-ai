@@ -4,7 +4,7 @@
 import { useCallback, useMemo, useRef } from "react";
 
 // server actions and mutations
-import transcribeNote from "@/features/notes/actions/transcribeNote3";
+import { transcribeNote } from "@/features/notes/actions/transcribeNote3";
 
 // services, features, and other libraries
 import { Effect } from "effect";
@@ -45,9 +45,6 @@ const editNoteForm = (noteId: string) =>
   });
 
 export default function EditNoteForm({ note: { id: noteId, title, content }, inNoteModal = false }: EditNoteFormProps) {
-  // Create a ref to the editor component
-  const editorRef = useRef<MDXEditorMethods>(null);
-
   // Get the form context
   const editNoteFormL = useMemo(() => editNoteForm(noteId), [noteId]);
   const submit = useAtomSet(editNoteFormL.submit);
@@ -55,18 +52,21 @@ export default function EditNoteForm({ note: { id: noteId, title, content }, inN
   // Provide feedback to the user regarding this form actions
   useSubmitToast(editNoteFormL.submit, "[EDIT NOTE]", "The note has been updated.", undefined, "/notes", true);
 
+  // Create a ref to the editor component
+  const editorRef = useRef<MDXEditorMethods>(null);
+
   // Function to be called when the transcription is processed
-  // const handleRecordingProcessed = useCallback(({ actionStatus, result }: Awaited<ReturnType<typeof transcribeNote>>) => {
-  //   // Only update the form if the transcription was successful
-  //   if (actionStatus !== "succeeded" || !result) return;
+  const handleRecordingProcessed = useCallback(({ actionStatus, result }: Awaited<ReturnType<typeof transcribeNote>>) => {
+    // Only update the form if the transcription was successful
+    if (actionStatus !== "succeeded" || !result) return;
 
-  //   // Extract only the content from the result
-  //   const { content } = result;
+    // Extract only the content from the result
+    const { content } = result;
 
-  //   // Insert the transcribed content into the markdown field at the cursor's location
-  //   markdownFieldRef.current?.focus();
-  //   markdownFieldRef.current?.insertMarkdown(content);
-  // }, []);
+    // Insert the transcribed content into the markdown field at the cursor's location
+    editorRef.current?.focus();
+    editorRef.current?.insertMarkdown(content);
+  }, []);
 
   return (
     <Card className="max-w-4xl">
@@ -78,8 +78,7 @@ export default function EditNoteForm({ note: { id: noteId, title, content }, inN
             <AudioRecorder
               recordingFieldName="recording"
               processRecordingAction={transcribeNote}
-              // onRecordingProcessed={handleRecordingProcessed}
-              onRecordingProcessed={() => {}}
+              onRecordingProcessed={handleRecordingProcessed}
               startRecordingText="Start Transcribing"
               stopRecordingText="Stop Transcribing"
             />
@@ -91,8 +90,7 @@ export default function EditNoteForm({ note: { id: noteId, title, content }, inN
             <AudioRecorder
               recordingFieldName="recording"
               processRecordingAction={transcribeNote}
-              // onRecordingProcessed={handleRecordingProcessed}
-              onRecordingProcessed={() => {}}
+              onRecordingProcessed={handleRecordingProcessed}
               startRecordingText="Start Transcribing"
               stopRecordingText="Stop Transcribing"
             />

@@ -4,11 +4,11 @@
 import { useCallback, useRef } from "react";
 
 // server actions and mutations
-import transcribeNote from "@/features/notes/actions/transcribeNote3";
+import { transcribeNote } from "@/features/notes/actions/transcribeNote3";
 
 // services, features, and other libraries
-import { Effect } from "effect";
-import { useAtomSet } from "@effect-atom/atom-react";
+import { Effect, Option } from "effect";
+import { useAtomSet, useAtomValue } from "@effect-atom/atom-react";
 import { FormReact } from "@lucas-barake/effect-form-react";
 import { RpcNotesClient } from "@/features/notes/rpc/client";
 import { newNoteFormBuilder } from "@/features/notes/schemas";
@@ -41,34 +41,39 @@ const newNoteForm = FormReact.make(newNoteFormBuilder, {
     }),
 });
 
-export default function NewNoteForm({ inNoteModal = false }: NewNoteFormProps) {
-  // Create a ref to the editor component
-  const editorRef = useRef<MDXEditorMethods>(null);
+const titleAtoms = newNoteForm.getFieldAtoms(newNoteForm.fields.title);
 
+export default function NewNoteForm({ inNoteModal = false }: NewNoteFormProps) {
   // Get the form context
   const submit = useAtomSet(newNoteForm.submit);
+  const titleOption = useAtomValue(titleAtoms.value);
+  const setTitle = useAtomSet(titleAtoms.setValue);
 
   // Provide feedback to the user regarding this form actions
   useSubmitToast(newNoteForm.submit, "[NEW NOTE]", "The new note has been created.", undefined, "/notes", true);
 
+  // Create a ref to the editor component
+  const editorRef = useRef<MDXEditorMethods>(null);
+
   // Function to be called when the transcription is processed
-  // const handleRecordingProcessed = useCallback(
-  //   ({ actionStatus, result }: Awaited<ReturnType<typeof transcribeNote>>) => {
-  //     // Only update the form if the transcription was successful
-  //     if (actionStatus !== "succeeded" || !result) return;
+  const handleRecordingProcessed = useCallback(
+    ({ actionStatus, result }: Awaited<ReturnType<typeof transcribeNote>>) => {
+      // Only update the form if the transcription was successful
+      if (actionStatus !== "succeeded" || !result) return;
 
-  //     // Extract the title and content from the result
-  //     const { title, content } = result;
+      // Extract the title and content from the result
+      const { title, content } = result;
 
-  //     // Only update the note title if it has not been established yet
-  //     if (!getFieldValue("title")) setFieldValue("title", title ?? "");
+      // Only update the note title if it has not been established yet
+      const currTitle = Option.match(titleOption, { onNone: () => "", onSome: (title) => title });
+      if (!currTitle) setTitle(title ?? "");
 
-  //     // Insert the transcribed content into the markdown field at the cursor's location
-  //     markdownFieldRef.current?.focus();
-  //     markdownFieldRef.current?.insertMarkdown(content);
-  //   },
-  //   [getFieldValue, setFieldValue]
-  // );
+      // Insert the transcribed content into the markdown field at the cursor's location
+      editorRef.current?.focus();
+      editorRef.current?.insertMarkdown(content);
+    },
+    [titleOption, setTitle]
+  );
 
   return (
     <Card className="max-w-4xl">
@@ -80,8 +85,7 @@ export default function NewNoteForm({ inNoteModal = false }: NewNoteFormProps) {
             <AudioRecorder
               recordingFieldName="recording"
               processRecordingAction={transcribeNote}
-              // onRecordingProcessed={handleRecordingProcessed}
-              onRecordingProcessed={() => {}}
+              onRecordingProcessed={handleRecordingProcessed}
               startRecordingText="Start Transcribing"
               stopRecordingText="Stop Transcribing"
               otherFields={{ isNewNote: "true" }}
@@ -94,8 +98,7 @@ export default function NewNoteForm({ inNoteModal = false }: NewNoteFormProps) {
             <AudioRecorder
               recordingFieldName="recording"
               processRecordingAction={transcribeNote}
-              // onRecordingProcessed={handleRecordingProcessed}
-              onRecordingProcessed={() => {}}
+              onRecordingProcessed={handleRecordingProcessed}
               startRecordingText="Start Transcribing"
               stopRecordingText="Stop Transcribing"
               otherFields={{ isNewNote: "true" }}

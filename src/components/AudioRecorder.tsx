@@ -127,7 +127,7 @@ export default function AudioRecorder<T>({
       if (result.actionStatus === "failed") setError("Processing failed. Please try again.");
       onRecordingProcessed(result);
     });
-  }, [cleanUpResources, processRecordingAction, recordingFieldName, startProcessing]);
+  }, [cleanUpResources, processRecordingAction, recordingFieldName, startProcessing, onRecordingProcessed, otherFields]);
 
   // Asks for microphone permission and starts the recording process
   const startRecording = useCallback(async () => {
