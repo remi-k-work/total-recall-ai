@@ -12,10 +12,10 @@ import { MarkdownEditor } from "@/components/MarkdownEditor";
 import { ErrorLine } from "@/components/Form";
 
 // types
-import type { ComponentPropsWithoutRef } from "react";
+import type { ComponentProps } from "react";
 import type { MDXEditorMethods } from "@mdxeditor/editor";
 
-interface MarkdownInputProps extends ComponentPropsWithoutRef<typeof MarkdownEditor> {
+interface MarkdownInputProps extends ComponentProps<typeof MarkdownEditor> {
   label: string;
 }
 

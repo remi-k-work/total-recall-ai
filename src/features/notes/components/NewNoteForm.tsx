@@ -1,23 +1,24 @@
-/* eslint-disable react/no-children-prop */
-
 "use client";
 
 // react
-import { useActionState, useCallback, useEffect, useRef } from "react";
+import { useCallback, useRef } from "react";
 
 // server actions and mutations
-import newNote from "@/features/notes/actions/newNoteForm";
 import transcribeNote from "@/features/notes/actions/transcribeNote3";
 
 // services, features, and other libraries
-import { mergeForm, useTransform } from "@tanstack/react-form-nextjs";
-import { useAppForm } from "@/components/formOld";
-import { NewNoteFormSchema } from "@/features/notes/schemas/newNoteForm";
-import useNewNoteFormFeedback from "@/features/notes/hooks/feedbacks/useNewNoteForm";
+import { Effect } from "effect";
+import { useAtomSet } from "@effect-atom/atom-react";
+import { FormReact } from "@lucas-barake/effect-form-react";
+import { RpcNotesClient } from "@/features/notes/rpc/client";
+import { newNoteFormBuilder } from "@/features/notes/schemas";
+import { RuntimeAtom } from "@/lib/RuntimeClient";
+import { useSubmitToast } from "@/components/Form/hooks";
 
 // components
-import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
-import InfoLine from "@/components/formOld/InfoLine";
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/custom/card";
+import { MarkdownInput, TextInput } from "@/components/Form/Inputs";
+import { FormSubmit, SubmitStatus } from "@/components/Form";
 import AudioRecorder from "@/components/AudioRecorder";
 
 // assets
@@ -30,149 +31,100 @@ interface NewNoteFormProps {
   inNoteModal?: boolean;
 }
 
-// constants
-import { FORM_OPTIONS, INITIAL_FORM_STATE } from "@/features/notes/constants/newNoteForm";
+const newNoteForm = FormReact.make(newNoteFormBuilder, {
+  runtime: RuntimeAtom,
+  fields: { title: TextInput, content: MarkdownInput },
+  onSubmit: (_, { decoded: { title, content } }) =>
+    Effect.gen(function* () {
+      const { newNoteForm } = yield* RpcNotesClient;
+      yield* newNoteForm({ title, content });
+    }),
+});
 
 export default function NewNoteForm({ inNoteModal = false }: NewNoteFormProps) {
   // Create a ref to the editor component
-  const markdownFieldRef = useRef<MDXEditorMethods>(null);
+  const editorRef = useRef<MDXEditorMethods>(null);
 
-  // The main server action that processes the form
-  const [formState, formAction, isPending] = useActionState(newNote, INITIAL_FORM_STATE);
-  const { AppField, AppForm, FormSubmit, handleSubmit, reset, store, getFieldValue, setFieldValue } = useAppForm({
-    ...FORM_OPTIONS,
-    transform: useTransform((baseForm) => mergeForm(baseForm, formState), [formState]),
-  });
-
-  // Track if the user has pressed the submit button
-  const hasPressedSubmitRef = useRef(false);
-
-  // All this new cleanup code is for the <Activity /> boundary
-  useEffect(() => {
-    // Reset the flag when the component unmounts
-    return () => {
-      hasPressedSubmitRef.current = false;
-    };
-  }, []);
+  // Get the form context
+  const submit = useAtomSet(newNoteForm.submit);
 
   // Provide feedback to the user regarding this form actions
-  const { feedbackMessage, hideFeedbackMessage } = useNewNoteFormFeedback(
-    hasPressedSubmitRef,
-    formState,
-    () => {
-      reset();
-      markdownFieldRef.current?.setMarkdown("");
-    },
-    store
-  );
+  useSubmitToast(newNoteForm.submit, "[NEW NOTE]", "The new note has been created.", undefined, "/notes", true);
 
   // Function to be called when the transcription is processed
-  const handleRecordingProcessed = useCallback(
-    ({ actionStatus, result }: Awaited<ReturnType<typeof transcribeNote>>) => {
-      // Only update the form if the transcription was successful
-      if (actionStatus !== "succeeded" || !result) return;
+  // const handleRecordingProcessed = useCallback(
+  //   ({ actionStatus, result }: Awaited<ReturnType<typeof transcribeNote>>) => {
+  //     // Only update the form if the transcription was successful
+  //     if (actionStatus !== "succeeded" || !result) return;
 
-      // Extract the title and content from the result
-      const { title, content } = result;
+  //     // Extract the title and content from the result
+  //     const { title, content } = result;
 
-      // Only update the note title if it has not been established yet
-      if (!getFieldValue("title")) setFieldValue("title", title ?? "");
+  //     // Only update the note title if it has not been established yet
+  //     if (!getFieldValue("title")) setFieldValue("title", title ?? "");
 
-      // Insert the transcribed content into the markdown field at the cursor's location
-      markdownFieldRef.current?.focus();
-      markdownFieldRef.current?.insertMarkdown(content);
-    },
-    [getFieldValue, setFieldValue]
-  );
+  //     // Insert the transcribed content into the markdown field at the cursor's location
+  //     markdownFieldRef.current?.focus();
+  //     markdownFieldRef.current?.insertMarkdown(content);
+  //   },
+  //   [getFieldValue, setFieldValue]
+  // );
 
   return (
-    <AppForm>
-      <form
-        action={formAction}
-        onSubmit={async () => {
-          await handleSubmit();
-          hasPressedSubmitRef.current = true;
-        }}
-      >
-        <Card className="max-w-4xl">
-          {!inNoteModal ? (
-            <CardHeader>
-              <CardTitle>New Note</CardTitle>
-              <CardDescription>To create a new note</CardDescription>
-              <CardAction>
-                <AudioRecorder
-                  recordingFieldName="recording"
-                  processRecordingAction={transcribeNote}
-                  onRecordingProcessed={handleRecordingProcessed}
-                  startRecordingText="Start Transcribing"
-                  stopRecordingText="Stop Transcribing"
-                  otherFields={{ isNewNote: "true" }}
-                />
-              </CardAction>
-            </CardHeader>
-          ) : (
-            <CardHeader>
-              <CardAction>
-                <AudioRecorder
-                  recordingFieldName="recording"
-                  processRecordingAction={transcribeNote}
-                  onRecordingProcessed={handleRecordingProcessed}
-                  startRecordingText="Start Transcribing"
-                  stopRecordingText="Stop Transcribing"
-                  otherFields={{ isNewNote: "true" }}
-                />
-              </CardAction>
-            </CardHeader>
-          )}
-          <CardContent>
-            <AppField
-              name="title"
-              validators={{ onChange: NewNoteFormSchema.shape.title }}
-              children={(field) => <field.TextField label="Title" size={40} maxLength={51} spellCheck autoComplete="off" placeholder="e.g. Quick Reminder" />}
+    <Card className="max-w-4xl">
+      {!inNoteModal ? (
+        <CardHeader>
+          <CardTitle>New Note</CardTitle>
+          <CardDescription>To create a new note</CardDescription>
+          <CardAction>
+            <AudioRecorder
+              recordingFieldName="recording"
+              processRecordingAction={transcribeNote}
+              // onRecordingProcessed={handleRecordingProcessed}
+              onRecordingProcessed={() => {}}
+              startRecordingText="Start Transcribing"
+              stopRecordingText="Stop Transcribing"
+              otherFields={{ isNewNote: "true" }}
             />
-            <AppField
-              name="markdown"
-              children={(field) => (
-                <field.MarkdownField
-                  ref={markdownFieldRef}
-                  label="Content"
-                  markdown=""
-                  spellCheck={false}
-                  placeholder="e.g. Buy cat food. Call mom. Pay electricity bill. Remember to bring umbrella tomorrow in case it rains."
-                  onChange={(markdown) => field.form.setFieldValue("content", markdown)}
-                />
-              )}
+          </CardAction>
+        </CardHeader>
+      ) : (
+        <CardHeader>
+          <CardAction>
+            <AudioRecorder
+              recordingFieldName="recording"
+              processRecordingAction={transcribeNote}
+              // onRecordingProcessed={handleRecordingProcessed}
+              onRecordingProcessed={() => {}}
+              startRecordingText="Start Transcribing"
+              stopRecordingText="Stop Transcribing"
+              otherFields={{ isNewNote: "true" }}
             />
-            <AppField
-              name="content"
-              validators={{ onChange: NewNoteFormSchema.shape.content }}
-              children={(field) => (
-                <field.TextAreaField
-                  cols={50}
-                  rows={8}
-                  maxLength={2049}
-                  spellCheck={false}
-                  autoComplete="off"
-                  placeholder="e.g. Buy cat food. Call mom. Pay electricity bill. Remember to bring umbrella tomorrow in case it rains."
-                  hidden
-                />
-              )}
+          </CardAction>
+        </CardHeader>
+      )}
+      <CardContent>
+        <newNoteForm.Initialize defaultValues={{ title: "", content: "" }}>
+          <form
+            onSubmit={(ev) => {
+              ev.preventDefault();
+              submit();
+            }}
+          >
+            <newNoteForm.title label="Title" size={40} maxLength={51} spellCheck autoComplete="off" placeholder="e.g., Quick Reminder" />
+            <br />
+            <newNoteForm.content
+              ref={editorRef}
+              label="Content"
+              spellCheck={false}
+              placeholder="e.g., Buy cat food. Call mom. Pay electricity bill. Remember to bring umbrella tomorrow in case it rains."
             />
-          </CardContent>
-          <CardFooter>
-            <InfoLine message={feedbackMessage} />
-            <FormSubmit
-              submitIcon={<DocumentPlusIcon className="size-9" />}
-              submitText="Create New Note"
-              isPending={isPending}
-              onClearedForm={() => {
-                hideFeedbackMessage();
-                markdownFieldRef.current?.setMarkdown("");
-              }}
-            />
-          </CardFooter>
-        </Card>
-      </form>
-    </AppForm>
+            <br />
+            <SubmitStatus form={newNoteForm} formName="[NEW NOTE]" succeededDesc="The new note has been created." />
+            <FormSubmit form={newNoteForm} submitIcon={<DocumentPlusIcon className="size-9" />} submitText="Create New Note" />
+          </form>
+        </newNoteForm.Initialize>
+      </CardContent>
+    </Card>
   );
 }

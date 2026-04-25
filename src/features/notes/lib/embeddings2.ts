@@ -18,7 +18,11 @@ export async function generateNoteEmbeddings(noteContent: string): Promise<Array
   const noteChunks = await generateNoteChunks(noteContent);
 
   // Embed many values at once (batch embedding); in other words, create embeddings for all note chunks
-  const { embeddings } = await embedMany({ model, values: noteChunks, providerOptions: { google: { outputDimensionality: 768 } } });
+  const { embeddings } = await embedMany({
+    model,
+    values: noteChunks,
+    providerOptions: { google: { taskType: "RETRIEVAL_DOCUMENT", outputDimensionality: 1536 } },
+  });
 
   // Return note chunks and their corresponding embeddings following the same naming convention as our "note_chunk" database table
   return embeddings.map((embedding, index) => ({ chunk: noteChunks[index], embedding }));
@@ -27,7 +31,7 @@ export async function generateNoteEmbeddings(noteContent: string): Promise<Array
 // Create an embedding vector for the user's question
 export async function generateQuestionEmbedding(question: string): Promise<number[]> {
   // Create an embedding for a single value, in this case the user's question
-  const { embedding } = await embed({ model, value: question, providerOptions: { google: { outputDimensionality: 768 } } });
+  const { embedding } = await embed({ model, value: question, providerOptions: { google: { taskType: "QUESTION_ANSWERING", outputDimensionality: 1536 } } });
 
   // Return the embedding
   return embedding;
