@@ -5,6 +5,7 @@ import { memo } from "react";
 
 // services, features, and other libraries
 import { cn } from "@/lib/utils";
+import { math } from "@streamdown/math";
 
 // components
 import { Streamdown } from "streamdown";
@@ -41,9 +42,14 @@ export const MessageContent = ({ className, ...props }: MessageContentProps) => 
 
 export const MessageResponse = memo(
   ({ className, ...props }: MessageResponseProps) => (
-    <Streamdown className={cn("size-full [&>*:first-child]:mt-0 [&>*:last-child]:mb-0", className)} rehypePlugins={REHYPE_PLUGINS} {...props} />
+    <Streamdown
+      className={cn("size-full [&>*:first-child]:mt-0 [&>*:last-child]:mb-0", className)}
+      rehypePlugins={REHYPE_PLUGINS}
+      plugins={{ math }}
+      {...props}
+    />
   ),
-  (prevProps, nextProps) => prevProps.children === nextProps.children
+  (prevProps, nextProps) => prevProps.children === nextProps.children && nextProps.isAnimating === prevProps.isAnimating
 );
 
 MessageResponse.displayName = "MessageResponse";

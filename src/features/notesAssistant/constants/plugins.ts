@@ -6,12 +6,11 @@ import { harden } from "rehype-harden";
 import type { ComponentPropsWithoutRef } from "react";
 import type { MessageResponse } from "@/components/ai-elements/custom/message";
 
-type ResponseType = ComponentPropsWithoutRef<typeof MessageResponse>;
+type MessageResponseType = ComponentPropsWithoutRef<typeof MessageResponse>;
 
 // This is a list of rehype plugins along with their respective settings
-export const REHYPE_PLUGINS: ResponseType["rehypePlugins"] = [
+export const REHYPE_PLUGINS = [
   defaultRehypePlugins.raw,
-  defaultRehypePlugins.katex,
   defaultRehypePlugins.sanitize,
   [
     harden,
@@ -20,4 +19,4 @@ export const REHYPE_PLUGINS: ResponseType["rehypePlugins"] = [
       allowedLinkPrefixes: [process.env.NEXT_PUBLIC_WEBSITE_URL],
     },
   ],
-] as const;
+] as const satisfies MessageResponseType["rehypePlugins"];
