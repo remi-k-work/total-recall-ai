@@ -11,7 +11,7 @@ import { UserTable } from "@/drizzle/schema";
 
 // services, features, and other libraries
 import { auth } from "@/services/better-auth/auth";
-import { generateNoteEmbeddings } from "@/features/notes/lib/embeddings2";
+import { generateNoteEmbeddings } from "@/features/notes/lib/embeddingsOld";
 
 // constants
 import { DEMO_USER_EMAIL, DEMO_USER_NAME, DEMO_USER_PASS, EXAMPLE_NOTES, MY_NOTE_TAGS } from "./constants";

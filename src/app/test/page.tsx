@@ -16,7 +16,7 @@ import { insertNote, insertNoteChunks, NoteDB } from "@/features/notes/db";
 // services, features, and other libraries
 import { Effect } from "effect";
 import { RuntimeServer } from "@/lib/RuntimeServer";
-import { generateNoteEmbeddings } from "@/features/notes/lib/embeddings2";
+import { generateNoteEmbeddings } from "@/features/notes/lib/embeddingsOld";
 
 // components
 import PageHeader from "@/components/PageHeader";
@@ -51,7 +51,7 @@ async function PageContent() {
         // 3. FORCE ROLLBACK: This returns a failing Effect
         // The transaction helper catches this failure and tells Drizzle to rollback
         return yield* Effect.fail(1);
-      }),
+      })
     );
   });
 

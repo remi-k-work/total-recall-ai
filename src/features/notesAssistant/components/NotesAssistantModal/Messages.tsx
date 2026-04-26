@@ -10,16 +10,17 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 
 // types
-import type { UIMessage, useChat } from "@ai-sdk/react";
+import type { useChat } from "@ai-sdk/react";
 import type { Session, User } from "@/services/better-auth/auth";
+import type { NotesAssistantUIMessage } from "@/features/notesAssistant/lib/agent";
 
 interface MessagesProps {
   user: User;
   session: Session;
-  messages: UIMessage[];
-  status: ReturnType<typeof useChat>["status"];
-  error: ReturnType<typeof useChat>["error"];
-  regenerate: ReturnType<typeof useChat>["regenerate"];
+  messages: NotesAssistantUIMessage[];
+  status: ReturnType<typeof useChat<NotesAssistantUIMessage>>["status"];
+  error: ReturnType<typeof useChat<NotesAssistantUIMessage>>["error"];
+  regenerate: ReturnType<typeof useChat<NotesAssistantUIMessage>>["regenerate"];
 }
 
 export default function Messages({ user, session, messages, status, error, regenerate }: MessagesProps) {

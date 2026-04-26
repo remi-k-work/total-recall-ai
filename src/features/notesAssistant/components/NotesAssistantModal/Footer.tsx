@@ -11,10 +11,11 @@ import { Loader2 } from "lucide-react";
 
 // types
 import type { useChat } from "@ai-sdk/react";
+import type { NotesAssistantUIMessage } from "@/features/notesAssistant/lib/agent";
 
 interface FooterProps {
-  sendMessage: ReturnType<typeof useChat>["sendMessage"];
-  status: ReturnType<typeof useChat>["status"];
+  sendMessage: ReturnType<typeof useChat<NotesAssistantUIMessage>>["sendMessage"];
+  status: ReturnType<typeof useChat<NotesAssistantUIMessage>>["status"];
 }
 
 export default function Footer({ sendMessage, status }: FooterProps) {

@@ -2,10 +2,10 @@
 import "dotenv/config";
 
 // drizzle and db access
-import { searchNoteChunksForUser } from "@/features/notes/db";
+// import { searchNoteChunksForUser } from "@/features/notes/db";
 
 // services, features, and other libraries
-import { expandQueryWithHypotheticalAnswer } from "@/features/notes-assistant/lib/helpers";
+// import { expandQueryWithHypotheticalAnswer } from "@/features/notesAssistant/lib/helpers";
 
 // constants
 import { EXAMPLE_QUESTIONS } from "./constants";
@@ -19,14 +19,17 @@ async function main() {
       console.log(`Q: ${question}`);
 
       // Expand the user's question into a hypothetical answer
-      const expandedQuery = await expandQueryWithHypotheticalAnswer(question);
+      // const expandedQuery = await expandQueryWithHypotheticalAnswer(question);
 
       // Search for and retrieve note chunks most relevant to the user's question
-      const results = await searchNoteChunksForUser("yLWyVGaBlCa7v27qfYk5DyyYiZqNXxqP", expandedQuery);
+      // const results = await searchNoteChunksForUser("yLWyVGaBlCa7v27qfYk5DyyYiZqNXxqP", expandedQuery);
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const results: any[] = [];
       if (results.length > 0) {
         // Print top match
         console.log(
-          `Top match (expected: ${expect}): Note "${results[0].noteTitle}" → "${results[0].chunk.slice(0, 100)}..." (similarity: ${results[0].similarity.toFixed(3)})`,
+          `Top match (expected: ${expect}): Note "${results[0].noteTitle}" → "${results[0].chunk.slice(0, 100)}..." (similarity: ${results[0].similarity.toFixed(3)})`
         );
 
         // Print all matches for debugging

@@ -31,7 +31,7 @@ export const MarkdownInput: FormReact.FieldComponent<string, Omit<MarkdownInputP
 
   // Keep the markdown in sync with the field value
   useEffect(() => {
-    ref?.current?.setMarkdown(value);
+    ref.current?.setMarkdown(value);
     markdownRef.current = value;
   }, [ref, value]);
 

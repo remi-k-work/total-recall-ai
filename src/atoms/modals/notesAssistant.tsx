@@ -6,7 +6,7 @@ import { Option } from "effect";
 import { Atom, useAtom, useAtomSet } from "@effect-atom/atom-react";
 
 // components
-import NotesAssistantModal from "@/features/notes-assistant/components/NotesAssistantModal";
+import NotesAssistantModal from "@/features/notesAssistant/components/NotesAssistantModal";
 
 // types
 import type { Session, User } from "@/services/better-auth/auth";

@@ -18,7 +18,7 @@ type MessageContentProps = ComponentPropsWithoutRef<"div">;
 type MessageResponseProps = ComponentPropsWithoutRef<typeof Streamdown>;
 
 // constants
-import { REHYPE_PLUGINS } from "@/features/notes-assistant/constants/plugins";
+import { REHYPE_PLUGINS } from "@/features/notesAssistant/constants";
 
 export const Message = ({ className, from, ...props }: MessageProps) => (
   <div

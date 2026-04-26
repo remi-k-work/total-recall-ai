@@ -1,56 +1,29 @@
 // services, features, and other libraries
-import { getUserSessionData, makeSureUserIsAuthenticated } from "@/features/auth/lib/helpers";
-import { google } from "@ai-sdk/google";
-import { streamText, convertToModelMessages, stepCountIs, NoSuchToolError, InvalidToolInputError } from "ai";
-import { searchNoteChunksForUserTool } from "@/features/notes-assistant/tools/searchNoteChunksForUser";
+import { Effect } from "effect";
+import { convertToModelMessages } from "ai";
+import { RuntimeServer } from "@/lib/RuntimeServer";
+import { runNotesAssistant } from "@/features/notesAssistant/lib/agent";
 
 // types
-import type { UIMessage } from "@ai-sdk/react";
+import type { ModelMessage } from "ai";
+import type { NotesAssistantUIMessage } from "@/features/notesAssistant/lib/agent";
 
-// constants
-import { SYSTEM_MESSAGE } from "@/features/notes-assistant/constants/messages";
+// Allow streaming responses up to 60 seconds
+export const maxDuration = 60;
 
-// Allow streaming responses up to 30 seconds
-export const maxDuration = 30;
+const main = (modelMessages: ModelMessage[]) =>
+  Effect.gen(function* () {
+    // Run the notes assistant using a fallback chain of models
+    const { response } = yield* runNotesAssistant(modelMessages);
+    return response;
+  }).pipe(
+    Effect.scoped,
+    Effect.catchAll((error) => Effect.logError(`[NOTES ASSISTANT] recovering from ${error._tag}`))
+  );
 
 export async function POST(req: Request) {
-  // Make sure the current user is authenticated (the check runs on the server side)
-  await makeSureUserIsAuthenticated();
+  const { messages }: { messages: NotesAssistantUIMessage[] } = await req.json();
+  const modelMessages = await convertToModelMessages(messages);
 
-  // Access the user session data from the server side
-  const {
-    user: { id: userId },
-  } = (await getUserSessionData())!;
-
-  const { messages }: { messages: UIMessage[] } = await req.json();
-
-  const result = streamText({
-    model: google("gemini-2.5-flash"),
-    system: SYSTEM_MESSAGE,
-    messages: await convertToModelMessages(messages),
-    stopWhen: stepCountIs(5),
-
-    activeTools: ["searchNoteChunksForUser"],
-
-    // Define available tools
-    tools: { searchNoteChunksForUser: searchNoteChunksForUserTool(userId) },
-    onError(error) {
-      console.error("streamText error:", error);
-    },
-  });
-
-  // Inspect the provider's warnings for any unsupported ai sdk features
-  result.warnings.then((warnings) => console.warn("streamText warnings:", warnings));
-
-  return result.toUIMessageStreamResponse({
-    onError: (error) => {
-      if (NoSuchToolError.isInstance(error)) {
-        return "The model tried to call an unknown tool.";
-      } else if (InvalidToolInputError.isInstance(error)) {
-        return "The model called a tool with invalid inputs.";
-      } else {
-        return "An unknown error occurred.";
-      }
-    },
-  });
+  return await RuntimeServer.runPromise(main(modelMessages));
 }

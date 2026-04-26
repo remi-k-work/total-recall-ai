@@ -16,6 +16,7 @@ import Footer from "./Footer";
 // types
 import type { ComponentPropsWithoutRef } from "react";
 import type { Session, User } from "@/services/better-auth/auth";
+import type { NotesAssistantUIMessage } from "@/features/notesAssistant/lib/agent";
 
 interface NotesAssistantModalProps extends ComponentPropsWithoutRef<"dialog"> {
   user: User;
@@ -24,7 +25,7 @@ interface NotesAssistantModalProps extends ComponentPropsWithoutRef<"dialog"> {
 }
 
 // constants
-import { INITIAL_MESSAGE } from "@/features/notes-assistant/constants/messages";
+import { INITIAL_MESSAGE } from "@/features/notesAssistant/constants/messages";
 
 export default function NotesAssistantModal({ user, session, onClosed, className, ...props }: NotesAssistantModalProps) {
   // To be able to call showModal() method on the dialog
@@ -38,7 +39,7 @@ export default function NotesAssistantModal({ user, session, onClosed, className
     dialogRef.current?.showModal();
   }, []);
 
-  const { messages, sendMessage, status, error, regenerate } = useChat({ messages: INITIAL_MESSAGE });
+  const { messages, sendMessage, status, error, regenerate } = useChat<NotesAssistantUIMessage>({ messages: INITIAL_MESSAGE });
 
   return (
     <dialog

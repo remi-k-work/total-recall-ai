@@ -8,7 +8,7 @@ import { RpcSerialization, RpcServer } from "@effect/rpc";
 import { HttpServer } from "@effect/platform";
 import { RpcNotes } from "./requests";
 import { Auth } from "@/features/auth/lib/auth";
-import { generateNoteEmbeddings } from "@/features/notes/lib/embeddings3";
+import { generateNoteEmbeddings } from "@/features/notesAssistant/lib/embeddings";
 
 const RpcNotesLayer = RpcNotes.toLayer({
   syncToDbNotePrefs: ({ noteId, color, posX, posY, isPinned }) =>

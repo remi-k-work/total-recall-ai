@@ -4,14 +4,15 @@ import { UserAvatar } from "@/components/Avatar/User";
 import AgentAvatar from "@/components/Avatar/Agent";
 
 // types
-import type { UIMessage, useChat } from "@ai-sdk/react";
+import type { useChat } from "@ai-sdk/react";
 import type { Session, User } from "@/services/better-auth/auth";
+import type { NotesAssistantUIMessage } from "@/features/notesAssistant/lib/agent";
 
 interface MessageProps {
   user: User;
   session: Session;
-  message: UIMessage;
-  status: ReturnType<typeof useChat>["status"];
+  message: NotesAssistantUIMessage;
+  status: ReturnType<typeof useChat<NotesAssistantUIMessage>>["status"];
 }
 
 export default function Message({ user, session, message: { id, role, parts }, status }: MessageProps) {
@@ -29,7 +30,7 @@ export default function Message({ user, session, message: { id, role, parts }, s
               );
 
             // For tool parts, use the typed tool part names
-            case "tool-searchNoteChunksForUser":
+            case "tool-getInformation":
               const { toolCallId } = part;
 
               return (

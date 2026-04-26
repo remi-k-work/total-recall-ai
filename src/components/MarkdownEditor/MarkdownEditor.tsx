@@ -39,7 +39,7 @@ import type { MDXEditorMethods, MDXEditorProps } from "@mdxeditor/editor";
 import type { RefObject } from "react";
 
 interface MarkdownEditorProps extends MDXEditorProps {
-  ref?: RefObject<MDXEditorMethods | null>;
+  ref: RefObject<MDXEditorMethods | null>;
 }
 
 export default function MarkdownEditor({ ref, className, ...props }: MarkdownEditorProps) {

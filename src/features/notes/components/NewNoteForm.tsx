@@ -4,7 +4,7 @@
 import { useCallback, useRef } from "react";
 
 // server actions and mutations
-import { transcribeNote } from "@/features/notes/actions/transcribeNote3";
+import { transcribeNote } from "@/features/notes/actions/transcribeNote";
 
 // services, features, and other libraries
 import { Effect, Option } from "effect";
