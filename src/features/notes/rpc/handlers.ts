@@ -11,7 +11,7 @@ import { Auth } from "@/features/auth/lib/auth";
 import { generateNoteEmbeddings } from "@/features/notesAssistant/lib/embeddings";
 
 const RpcNotesLayer = RpcNotes.toLayer({
-  syncToDbNotePrefs: ({ noteId, color, border, posX, posY, isPinned }) =>
+  syncToDbNotePrefs: ({ noteId, color, border, mask, posX, posY, isPinned }) =>
     Effect.gen(function* () {
       // Access the user session data from the server side or fail with an unauthorized access error
       const auth = yield* Auth;
@@ -21,7 +21,7 @@ const RpcNotesLayer = RpcNotes.toLayer({
 
       // Update the preferences of a note for a user
       const noteDB = yield* NoteDB;
-      yield* noteDB.updateNotePreferences(noteId, userId, { color, border, posX, posY, isPinned });
+      yield* noteDB.updateNotePreferences(noteId, userId, { color, border, mask, posX, posY, isPinned });
     }),
 
   syncToDbNoteTags: ({ noteId, tags }) =>

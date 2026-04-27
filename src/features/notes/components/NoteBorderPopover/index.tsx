@@ -26,7 +26,7 @@ export default function NoteBorderPopover({ note, note: { id: noteId } }: NoteBo
   return (
     <Popover>
       <PopoverTrigger
-        className="size-12 border-2 border-accent bg-background transition-colors duration-1000 ease-in-out hover:bg-accent"
+        className="size-20 border-2 border-accent bg-background transition-colors duration-1000 ease-in-out hover:bg-accent"
         style={{ borderRadius: curNoteBorder }}
         title="Choose a border style"
       />
@@ -42,7 +42,7 @@ export default function NoteBorderPopover({ note, note: { id: noteId } }: NoteBo
               value={border}
               aria-label="Choose this border style"
               title="Choose this border style"
-              className="size-12 border-2 border-accent bg-background hover:bg-accent"
+              className="size-20 border-2 border-accent bg-background transition-colors duration-1000 ease-in-out hover:bg-accent"
               style={{ borderRadius: border }}
             />
           ))}

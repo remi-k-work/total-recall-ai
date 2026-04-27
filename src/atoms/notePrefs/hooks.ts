@@ -24,8 +24,9 @@ export function useNotePrefs(note: NoteWithPagination | NoteDetails) {
 
   const changedColor = useCallback((color: string) => startTransition(() => syncToDbNotePrefs({ color })), [syncToDbNotePrefs]);
   const changedBorder = useCallback((border: string) => startTransition(() => syncToDbNotePrefs({ border })), [syncToDbNotePrefs]);
+  const changedMask = useCallback((mask: string) => startTransition(() => syncToDbNotePrefs({ mask })), [syncToDbNotePrefs]);
   const changedPosition = useCallback((posX: number, posY: number) => startTransition(() => syncToDbNotePrefs({ posX, posY })), [syncToDbNotePrefs]);
   const toggledPin = useCallback(() => startTransition(() => togglePin()), [togglePin]);
 
-  return { changedColor, changedBorder, changedPosition, toggledPin } as const;
+  return { changedColor, changedBorder, changedMask, changedPosition, toggledPin } as const;
 }

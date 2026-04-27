@@ -38,7 +38,7 @@ export default function ColorPicker({ note, note: { id: noteId } }: ColorPickerP
   }, [resolvedTheme]);
 
   return (
-    <section className="rounded-md bg-background p-3 transition-colors duration-1000 ease-in-out has-hover:bg-accent">
+    <section className="rounded-md bg-background p-6 transition-colors duration-1000 ease-in-out has-hover:bg-accent">
       <input
         name="colorPicker"
         type="color"
