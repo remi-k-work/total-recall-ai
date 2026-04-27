@@ -7,13 +7,28 @@ import { RpcNotesClient } from "@/features/notes/rpc/client";
 // types
 export interface NotePrefs {
   color: string | null;
+  border: string | null;
   posX: number | null;
   posY: number | null;
   isPinned: boolean;
 }
 
 // constants
-export const INIT_NOTE_PREFS = { color: null, posX: null, posY: null, isPinned: false } as const satisfies NotePrefs;
+export const NOTE_PREFS_BORDERS = [
+  "255px 15px 225px 15px / 15px 225px 15px 255px",
+  "125px 10px 20px 185px / 25px 205px 205px 25px",
+  "15px 255px 15px 225px / 225px 15px 255px 15px",
+  "15px 25px 155px 25px / 225px 150px 25px 115px",
+  "250px 25px 15px 20px / 15px 80px 105px 115px",
+  "28px 100px 20px 15px / 150px 30px 205px 225px",
+  "30% 70% 70% 30% / 53% 30% 70% 47%",
+  "53% 47% 34% 66% / 63% 46% 54% 37%",
+  "37% 63% 56% 44% / 49% 56% 44% 51%",
+  "63% 37% 37% 63% / 43% 37% 63% 57%",
+  "49% 51% 48% 52% / 57% 44% 56% 43%",
+] as const;
+
+export const INIT_NOTE_PREFS = { color: null, border: null, posX: null, posY: null, isPinned: false } as const satisfies NotePrefs;
 
 // Master atom storing note preferences, using a writable family that persists its value on refresh
 export const notePrefsAtom = Atom.family(() =>
@@ -49,6 +64,7 @@ export const syncToDbNotePrefsAtom = Atom.family((noteId: string) =>
 
 // Granular selectors derived from the optimistic atom to minimize unnecessary re-renders
 export const notePrefsColorAtom = Atom.family((noteId: string) => optiNotePrefsAtom(noteId).pipe(Atom.map((state) => state.color)));
+export const notePrefsBorderAtom = Atom.family((noteId: string) => optiNotePrefsAtom(noteId).pipe(Atom.map((state) => state.border)));
 export const notePrefsPosXAtom = Atom.family((noteId: string) => optiNotePrefsAtom(noteId).pipe(Atom.map((state) => state.posX)));
 export const notePrefsPosYAtom = Atom.family((noteId: string) => optiNotePrefsAtom(noteId).pipe(Atom.map((state) => state.posY)));
 export const notePrefsIsPinnedAtom = Atom.family((noteId: string) => optiNotePrefsAtom(noteId).pipe(Atom.map((state) => state.isPinned)));

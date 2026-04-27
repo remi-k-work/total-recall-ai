@@ -1,4 +1,5 @@
 {
+  "$schema": "./node_modules/@effect/language-service/schema.json",
   "compilerOptions": {
     "target": "es2023",
     "lib": [
@@ -19,7 +20,10 @@
     "incremental": true,
     "plugins": [
       {
-        "name": "@effect/language-service"
+        "name": "@effect/language-service",
+        "allowedDuplicatedPackages": [
+          "effect"
+        ],
       },
       {
         "name": "next"

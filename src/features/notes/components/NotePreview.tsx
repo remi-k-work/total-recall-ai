@@ -5,13 +5,14 @@ import Link from "next/link";
 
 // services, features, and other libraries
 import useUrlScribe from "@/hooks/useUrlScribe";
-import { notePrefsColorAtom } from "@/atoms";
+import { notePrefsBorderAtom, notePrefsColorAtom } from "@/atoms";
 import { useAtomValue } from "@effect-atom/atom-react";
 
 // components
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
 import { MessageResponse } from "@/components/ai-elements/custom/message";
 import ColorPicker from "./ColorPicker";
+import NoteBorderPopover from "./NoteBorderPopover";
 import NoteTagsPopover from "./NoteTagsPopover";
 import DateTimeAt from "@/components/DateTimeAt";
 
@@ -20,6 +21,7 @@ import { CalendarIcon } from "@heroicons/react/24/outline";
 
 // types
 import type { AvailNoteTags, NoteWithPagination } from "@/features/notes/db";
+import type { CSSProperties } from "react";
 import type { Route } from "next";
 
 interface NotePreviewProps {
@@ -27,15 +29,21 @@ interface NotePreviewProps {
   availNoteTags: AvailNoteTags;
 }
 
+// constants
+import { NOTE_PREFS_BORDERS } from "@/atoms";
+
 export default function NotePreview({ note, note: { id: noteId, title, contentPreview, createdAt, updatedAt }, availNoteTags }: NotePreviewProps) {
   // A hook to easily create new route strings with updated search parameters (it preserves existing search params)
   const { createHref } = useUrlScribe();
 
   // Manages note preferences, including hydration, zero-read setter actions, and debounced database synchronization
-  const color = useAtomValue(notePrefsColorAtom(noteId));
+  const curNoteColor = useAtomValue(notePrefsColorAtom(noteId)) ?? undefined;
+  const curNoteBorder = useAtomValue(notePrefsBorderAtom(noteId)) ?? NOTE_PREFS_BORDERS[0];
+
+  const noteStyle = { backgroundColor: curNoteColor, borderRadius: curNoteBorder } as const satisfies CSSProperties;
 
   return (
-    <Card className="mb-4 break-inside-avoid rounded-[255px_15px_225px_15px/15px_225px_15px_255px]" style={color ? { backgroundColor: color } : undefined}>
+    <Card className="mb-4 break-inside-avoid overflow-clip" style={noteStyle}>
       <CardHeader>
         <CardTitle>
           <Link href={createHref(`/notes/${noteId}` as Route)} className="link text-3xl leading-none font-normal normal-case">
@@ -43,11 +51,12 @@ export default function NotePreview({ note, note: { id: noteId, title, contentPr
           </Link>
         </CardTitle>
       </CardHeader>
-      <CardContent className="line-clamp-6">
+      <CardContent className="h-72 overflow-clip">
         <MessageResponse>{contentPreview}</MessageResponse>
       </CardContent>
       <CardFooter className="flex flex-wrap items-center justify-around gap-6 border-t pt-6">
         <ColorPicker note={note} />
+        <NoteBorderPopover note={note} />
         <NoteTagsPopover note={note} availNoteTags={availNoteTags} />
         <DateTimeAt icon={<CalendarIcon className="size-9" />} title="Created At" date={createdAt} />
         <DateTimeAt icon={<CalendarIcon className="size-9" />} title="Updated At" date={updatedAt} />

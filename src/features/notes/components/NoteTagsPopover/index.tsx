@@ -28,11 +28,14 @@ export default function NoteTagsPopover({ note, availNoteTags }: NoteTagsPopover
 
   return (
     <Popover>
-      <PopoverTrigger className="flex w-96 flex-wrap items-center justify-center gap-2">
+      <PopoverTrigger
+        className="group flex w-96 flex-wrap items-center justify-center gap-2 rounded-md p-3 transition-colors duration-1000 ease-in-out hover:bg-accent"
+        title="Apply tags to this note"
+      >
         {selectedTags.length === 0 ? (
-          <Badge variant="outline" className="w-full p-3 uppercase">
+          <Badge variant="outline" className="w-full p-3 uppercase transition-colors duration-1000 ease-in-out group-hover:text-accent-foreground">
             <TagIcon className="size-9" />
-            Add Tags...
+            Apply tags to this note...
           </Badge>
         ) : (
           selectedTags.map(({ id, name }) => <Badge key={id}>{name}</Badge>)

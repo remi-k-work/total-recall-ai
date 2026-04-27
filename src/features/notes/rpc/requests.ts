@@ -12,6 +12,7 @@ export class RpcNotes extends RpcGroup.make(
     payload: {
       noteId: Schema.UUID,
       color: Schema.Union(Schema.Trim.pipe(Schema.nonEmptyString()), Schema.Null),
+      border: Schema.Union(Schema.Trim.pipe(Schema.nonEmptyString()), Schema.Null),
       posX: Schema.Union(Schema.NonNegativeInt, Schema.Null),
       posY: Schema.Union(Schema.NonNegativeInt, Schema.Null),
       isPinned: Schema.Boolean,
