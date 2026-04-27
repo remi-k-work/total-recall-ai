@@ -22,9 +22,12 @@ export function useNotePrefs(note: NoteWithPagination | NoteDetails) {
   const syncToDbNotePrefs = useAtomSet(syncToDbNotePrefsAtom(noteId));
   const togglePin = useAtomSet(togglePinAtom(noteId));
 
-  const changedColor = useCallback((color: string) => startTransition(() => syncToDbNotePrefs({ color })), [syncToDbNotePrefs]);
-  const changedBorder = useCallback((border: string) => startTransition(() => syncToDbNotePrefs({ border })), [syncToDbNotePrefs]);
-  const changedMask = useCallback((mask: string) => startTransition(() => syncToDbNotePrefs({ mask })), [syncToDbNotePrefs]);
+  const changedColor = useCallback((color: string) => startTransition(() => syncToDbNotePrefs({ color: color === "*" ? null : color })), [syncToDbNotePrefs]);
+  const changedBorder = useCallback(
+    (border: string) => startTransition(() => syncToDbNotePrefs({ border: border === "*" ? null : border })),
+    [syncToDbNotePrefs]
+  );
+  const changedMask = useCallback((mask: string) => startTransition(() => syncToDbNotePrefs({ mask: mask === "*" ? null : mask })), [syncToDbNotePrefs]);
   const changedPosition = useCallback((posX: number, posY: number) => startTransition(() => syncToDbNotePrefs({ posX, posY })), [syncToDbNotePrefs]);
   const toggledPin = useCallback(() => startTransition(() => togglePin()), [togglePin]);
 

@@ -20,26 +20,26 @@ import { NOTE_PREFS_MASKS } from "@/atoms";
 
 export default function NoteMaskPopover({ note, note: { id: noteId } }: NoteMaskPopoverProps) {
   // Manages note preferences, including hydration, zero-read setter actions, and debounced database synchronization
-  const curNoteMask = useAtomValue(notePrefsMaskAtom(noteId)) ?? NOTE_PREFS_MASKS[0];
+  const curNoteMask = useAtomValue(notePrefsMaskAtom(noteId)) ?? "*";
   const { changedMask } = useNotePrefs(note);
 
   return (
     <Popover>
       <PopoverTrigger
         className="size-20 bg-background transition-colors duration-1000 ease-in-out hover:bg-accent"
-        style={{ WebkitMask: curNoteMask }}
-        title="Choose a note mask"
+        style={{ WebkitMask: curNoteMask === "*" ? undefined : curNoteMask }}
+        title="🎭 Change Note Mask"
       />
-      <PopoverContent side="top" className="w-96">
+      <PopoverContent className="max-h-96 w-96 overflow-y-auto">
         <ToggleGroup value={[curNoteMask]} onValueChange={([newNoteMask]) => changedMask(newNoteMask)} className="w-full flex-wrap justify-center gap-3">
           {NOTE_PREFS_MASKS.map((mask, index) => (
             <ToggleGroupItem
               key={index}
               value={mask}
-              aria-label="Choose this note mask"
-              title="Choose this note mask"
               className="size-20 bg-background transition-colors duration-1000 ease-in-out hover:bg-accent"
-              style={{ WebkitMask: mask }}
+              style={{ WebkitMask: mask === "*" ? undefined : mask }}
+              aria-label="🎭 Change to this Mask"
+              title="🎭 Change to this Mask"
             />
           ))}
         </ToggleGroup>

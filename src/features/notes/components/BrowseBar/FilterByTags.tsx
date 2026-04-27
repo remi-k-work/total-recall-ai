@@ -10,9 +10,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/custom/
 import { Badge } from "@/components/ui/custom/badge";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/custom/toggle-group";
 
-// assets
-import { TagIcon } from "@heroicons/react/24/outline";
-
 // types
 import type { BrowseBar } from "@/atoms";
 import type { AvailNoteTags } from "@/features/notes/db";
@@ -35,11 +32,13 @@ export default function FilterByTags({ browseBar, availNoteTags }: FilterByTagsP
 
   return (
     <Popover>
-      <PopoverTrigger className="flex w-96 flex-wrap items-center justify-center gap-2">
+      <PopoverTrigger
+        className="group flex w-96 flex-wrap items-center justify-center gap-2 rounded-md p-3 transition-colors duration-1000 ease-in-out hover:bg-accent"
+        title="🏷️ Filter Notes by Tags"
+      >
         {selectedTags.length === 0 ? (
-          <Badge variant="outline" className="w-full p-3 uppercase">
-            <TagIcon className="size-9" />
-            Filter By Tags...
+          <Badge variant="outline" className="w-full p-3 transition-colors duration-1000 ease-in-out group-hover:text-accent-foreground">
+            🏷️ Filter Notes by Tags
           </Badge>
         ) : (
           selectedTags.map(({ id, name }) => <Badge key={id}>{name}</Badge>)

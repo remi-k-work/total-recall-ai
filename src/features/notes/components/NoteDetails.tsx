@@ -26,9 +26,6 @@ interface NoteDetailsProps {
   inNoteModal?: boolean;
 }
 
-// constants
-import { NOTE_PREFS_BORDERS, NOTE_PREFS_MASKS } from "@/atoms";
-
 export default function NoteDetails({
   note,
   note: { id: noteId, title, content, createdAt, updatedAt },
@@ -37,8 +34,8 @@ export default function NoteDetails({
 }: NoteDetailsProps) {
   // Manages note preferences, including hydration, zero-read setter actions, and debounced database synchronization
   const curNoteColor = useAtomValue(notePrefsColorAtom(noteId)) ?? undefined;
-  const curNoteBorder = useAtomValue(notePrefsBorderAtom(noteId)) ?? NOTE_PREFS_BORDERS[0];
-  const curNoteMask = useAtomValue(notePrefsMaskAtom(noteId)) ?? NOTE_PREFS_MASKS[0];
+  const curNoteBorder = useAtomValue(notePrefsBorderAtom(noteId)) ?? undefined;
+  const curNoteMask = useAtomValue(notePrefsMaskAtom(noteId)) ?? undefined;
 
   const noteStyle = { backgroundColor: curNoteColor, borderRadius: curNoteBorder, WebkitMask: curNoteMask } as const satisfies CSSProperties;
 

@@ -11,9 +11,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/custom/
 import { Badge } from "@/components/ui/custom/badge";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/custom/toggle-group";
 
-// assets
-import { TagIcon } from "@heroicons/react/24/outline";
-
 // types
 import type { AvailNoteTags, NoteDetails, NoteWithPagination } from "@/features/notes/db";
 
@@ -30,18 +27,17 @@ export default function NoteTagsPopover({ note, availNoteTags }: NoteTagsPopover
     <Popover>
       <PopoverTrigger
         className="group flex w-96 flex-wrap items-center justify-center gap-2 rounded-md p-3 transition-colors duration-1000 ease-in-out hover:bg-accent"
-        title="Apply tags to this note"
+        title="🏷️ Apply Tags to this Note"
       >
         {selectedTags.length === 0 ? (
-          <Badge variant="outline" className="w-full p-3 uppercase transition-colors duration-1000 ease-in-out group-hover:text-accent-foreground">
-            <TagIcon className="size-9" />
-            Apply tags to this note...
+          <Badge variant="outline" className="w-full p-3 transition-colors duration-1000 ease-in-out group-hover:text-accent-foreground">
+            🏷️ Apply Tags to this Note
           </Badge>
         ) : (
           selectedTags.map(({ id, name }) => <Badge key={id}>{name}</Badge>)
         )}
       </PopoverTrigger>
-      <PopoverContent side="top" className="w-96">
+      <PopoverContent className="max-h-96 w-96 overflow-y-auto">
         <ToggleGroup
           multiple
           value={optiNoteTags}

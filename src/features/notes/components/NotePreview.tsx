@@ -30,17 +30,14 @@ interface NotePreviewProps {
   availNoteTags: AvailNoteTags;
 }
 
-// constants
-import { NOTE_PREFS_BORDERS, NOTE_PREFS_MASKS } from "@/atoms";
-
 export default function NotePreview({ note, note: { id: noteId, title, contentPreview, createdAt, updatedAt }, availNoteTags }: NotePreviewProps) {
   // A hook to easily create new route strings with updated search parameters (it preserves existing search params)
   const { createHref } = useUrlScribe();
 
   // Manages note preferences, including hydration, zero-read setter actions, and debounced database synchronization
   const curNoteColor = useAtomValue(notePrefsColorAtom(noteId)) ?? undefined;
-  const curNoteBorder = useAtomValue(notePrefsBorderAtom(noteId)) ?? NOTE_PREFS_BORDERS[0];
-  const curNoteMask = useAtomValue(notePrefsMaskAtom(noteId)) ?? NOTE_PREFS_MASKS[0];
+  const curNoteBorder = useAtomValue(notePrefsBorderAtom(noteId)) ?? undefined;
+  const curNoteMask = useAtomValue(notePrefsMaskAtom(noteId)) ?? undefined;
 
   const noteStyle = { backgroundColor: curNoteColor, borderRadius: curNoteBorder, WebkitMask: curNoteMask } as const satisfies CSSProperties;
 

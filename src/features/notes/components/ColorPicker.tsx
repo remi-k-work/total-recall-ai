@@ -44,7 +44,7 @@ export default function ColorPicker({ note, note: { id: noteId } }: ColorPickerP
         type="color"
         defaultValue={curNoteColor ?? defNoteColor}
         onChange={({ target: { value: newNoteColor } }) => changedColor(newNoteColor)}
-        title="Change note color"
+        title="🎨 Change Note Color"
       />
     </section>
   );
