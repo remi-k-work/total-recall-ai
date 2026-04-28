@@ -107,7 +107,7 @@ export class Auth extends Effect.Service<Auth>()("Auth", {
                 try: () => auth.api.changePassword({ body: { currentPassword, newPassword }, headers }),
                 catch: (cause) => new BetterAuthApiError({ message: "Failed to change password", cause }),
               }),
-          }),
+          })
         );
       });
 
@@ -140,8 +140,8 @@ export class Auth extends Effect.Service<Auth>()("Auth", {
         }).pipe(
           Effect.filterOrFail(
             ({ success }) => success,
-            () => new UnauthorizedAccessError({ message: "Unauthorized access" }),
-          ),
+            () => new UnauthorizedAccessError({ message: "Unauthorized access" })
+          )
         );
       });
 
@@ -149,9 +149,15 @@ export class Auth extends Effect.Service<Auth>()("Auth", {
     const getUserSessionData = Effect.gen(function* () {
       const headers = yield* getHeaders;
       return yield* Effect.fromNullable(yield* Effect.promise(() => auth.api.getSession({ headers }))).pipe(
-        Effect.mapError((cause) => new UnauthorizedAccessError({ message: "Unauthorized access", cause })),
+        Effect.mapError((cause) => new UnauthorizedAccessError({ message: "Unauthorized access", cause }))
       );
     });
+
+    // Only check if the current user is authenticated (the check runs on the server side)
+    const isUserAuthenticated = getUserSessionData.pipe(
+      Effect.as(true),
+      Effect.orElse(() => Effect.succeed(false))
+    );
 
     // List all accounts associated with the current user
     const listUserAccounts = Effect.gen(function* () {
@@ -167,9 +173,9 @@ export class Auth extends Effect.Service<Auth>()("Auth", {
       getUserSessionData.pipe(
         Effect.filterOrFail(
           ({ user: { role } }) => Array.contains(roles, role),
-          () => new UnauthorizedAccessError({ message: "Unauthorized access" }),
+          () => new UnauthorizedAccessError({ message: "Unauthorized access" })
         ),
-        Effect.asVoid,
+        Effect.asVoid
       );
 
     return {
@@ -187,6 +193,7 @@ export class Auth extends Effect.Service<Auth>()("Auth", {
       revokeSessions,
       assertPermissions,
       getUserSessionData,
+      isUserAuthenticated,
       listUserAccounts,
       hasCredentialAccount,
       assertRoles,

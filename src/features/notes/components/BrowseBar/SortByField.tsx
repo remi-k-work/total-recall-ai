@@ -23,15 +23,25 @@ export default function SortByField({ browseBar, totalItems }: SortByFieldProps)
 
   return (
     <ToggleGroup disabled={totalItems <= 1} value={[sbf]} onValueChange={([sbf]) => setSbf(sbf as BrowseBar["sbf"])} className="items-start">
-      <ToggleGroupItem value="title" aria-label="Sort By Note Title" title="Sort By Note Title" className="flex-col text-center whitespace-pre-line">
+      <ToggleGroupItem value="title" className="flex-col text-center whitespace-pre-line" aria-label="↕️ Sort By: Title" title="↕️ Sort By: Title">
         <LanguageIcon className="size-11" />
         {"Note Title".replaceAll(" ", "\n")}
       </ToggleGroupItem>
-      <ToggleGroupItem value="created_at" aria-label="Sort By Created At" title="Sort By Created At" className="flex-col text-center whitespace-pre-line">
+      <ToggleGroupItem
+        value="created_at"
+        className="flex-col text-center whitespace-pre-line"
+        aria-label="↕️ Sort By: Created At"
+        title="↕️ Sort By: Created At"
+      >
         <CalendarIcon className="size-11" />
         {"Created At".replaceAll(" ", "\n")}
       </ToggleGroupItem>
-      <ToggleGroupItem value="updated_at" aria-label="Sort By Updated At" title="Sort By Updated At" className="flex-col text-center whitespace-pre-line">
+      <ToggleGroupItem
+        value="updated_at"
+        className="flex-col text-center whitespace-pre-line"
+        aria-label="↕️ Sort By: Updated At"
+        title="↕️ Sort By: Updated At"
+      >
         <CalendarIcon className="size-11" />
         {"Updated At".replaceAll(" ", "\n")}
       </ToggleGroupItem>

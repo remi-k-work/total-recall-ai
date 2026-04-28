@@ -1,32 +1,24 @@
-"use client";
-
-// next
-import { usePathname } from "next/navigation";
-import Link from "next/link";
-
 // components
 import PageHeader from "@/components/PageHeader";
-import { Button } from "@/components/ui/custom/button";
+import SignInForm from "@/features/auth/components/SignInForm";
+import SignInDemoUser from "@/features/auth/components/SignInDemoUser";
 
-// assets
-import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/outline";
+// types
+import type { Metadata } from "next";
+
+// constants
+export const metadata: Metadata = {
+  title: "Total Recall AI ► Sign In",
+};
 
 export default function Page() {
-  const pathname = usePathname();
-
   return (
-    <article className="grid h-full place-items-center">
-      <PageHeader title="Unauthorized" description="You are not authorized to view this page" />
-      <Button
-        variant="ghost"
-        nativeButton={false}
-        render={
-          <Link href={`/sign-in?redirect=${pathname}`}>
-            <ArrowRightEndOnRectangleIcon className="size-9" />
-            Sign In
-          </Link>
-        }
-      />
-    </article>
+    <>
+      <PageHeader title="Sign In" description="Use the form below to sign in" />
+      <article className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <SignInForm />
+        <SignInDemoUser />
+      </article>
+    </>
   );
 }

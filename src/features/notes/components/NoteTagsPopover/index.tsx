@@ -27,6 +27,7 @@ export default function NoteTagsPopover({ note, availNoteTags }: NoteTagsPopover
     <Popover>
       <PopoverTrigger
         className="group flex w-96 flex-wrap items-center justify-center gap-2 rounded-md p-3 transition-colors duration-1000 ease-in-out hover:bg-accent"
+        aria-label="🏷️ Apply Tags to this Note"
         title="🏷️ Apply Tags to this Note"
       >
         {selectedTags.length === 0 ? (

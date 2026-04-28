@@ -44,6 +44,7 @@ export default function ColorPicker({ note, note: { id: noteId } }: ColorPickerP
         type="color"
         defaultValue={curNoteColor ?? defNoteColor}
         onChange={({ target: { value: newNoteColor } }) => changedColor(newNoteColor)}
+        aria-label="🎨 Change Note Color"
         title="🎨 Change Note Color"
       />
     </section>

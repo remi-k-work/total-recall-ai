@@ -28,6 +28,7 @@ export default function NoteBorderPopover({ note, note: { id: noteId } }: NoteBo
       <PopoverTrigger
         className="size-20 border-2 border-accent bg-background transition-colors duration-1000 ease-in-out hover:bg-accent"
         style={{ borderRadius: curNoteBorder === "*" ? undefined : curNoteBorder }}
+        aria-label="🔲 Change Note Border"
         title="🔲 Change Note Border"
       />
       <PopoverContent className="max-h-96 w-96 overflow-y-auto">

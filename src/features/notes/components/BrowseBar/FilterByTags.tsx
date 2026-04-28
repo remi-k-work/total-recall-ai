@@ -34,6 +34,7 @@ export default function FilterByTags({ browseBar, availNoteTags }: FilterByTagsP
     <Popover>
       <PopoverTrigger
         className="group flex w-96 flex-wrap items-center justify-center gap-2 rounded-md p-3 transition-colors duration-1000 ease-in-out hover:bg-accent"
+        aria-label="🏷️ Filter Notes by Tags"
         title="🏷️ Filter Notes by Tags"
       >
         {selectedTags.length === 0 ? (

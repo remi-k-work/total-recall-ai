@@ -28,6 +28,7 @@ export default function NoteMaskPopover({ note, note: { id: noteId } }: NoteMask
       <PopoverTrigger
         className="size-20 bg-background transition-colors duration-1000 ease-in-out hover:bg-accent"
         style={{ WebkitMask: curNoteMask === "*" ? undefined : curNoteMask }}
+        aria-label="🎭 Change Note Mask"
         title="🎭 Change Note Mask"
       />
       <PopoverContent className="max-h-96 w-96 overflow-y-auto">

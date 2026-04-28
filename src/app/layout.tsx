@@ -6,9 +6,9 @@ import { Analytics } from "@vercel/analytics/next";
 
 // components
 import { ThemeProvider } from "next-themes";
-import Footer from "@/components/Footer";
 import DemoModeProvider from "@/contexts/DemoMode";
-import ConfirmModalProvider from "@/contexts/ConfirmModal";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/custom/sonner";
 
 // assets
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   other: { google: "notranslate" },
 };
 
-export default function Layout({ children }: LayoutProps<"/">) {
+export default function Layout({ notes, children }: LayoutProps<"/">) {
   return (
     <html lang="en" translate="no" suppressHydrationWarning>
       <body
@@ -39,12 +39,14 @@ export default function Layout({ children }: LayoutProps<"/">) {
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <DemoModeProvider>
-            <ConfirmModalProvider>
+            <Header />
+            <main className="mx-4 [grid-area:main]">
               {children}
-              <Footer />
-              <Toaster richColors />
-              <Analytics debug={false} />
-            </ConfirmModalProvider>
+              {notes}
+            </main>
+            <Footer />
+            <Toaster richColors />
+            <Analytics debug={false} />
           </DemoModeProvider>
         </ThemeProvider>
       </body>
