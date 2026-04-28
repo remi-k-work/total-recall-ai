@@ -43,7 +43,7 @@ export default function SignInForm({ redirect }: SignInFormProps) {
   const submit = useAtomSet(signInForm.submit);
 
   // Provide feedback to the user regarding this form actions
-  useSubmitToast(signInForm.submit, "[SIGN IN]", "You signed in successfully.", undefined, redirect ?? "/dashboard");
+  useSubmitToast(signInForm.submit, "[SIGN IN]", "You signed in successfully.", undefined, redirect ?? "/dashboard", true);
 
   return (
     <Card>

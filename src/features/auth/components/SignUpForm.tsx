@@ -32,7 +32,7 @@ export default function SignUpForm() {
   const submit = useAtomSet(signUpForm.submit);
 
   // Provide feedback to the user regarding this form actions
-  useSubmitToast(signUpForm.submit, "[SIGN UP]", "You signed up successfully.", undefined, "/dashboard");
+  useSubmitToast(signUpForm.submit, "[SIGN UP]", "You signed up successfully.", undefined, "/dashboard", true);
 
   return (
     <Card>
