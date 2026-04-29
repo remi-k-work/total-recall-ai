@@ -16,7 +16,7 @@ import type { UserAvatarProps } from "./User";
 // constants
 import { DEMO_USER_NAME } from "@/drizzle/seed/constants";
 
-export const UserAvatar = dynamic(() => import("./User"), { ssr: false });
+export const UserAvatar = dynamic(() => import("./User"), { ssr: false, loading: () => <UserAvatarSkeleton isSmall /> });
 
 export function UserAvatarSkeleton({ isSmall = false, className, ...props }: Omit<UserAvatarProps, "user" | "session">) {
   return (
