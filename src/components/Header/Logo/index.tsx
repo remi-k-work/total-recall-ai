@@ -8,7 +8,7 @@ import Image from "next/image";
 // assets
 import logoD from "@/assets/logo.png";
 
-export const Logo = dynamic(() => import("./Logo"), { ssr: false });
+export const Logo = dynamic(() => import("./Logo"), { ssr: false, loading: () => <LogoSkeleton /> });
 
 export function LogoSkeleton() {
   return (

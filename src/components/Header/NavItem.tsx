@@ -32,6 +32,7 @@ export default function NavItem({ href, match, title, icon, isExternal = false }
       title={title}
       prefetch={!isExternal}
       target={isExternal ? "_blank" : undefined}
+      rel={isExternal ? "noopener noreferrer" : undefined}
       className={cn(
         "border bg-secondary p-3",
         "[&>svg]:size-11",
@@ -45,7 +46,14 @@ export default function NavItem({ href, match, title, icon, isExternal = false }
 
 export function NavItemSkeleton({ href, title, icon, isExternal = false }: NavItemProps) {
   return (
-    <Link href={href} title={title} prefetch={!isExternal} target={isExternal ? "_blank" : undefined} className="border bg-secondary p-3 [&>svg]:size-11">
+    <Link
+      href={href}
+      title={title}
+      prefetch={!isExternal}
+      target={isExternal ? "_blank" : undefined}
+      rel={isExternal ? "noopener noreferrer" : undefined}
+      className="border bg-secondary p-3 [&>svg]:size-11"
+    >
       {icon}
     </Link>
   );
