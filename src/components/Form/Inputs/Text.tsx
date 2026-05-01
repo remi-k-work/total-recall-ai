@@ -2,7 +2,7 @@
 import { useId } from "react";
 
 // services, features, and other libraries
-import { Option } from "effect";
+import { Hash, Option, pipe } from "effect";
 import { FormReact } from "@lucas-barake/effect-form-react";
 import { AnimatePresence } from "motion/react";
 
@@ -34,3 +34,15 @@ export const TextInput: FormReact.FieldComponent<string, TextInputProps> = ({ fi
     </>
   );
 };
+
+export function TextInputSkeleton({ formName = "global", label, ...rest }: TextInputProps & { formName?: string }) {
+  // Generate a hash id from the incoming form name and label
+  const id = pipe(`${formName}::${label}`, Hash.string, Math.abs, (hashValue) => `input-${hashValue}`);
+
+  return (
+    <>
+      <Label htmlFor={id}>{label}</Label>
+      <Input id={id} name={label} disabled {...rest} />
+    </>
+  );
+}

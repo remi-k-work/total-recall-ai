@@ -2,7 +2,7 @@
 import { useId } from "react";
 
 // services, features, and other libraries
-import { Option } from "effect";
+import { Hash, Option, pipe } from "effect";
 import { FormReact } from "@lucas-barake/effect-form-react";
 import { AnimatePresence } from "motion/react";
 
@@ -36,3 +36,15 @@ export const CheckBoxInput: FormReact.FieldComponent<boolean, CheckBoxInputProps
     </>
   );
 };
+
+export function CheckBoxInputSkeleton({ formName = "global", label, ...rest }: CheckBoxInputProps & { formName?: string }) {
+  // Generate a hash id from the incoming form name and label
+  const id = pipe(`${formName}::${label}`, Hash.string, Math.abs, (hashValue) => `input-${hashValue}`);
+
+  return (
+    <div className="flex items-center gap-1">
+      <Checkbox id={id} name={label} disabled {...rest} />
+      <Label htmlFor={id}>{label}</Label>
+    </div>
+  );
+}

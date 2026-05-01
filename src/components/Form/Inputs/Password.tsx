@@ -6,7 +6,7 @@ import Link from "next/link";
 
 // services, features, and other libraries
 import { cn } from "@/lib/utils";
-import { Option } from "effect";
+import { Hash, Option, pipe } from "effect";
 import { FormReact } from "@lucas-barake/effect-form-react";
 import { AnimatePresence } from "motion/react";
 
@@ -78,3 +78,36 @@ export const PasswordInput: FormReact.FieldComponent<string, PasswordInputProps>
     </>
   );
 };
+
+export function PasswordInputSkeleton({
+  formName = "global",
+  label,
+  forgotPassHref,
+  forgotPassText = "Forgot your password?",
+  className,
+  ...rest
+}: PasswordInputProps & { formName?: string }) {
+  // Generate a hash id from the incoming form name and label
+  const id = pipe(`${formName}::${label}`, Hash.string, Math.abs, (hashValue) => `input-${hashValue}`);
+
+  return (
+    <>
+      {forgotPassHref ? (
+        <div className="flex items-center justify-between gap-2 md:gap-4">
+          <Label htmlFor={id}>{label}</Label>
+          <Link href={forgotPassHref} className="link">
+            {forgotPassText}
+          </Link>
+        </div>
+      ) : (
+        <Label htmlFor={id}>{label}</Label>
+      )}
+      <div className="relative">
+        <Input type="password" id={id} name={label} className={cn("pr-18 [&::-ms-reveal]:hidden", className)} disabled {...rest} />
+        <Button type="button" variant="ghost" size="icon" title="Show Password" className="absolute top-1/2 right-3 -translate-y-1/2" disabled>
+          <EyeSlashIcon className="size-7" />
+        </Button>
+      </div>
+    </>
+  );
+}

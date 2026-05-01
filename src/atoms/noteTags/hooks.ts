@@ -20,10 +20,10 @@ export function useNoteTags(note: NoteWithPagination | NoteDetails, availNoteTag
   const syncToDbNoteTags = useAtomSet(syncToDbNoteTagsAtom(noteId));
 
   // Compute selected tag objects for rendering badges
-  const selectedTags = useMemo(() => {
-    const selectedSet = new Set(optiNoteTags);
+  const selectedTags = useAtomValue(optiNoteTagsAtom(noteId), (tagIds) => {
+    const selectedSet = new Set(tagIds);
     return availNoteTags.filter(({ id }) => selectedSet.has(id));
-  }, [optiNoteTags, availNoteTags]);
+  });
 
   return { optiNoteTags, selectedTags, syncToDbNoteTags } as const;
 }

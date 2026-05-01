@@ -2,7 +2,7 @@
 import { useEffect, useId, useRef } from "react";
 
 // services, features, and other libraries
-import { Option } from "effect";
+import { Hash, Option, pipe } from "effect";
 import { FormReact } from "@lucas-barake/effect-form-react";
 import { AnimatePresence } from "motion/react";
 
@@ -58,3 +58,17 @@ export const MarkdownInput: FormReact.FieldComponent<string, Omit<MarkdownInputP
     </>
   );
 };
+
+export function MarkdownInputSkeleton({ formName = "global", label }: MarkdownInputProps & { formName?: string }) {
+  // Generate a hash id from the incoming form name and label
+  const id = pipe(`${formName}::${label}`, Hash.string, Math.abs, (hashValue) => `input-${hashValue}`);
+
+  return (
+    <>
+      <Label htmlFor={id}>{label}</Label>
+      <output id={id} name={label}>
+        <div className="h-96 w-full bg-muted" />
+      </output>
+    </>
+  );
+}

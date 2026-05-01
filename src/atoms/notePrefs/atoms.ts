@@ -106,6 +106,7 @@ export const syncToDbNotePrefsAtom = Atom.family((noteId: string) =>
     reducer: (current, update: Partial<NotePrefs>) => ({ ...current, ...update }),
     fn: RuntimeAtom.fn((_, get) =>
       Effect.gen(function* () {
+        // Debounce, wait for a pause in user activity
         yield* Effect.sleep("3 seconds");
 
         // Retrieve the finalized state from the optimistic atom for commitment

@@ -25,6 +25,7 @@ export const syncToUrlBrowseBarAtom = RuntimeAtom.fn(
     const result = get(browseBarAtom);
     get.set(browseBarAtom, { ...result, ...update });
 
+    // Debounce, wait for a pause in user activity
     yield* Effect.sleep("3 seconds");
 
     yield* Effect.log(`[BROWSE BAR URL SYNC]: ${JSON.stringify({ ...result, ...update })}`);
