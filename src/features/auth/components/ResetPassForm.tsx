@@ -14,8 +14,8 @@ import { useSubmitToast } from "@/components/Form/hooks";
 
 // components
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/custom/card";
-import { PasswordInput } from "@/components/Form/Inputs";
-import { FormSubmit, SubmitStatus } from "@/components/Form";
+import { PasswordInput, PasswordInputSkeleton } from "@/components/Form/Inputs";
+import { FormSubmit, FormSubmitSkeleton, SubmitStatus } from "@/components/Form";
 
 // assets
 import { KeyIcon } from "@heroicons/react/24/outline";
@@ -70,6 +70,40 @@ export default function ResetPassForm({ token }: ResetPassFormProps) {
             <FormSubmit form={resetPassFormL} submitIcon={<KeyIcon className="size-9" />} submitText="Reset Password" />
           </form>
         </resetPassFormL.Initialize>
+      </CardContent>
+    </Card>
+  );
+}
+
+export function ResetPassFormSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Reset Your Password</CardTitle>
+        <CardDescription>Enter your new password below</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form>
+          <PasswordInputSkeleton
+            formName="[RESET YOUR PASSWORD]"
+            label="New Password"
+            size={40}
+            maxLength={129}
+            autoComplete="new-password"
+            placeholder="e.g. P@ssw0rd!"
+          />
+          <br />
+          <PasswordInputSkeleton
+            formName="[RESET YOUR PASSWORD]"
+            label="Confirm Password"
+            size={40}
+            maxLength={129}
+            autoComplete="new-password"
+            placeholder="e.g. P@ssw0rd!"
+          />
+          <br />
+          <FormSubmitSkeleton submitIcon={<KeyIcon className="size-9" />} submitText="Reset Password" />
+        </form>
       </CardContent>
     </Card>
   );

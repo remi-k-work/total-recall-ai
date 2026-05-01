@@ -8,7 +8,7 @@ import { ResetPassPageSchema } from "@/features/auth/schemas";
 
 // components
 import PageHeader from "@/components/PageHeader";
-import ResetPassForm from "@/features/auth/components/ResetPassForm";
+import ResetPassForm, { ResetPassFormSkeleton } from "@/features/auth/components/ResetPassForm";
 
 // types
 import type { Metadata } from "next";
@@ -54,6 +54,7 @@ function PageSkeleton() {
   return (
     <>
       <PageHeader title="Reset Password" description="Use the form below to reset your password" />
+      <ResetPassFormSkeleton />
     </>
   );
 }

@@ -8,8 +8,8 @@ import { SignInPageSchema } from "@/features/auth/schemas";
 
 // components
 import PageHeader from "@/components/PageHeader";
-import SignInForm from "@/features/auth/components/SignInForm";
-import SignInDemoUser from "@/features/auth/components/SignInDemoUser";
+import SignInForm, { SignInFormSkeleton } from "@/features/auth/components/SignInForm";
+import SignInDemoUser, { SignInDemoUserSkeleton } from "@/features/auth/components/SignInDemoUser";
 
 // types
 import type { Metadata, Route } from "next";
@@ -58,6 +58,10 @@ function PageSkeleton() {
   return (
     <>
       <PageHeader title="Sign In" description="Use the form below to sign in" />
+      <article className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <SignInFormSkeleton />
+        <SignInDemoUserSkeleton />
+      </article>
     </>
   );
 }

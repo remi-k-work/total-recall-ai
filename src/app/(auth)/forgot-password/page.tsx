@@ -3,7 +3,7 @@ import { Suspense } from "react";
 
 // components
 import PageHeader from "@/components/PageHeader";
-import ForgotPassForm from "@/features/auth/components/ForgotPassForm";
+import ForgotPassForm, { ForgotPassFormSkeleton } from "@/features/auth/components/ForgotPassForm";
 
 // types
 import type { Metadata } from "next";
@@ -36,6 +36,7 @@ function PageSkeleton() {
   return (
     <>
       <PageHeader title="Forgot Password" description="Use the form below to reset your password" />
+      <ForgotPassFormSkeleton />
     </>
   );
 }

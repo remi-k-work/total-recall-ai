@@ -56,3 +56,12 @@ export default function SignInDemo({ redirect }: SignInDemoProps) {
     </Button>
   );
 }
+
+export function SignInDemoSkeleton() {
+  return (
+    <Button type="button" className="mx-auto" disabled>
+      <ArrowRightEndOnRectangleIcon className="size-9" />
+      Sign In as a Demo User
+    </Button>
+  );
+}

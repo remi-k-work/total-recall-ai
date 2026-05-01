@@ -3,7 +3,7 @@ import { Suspense } from "react";
 
 // components
 import PageHeader from "@/components/PageHeader";
-import SignUpForm from "@/features/auth/components/SignUpForm";
+import SignUpForm, { SignUpFormSkeleton } from "@/features/auth/components/SignUpForm";
 
 // types
 import type { Metadata } from "next";
@@ -36,6 +36,7 @@ function PageSkeleton() {
   return (
     <>
       <PageHeader title="Sign Up" description="Use the form below to sign up" />
+      <SignUpFormSkeleton />
     </>
   );
 }

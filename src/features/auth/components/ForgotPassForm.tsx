@@ -11,8 +11,8 @@ import { useSubmitToast } from "@/components/Form/hooks";
 
 // components
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/custom/card";
-import { TextInput } from "@/components/Form/Inputs";
-import { FormSubmit, SubmitStatus } from "@/components/Form";
+import { TextInput, TextInputSkeleton } from "@/components/Form/Inputs";
+import { FormSubmit, FormSubmitSkeleton, SubmitStatus } from "@/components/Form";
 
 // assets
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
@@ -54,6 +54,32 @@ export default function ForgotPassForm() {
             <FormSubmit form={forgotPassForm} submitIcon={<PaperAirplaneIcon className="size-9" />} submitText="Send Reset Link" />
           </form>
         </forgotPassForm.Initialize>
+      </CardContent>
+    </Card>
+  );
+}
+
+export function ForgotPassFormSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Forgot Your Password?</CardTitle>
+        <CardDescription>Enter your email below to reset password</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form>
+          <TextInputSkeleton
+            formName="[FORGOT YOUR PASSWORD?]"
+            label="Email"
+            size={40}
+            maxLength={50}
+            spellCheck={false}
+            autoComplete="email"
+            placeholder="e.g. john.doe@gmail.com"
+          />
+          <br />
+          <FormSubmitSkeleton submitIcon={<PaperAirplaneIcon className="size-9" />} submitText="Send Reset Link" />
+        </form>
       </CardContent>
     </Card>
   );

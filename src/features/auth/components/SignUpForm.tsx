@@ -11,8 +11,8 @@ import { useSubmitToast } from "@/components/Form/hooks";
 
 // components
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/custom/card";
-import { PasswordInput, TextInput } from "@/components/Form/Inputs";
-import { FormSubmit, SubmitStatus } from "@/components/Form";
+import { PasswordInput, PasswordInputSkeleton, TextInput, TextInputSkeleton } from "@/components/Form/Inputs";
+import { FormSubmit, FormSubmitSkeleton, SubmitStatus } from "@/components/Form";
 
 // assets
 import { UserIcon } from "@heroicons/react/24/outline";
@@ -60,6 +60,45 @@ export default function SignUpForm() {
             <FormSubmit form={signUpForm} submitIcon={<UserIcon className="size-9" />} submitText="Create New Account" />
           </form>
         </signUpForm.Initialize>
+      </CardContent>
+    </Card>
+  );
+}
+
+export function SignUpFormSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Sign Up</CardTitle>
+        <CardDescription>To create a new account</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form>
+          <TextInputSkeleton formName="[SIGN UP]" label="Name" size={40} maxLength={26} spellCheck={false} autoComplete="name" placeholder="e.g. John Doe" />
+          <br />
+          <TextInputSkeleton
+            formName="[SIGN UP]"
+            label="Email"
+            size={40}
+            maxLength={50}
+            spellCheck={false}
+            autoComplete="email"
+            placeholder="e.g. john.doe@gmail.com"
+          />
+          <br />
+          <PasswordInputSkeleton formName="[SIGN UP]" label="Password" size={40} maxLength={129} autoComplete="new-password" placeholder="e.g. P@ssw0rd!" />
+          <br />
+          <PasswordInputSkeleton
+            formName="[SIGN UP]"
+            label="Confirm Password"
+            size={40}
+            maxLength={129}
+            autoComplete="new-password"
+            placeholder="e.g. P@ssw0rd!"
+          />
+          <br />
+          <FormSubmitSkeleton submitIcon={<UserIcon className="size-9" />} submitText="Create New Account" />
+        </form>
       </CardContent>
     </Card>
   );
