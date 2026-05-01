@@ -71,7 +71,7 @@ export function FormSubmit<TFields extends Field.FieldsRecord, R, A, E, SubmitAr
         if (cooldownMillis > 0) setIsCoolingDown(true);
       }
     },
-    { immediate: false },
+    { immediate: false }
   );
 
   // Reset the cooling down state
@@ -107,6 +107,36 @@ export function FormSubmit<TFields extends Field.FieldsRecord, R, A, E, SubmitAr
       )}
       {showCancel && (
         <Button type="button" variant="secondary" onClick={() => back()}>
+          <ArrowLeftCircleIcon className="size-9" />
+          {cancelText}
+        </Button>
+      )}
+    </section>
+  );
+}
+
+export function FormSubmitSkeleton<TFields extends Field.FieldsRecord, R, A, E, SubmitArgs>({
+  submitIcon,
+  submitText,
+  resetText = "Clear Form",
+  cancelText = "Cancel and Go Back",
+  showReset = true,
+  showCancel = true,
+}: Omit<FormSubmitProps<TFields, R, A, E, SubmitArgs>, "form">) {
+  return (
+    <section className="flex flex-wrap gap-3 *:flex-1 md:gap-6">
+      <Button type="submit" disabled>
+        {submitIcon}
+        {submitText}
+      </Button>
+      {showReset && (
+        <Button type="button" variant="destructive" disabled>
+          <XCircleIcon className="size-9" />
+          {resetText}
+        </Button>
+      )}
+      {showCancel && (
+        <Button type="button" variant="secondary" disabled>
           <ArrowLeftCircleIcon className="size-9" />
           {cancelText}
         </Button>

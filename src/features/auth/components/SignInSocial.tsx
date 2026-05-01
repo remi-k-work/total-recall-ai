@@ -51,3 +51,12 @@ export default function SignInSocial({ provider, redirect }: SignInSocialProps) 
     </Button>
   );
 }
+
+export function SignInSocialSkeleton({ provider }: SignInSocialProps) {
+  return (
+    <Button type="button" variant="ghost" disabled>
+      {provider === "google" ? <GoogleIcon className="size-9" /> : <GitHubIcon className="size-9" />}
+      Sign In With {provider}
+    </Button>
+  );
+}
