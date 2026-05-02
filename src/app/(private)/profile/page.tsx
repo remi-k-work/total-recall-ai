@@ -8,11 +8,11 @@ import { Auth } from "@/features/auth/lib/auth";
 
 // components
 import PageHeader from "@/components/PageHeader";
-import ProfileDetailsForm from "@/features/profile/components/ProfileDetailsForm";
-import EmailChangeForm from "@/features/profile/components/EmailChangeForm";
-import PassChangeForm from "@/features/profile/components/PassChangeForm";
+import ProfileDetailsForm, { ProfileDetailsFormSkeleton } from "@/features/profile/components/ProfileDetailsForm";
+import EmailChangeForm, { EmailChangeFormSkeleton } from "@/features/profile/components/EmailChangeForm";
+import PassChangeForm, { PassChangeFormSkeleton } from "@/features/profile/components/PassChangeForm";
 import PassSetupForm from "@/features/profile/components/PassSetupForm";
-import SignOutEverywhere from "@/features/profile/components/SignOutEverywhere";
+import SignOutEverywhere, { SignOutEverywhereSkeleton } from "@/features/profile/components/SignOutEverywhere";
 
 // types
 import type { Metadata } from "next";
@@ -64,6 +64,12 @@ function PageSkeleton() {
   return (
     <>
       <PageHeader title="Profile" description="Below you can see and manage your profile" />
+      <article className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <ProfileDetailsFormSkeleton />
+        <EmailChangeFormSkeleton />
+        <PassChangeFormSkeleton />
+        <SignOutEverywhereSkeleton />
+      </article>
     </>
   );
 }
