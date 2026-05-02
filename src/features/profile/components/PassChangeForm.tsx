@@ -11,8 +11,8 @@ import { useSubmitToast } from "@/components/Form/hooks";
 
 // components
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/custom/card";
-import { PasswordInput } from "@/components/Form/Inputs";
-import { FormSubmit, SubmitStatus } from "@/components/Form";
+import { PasswordInput, PasswordInputSkeleton } from "@/components/Form/Inputs";
+import { FormSubmit, FormSubmitSkeleton, SubmitStatus } from "@/components/Form";
 
 // assets
 import { KeyIcon } from "@heroicons/react/24/outline";
@@ -58,6 +58,49 @@ export default function PassChangeForm() {
             <FormSubmit form={passChangeForm} submitIcon={<KeyIcon className="size-9" />} submitText="Change Password" showCancel={false} />
           </form>
         </passChangeForm.Initialize>
+      </CardContent>
+    </Card>
+  );
+}
+
+export function PassChangeFormSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Password Change</CardTitle>
+        <CardDescription>Enter your new password below</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form>
+          <PasswordInputSkeleton
+            formName="[PASSWORD CHANGE]"
+            label="Current Password"
+            size={40}
+            maxLength={129}
+            autoComplete="current-password"
+            placeholder="e.g. P@ssw0rd!"
+          />
+          <br />
+          <PasswordInputSkeleton
+            formName="[PASSWORD CHANGE]"
+            label="New Password"
+            size={40}
+            maxLength={129}
+            autoComplete="new-password"
+            placeholder="e.g. P@ssw0rd!"
+          />
+          <br />
+          <PasswordInputSkeleton
+            formName="[PASSWORD CHANGE]"
+            label="Confirm Password"
+            size={40}
+            maxLength={129}
+            autoComplete="new-password"
+            placeholder="e.g. P@ssw0rd!"
+          />
+          <br />
+          <FormSubmitSkeleton submitIcon={<KeyIcon className="size-9" />} submitText="Change Password" showCancel={false} />
+        </form>
       </CardContent>
     </Card>
   );

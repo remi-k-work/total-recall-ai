@@ -11,8 +11,8 @@ import { useSubmitToast } from "@/components/Form/hooks";
 
 // components
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/custom/card";
-import { PasswordInput } from "@/components/Form/Inputs";
-import { FormSubmit, SubmitStatus } from "@/components/Form";
+import { PasswordInput, PasswordInputSkeleton } from "@/components/Form/Inputs";
+import { FormSubmit, FormSubmitSkeleton, SubmitStatus } from "@/components/Form";
 
 // assets
 import { KeyIcon } from "@heroicons/react/24/outline";
@@ -56,6 +56,40 @@ export default function PassSetupForm() {
             <FormSubmit form={passSetupForm} submitIcon={<KeyIcon className="size-9" />} submitText="Setup Password" showCancel={false} />
           </form>
         </passSetupForm.Initialize>
+      </CardContent>
+    </Card>
+  );
+}
+
+export function PassSetupFormSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Password Setup</CardTitle>
+        <CardDescription>Setup your password below</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form>
+          <PasswordInputSkeleton
+            formName="[PASSWORD SETUP]"
+            label="New Password"
+            size={40}
+            maxLength={129}
+            autoComplete="new-password"
+            placeholder="e.g. P@ssw0rd!"
+          />
+          <br />
+          <PasswordInputSkeleton
+            formName="[PASSWORD SETUP]"
+            label="Confirm Password"
+            size={40}
+            maxLength={129}
+            autoComplete="new-password"
+            placeholder="e.g. P@ssw0rd!"
+          />
+          <br />
+          <FormSubmitSkeleton submitIcon={<KeyIcon className="size-9" />} submitText="Setup Password" showCancel={false} />
+        </form>
       </CardContent>
     </Card>
   );

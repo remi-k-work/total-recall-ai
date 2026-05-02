@@ -65,3 +65,20 @@ export default function SignOutEverywhere() {
     </Card>
   );
 }
+
+export function SignOutEverywhereSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Sign Out Everywhere</CardTitle>
+        <CardDescription>Sign out from all devices</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Button type="button" variant="destructive" className="mx-auto" disabled>
+          <ArrowRightStartOnRectangleIcon className="size-9" />
+          Sign Out Everywhere
+        </Button>
+      </CardContent>
+    </Card>
+  );
+}

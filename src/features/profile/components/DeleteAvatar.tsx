@@ -65,3 +65,12 @@ export default function DeleteAvatar({ currentImage }: DeleteAvatarProps) {
     </Button>
   );
 }
+
+export function DeleteAvatarSkeleton() {
+  return (
+    <Button type="button" variant="destructive" disabled>
+      <TrashIcon className="size-9" />
+      Delete Avatar
+    </Button>
+  );
+}

@@ -11,8 +11,8 @@ import { useSubmitToast } from "@/components/Form/hooks";
 
 // components
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/custom/card";
-import { TextInput } from "@/components/Form/Inputs";
-import { FormSubmit, SubmitStatus } from "@/components/Form";
+import { TextInput, TextInputSkeleton } from "@/components/Form/Inputs";
+import { FormSubmit, FormSubmitSkeleton, SubmitStatus } from "@/components/Form";
 
 // assets
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
@@ -85,6 +85,32 @@ export default function EmailChangeForm({ user: { email: newEmail, emailVerified
             <FormSubmit form={emailChangeForm} submitIcon={<PaperAirplaneIcon className="size-9" />} submitText="Request Email Change" showCancel={false} />
           </form>
         </emailChangeForm.Initialize>
+      </CardContent>
+    </Card>
+  );
+}
+
+export function EmailChangeFormSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Email Change</CardTitle>
+        <CardDescription>Enter your new email below</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form>
+          <TextInputSkeleton
+            formName="[EMAIL CHANGE]"
+            label="New Email"
+            size={40}
+            maxLength={50}
+            spellCheck={false}
+            autoComplete="email"
+            placeholder="e.g. john.doe@gmail.com"
+          />
+          <br />
+          <FormSubmitSkeleton submitIcon={<PaperAirplaneIcon className="size-9" />} submitText="Request Email Change" showCancel={false} />
+        </form>
       </CardContent>
     </Card>
   );

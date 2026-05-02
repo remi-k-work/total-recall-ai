@@ -35,3 +35,13 @@ export default function UploadAvatar() {
     />
   );
 }
+
+export function UploadAvatarSkeleton() {
+  return (
+    <UploadButton
+      endpoint="avatarUploader"
+      className="ut-button:w-full ut-button:rounded-none ut-button:bg-primary ut-button:font-semibold ut-button:tracking-widest ut-button:text-primary-foreground ut-button:uppercase"
+      disabled
+    />
+  );
+}

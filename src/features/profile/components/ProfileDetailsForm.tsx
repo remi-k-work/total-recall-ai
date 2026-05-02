@@ -11,11 +11,11 @@ import { useSubmitToast } from "@/components/Form/hooks";
 
 // components
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/custom/card";
-import { TextInput } from "@/components/Form/Inputs";
-import { FormSubmit, SubmitStatus } from "@/components/Form";
-import { UserAvatarMd } from "@/components/Avatar/User";
-import UploadAvatar from "./UploadAvatar";
-import DeleteAvatar from "./DeleteAvatar";
+import { TextInput, TextInputSkeleton } from "@/components/Form/Inputs";
+import { FormSubmit, FormSubmitSkeleton, SubmitStatus } from "@/components/Form";
+import { UserAvatarMd, UserAvatarMdSkeleton } from "@/components/Avatar/User";
+import UploadAvatar, { UploadAvatarSkeleton } from "./UploadAvatar";
+import DeleteAvatar, { DeleteAvatarSkeleton } from "./DeleteAvatar";
 
 // assets
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
@@ -72,6 +72,39 @@ export default function ProfileDetailsForm({ user, user: { name, image }, sessio
             <FormSubmit form={profileDetailsForm} submitIcon={<PencilSquareIcon className="size-9" />} submitText="Change Name" showCancel={false} />
           </form>
         </profileDetailsForm.Initialize>
+      </CardContent>
+    </Card>
+  );
+}
+
+export function ProfileDetailsFormSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Profile Details</CardTitle>
+        <CardDescription>Change your avatar and name</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="mb-4 flex flex-wrap items-center justify-around gap-4 sm:justify-between">
+          <UserAvatarMdSkeleton />
+          <div className="grid gap-4">
+            <UploadAvatarSkeleton />
+            <DeleteAvatarSkeleton />
+          </div>
+        </div>
+        <form>
+          <TextInputSkeleton
+            formName="[PROFILE DETAILS]"
+            label="Name"
+            size={40}
+            maxLength={26}
+            spellCheck={false}
+            autoComplete="name"
+            placeholder="e.g. John Doe"
+          />
+          <br />
+          <FormSubmitSkeleton submitIcon={<PencilSquareIcon className="size-9" />} submitText="Change Name" showCancel={false} />
+        </form>
       </CardContent>
     </Card>
   );
