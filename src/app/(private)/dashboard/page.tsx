@@ -12,8 +12,8 @@ import { Auth } from "@/features/auth/lib/auth";
 // components
 import PageHeader from "@/components/PageHeader";
 import SectionHeader from "@/components/SectionHeader";
-import ProfileInfo from "@/features/dashboard/components/ProfileInfo";
-import VerifyEmailForm from "@/features/dashboard/components/VerifyEmailForm";
+import ProfileInfo, { ProfileInfoSkeleton } from "@/features/dashboard/components/ProfileInfo";
+import VerifyEmailForm, { VerifyEmailFormSkeleton } from "@/features/dashboard/components/VerifyEmailForm";
 import NotesPreview from "@/features/notes/components/NotesPreview";
 
 // types
@@ -73,6 +73,10 @@ function PageSkeleton() {
   return (
     <>
       <PageHeader title="Dashboard" description="Welcome back! Below is your account overview" />
+      <article className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <ProfileInfoSkeleton />
+        <VerifyEmailFormSkeleton />
+      </article>
       <SectionHeader title="Your most recent notes" />
     </>
   );

@@ -11,8 +11,8 @@ import { useSubmitToast } from "@/components/Form/hooks";
 
 // components
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/custom/card";
-import { TextInput } from "@/components/Form/Inputs";
-import { FormSubmit, InfoLine, SubmitStatus } from "@/components/Form";
+import { TextInput, TextInputSkeleton } from "@/components/Form/Inputs";
+import { FormSubmit, FormSubmitSkeleton, InfoLine, SubmitStatus } from "@/components/Form";
 
 // assets
 import { CheckBadgeIcon } from "@heroicons/react/24/outline";
@@ -87,6 +87,32 @@ export default function VerifyEmailForm({ user: { email, emailVerified } }: Veri
             )}
           </form>
         </verifyEmailForm.Initialize>
+      </CardContent>
+    </Card>
+  );
+}
+
+export function VerifyEmailFormSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Verify Email</CardTitle>
+        <CardDescription>To access all our features</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form>
+          <TextInputSkeleton
+            formName="[VERIFY EMAIL]"
+            label="Email"
+            size={40}
+            maxLength={50}
+            spellCheck={false}
+            autoComplete="email"
+            placeholder="e.g. john.doe@gmail.com"
+          />
+          <br />
+          <FormSubmitSkeleton submitIcon={<CheckBadgeIcon className="size-9" />} submitText="Verify Email" showReset={false} showCancel={false} />
+        </form>
       </CardContent>
     </Card>
   );

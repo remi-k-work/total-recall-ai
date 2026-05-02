@@ -1,6 +1,6 @@
 // components
 import { Message as AIEMessage, MessageContent, MessageResponse } from "@/components/ai-elements/custom/message";
-import { UserAvatar } from "@/components/Avatar/User";
+import { UserAvatarSm } from "@/components/Avatar/User";
 import AgentAvatar from "@/components/Avatar/Agent";
 
 // types
@@ -44,7 +44,7 @@ export default function Message({ user, session, message: { id, role, parts }, s
           }
         })}
       </MessageContent>
-      {role === "user" ? <UserAvatar user={user} session={session} isSmall /> : <AgentAvatar isSmall />}
+      {role === "user" ? <UserAvatarSm user={user} session={session} /> : <AgentAvatar isSmall />}
     </AIEMessage>
   );
 }

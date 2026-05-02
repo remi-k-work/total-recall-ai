@@ -3,26 +3,21 @@
 // next
 import dynamic from "next/dynamic";
 
-// services, features, and other libraries
-import { cn } from "@/lib/utils";
-import { getInitialsFromName } from "@/lib/helpers";
+// assets
+import { UserIcon } from "@heroicons/react/24/outline";
 
-// components
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/custom/avatar";
+export const UserAvatarSm = dynamic(() => import("./UserSm"), { ssr: false, loading: () => <UserAvatarSmSkeleton /> });
+export const UserAvatarMd = dynamic(() => import("./UserMd"), { ssr: false, loading: () => <UserAvatarMdSkeleton /> });
+export const UserAvatarLg = dynamic(() => import("./UserLg"), { ssr: false, loading: () => <UserAvatarLgSkeleton /> });
 
-// types
-import type { UserAvatarProps } from "./User";
+export function UserAvatarSmSkeleton() {
+  return <UserIcon className="size-11" />;
+}
 
-// constants
-import { DEMO_USER_NAME } from "@/drizzle/seed/constants";
+export function UserAvatarMdSkeleton() {
+  return <UserIcon className="mx-auto size-36" />;
+}
 
-export const UserAvatar = dynamic(() => import("./User"), { ssr: false, loading: () => <UserAvatarSkeleton isSmall /> });
-
-export function UserAvatarSkeleton({ isSmall = false, className, ...props }: Omit<UserAvatarProps, "user" | "session">) {
-  return (
-    <Avatar className={cn(isSmall && "size-11", className)} {...props}>
-      <AvatarImage src="https://robohash.org/placeholder.png" alt={DEMO_USER_NAME} />
-      <AvatarFallback className={cn(isSmall && "border-none text-2xl")}>{getInitialsFromName(DEMO_USER_NAME)}</AvatarFallback>
-    </Avatar>
-  );
+export function UserAvatarLgSkeleton() {
+  return <UserIcon className="mx-auto size-74" />;
 }

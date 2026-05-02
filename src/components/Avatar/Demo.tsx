@@ -10,6 +10,7 @@ import { getInitialsFromName, getUserAvatarUrl } from "@/lib/helpers";
 
 // components
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/custom/avatar";
+import { UserAvatarLgSkeleton } from "./User";
 
 // types
 import type { ComponentPropsWithoutRef } from "react";
@@ -21,7 +22,7 @@ import { DEMO_USER_EMAIL, DEMO_USER_NAME } from "@/drizzle/seed/constants";
 export default function DemoAvatar(props: ComponentPropsWithoutRef<typeof Avatar>) {
   // If the user is a demo user, use a random and large avatar image (this is for the signing in as a demo user section only)
   return (
-    <Suspense fallback={<DemoAvatarSkeleton {...props} />}>
+    <Suspense fallback={<DemoAvatarSkeleton />}>
       <DemoAvatarContent {...props} />
     </Suspense>
   );
@@ -38,20 +39,17 @@ async function DemoAvatarContent({ className, ...props }: ComponentPropsWithoutR
         <AvatarFallback>{getInitialsFromName(DEMO_USER_NAME)}</AvatarFallback>
       </Avatar>
       <h4 className="mt-4 max-w-none truncate text-center">{DEMO_USER_NAME}</h4>
-      <p className="text-muted-foreground max-w-none truncate text-center">{DEMO_USER_EMAIL}</p>
+      <p className="max-w-none truncate text-center text-muted-foreground">{DEMO_USER_EMAIL}</p>
     </section>
   );
 }
 
-function DemoAvatarSkeleton({ className, ...props }: ComponentPropsWithoutRef<typeof Avatar>) {
+export function DemoAvatarSkeleton() {
   return (
     <section className="grid">
-      <Avatar className={cn("mx-auto size-74", className)} {...props}>
-        <AvatarImage src="https://robohash.org/placeholder.png" alt={DEMO_USER_NAME} />
-        <AvatarFallback>{getInitialsFromName(DEMO_USER_NAME)}</AvatarFallback>
-      </Avatar>
+      <UserAvatarLgSkeleton />
       <h4 className="mt-4 max-w-none truncate text-center">{DEMO_USER_NAME}</h4>
-      <p className="text-muted-foreground max-w-none truncate text-center">{DEMO_USER_EMAIL}</p>
+      <p className="max-w-none truncate text-center text-muted-foreground">{DEMO_USER_EMAIL}</p>
     </section>
   );
 }

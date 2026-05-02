@@ -13,7 +13,7 @@ import { useSubmitToast } from "@/components/Form/hooks";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/custom/card";
 import { TextInput } from "@/components/Form/Inputs";
 import { FormSubmit, SubmitStatus } from "@/components/Form";
-import { UserAvatar } from "@/components/Avatar/User";
+import { UserAvatarMd } from "@/components/Avatar/User";
 import UploadAvatar from "./UploadAvatar";
 import DeleteAvatar from "./DeleteAvatar";
 
@@ -53,7 +53,7 @@ export default function ProfileDetailsForm({ user, user: { name, image }, sessio
       </CardHeader>
       <CardContent>
         <div className="mb-4 flex flex-wrap items-center justify-around gap-4 sm:justify-between">
-          <UserAvatar user={user} session={session} />
+          <UserAvatarMd user={user} session={session} />
           <div className="grid gap-4">
             <UploadAvatar />
             <DeleteAvatar currentImage={image ?? undefined} />

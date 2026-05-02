@@ -1,6 +1,6 @@
 // components
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/custom/card";
-import DemoAvatar from "@/components/Avatar/Demo";
+import DemoAvatar, { DemoAvatarSkeleton } from "@/components/Avatar/Demo";
 import SignInDemo, { SignInDemoSkeleton } from "./SignInDemo";
 
 // types
@@ -35,7 +35,7 @@ export function SignInDemoUserSkeleton() {
         <CardDescription>To test drive the application</CardDescription>
       </CardHeader>
       <CardContent>
-        <DemoAvatar />
+        <DemoAvatarSkeleton />
       </CardContent>
       <CardFooter>
         <SignInDemoSkeleton />
